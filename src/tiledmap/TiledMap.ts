@@ -7,7 +7,7 @@ export class TiledMap {
   private readonly data: ITiledMapData;
 
   /**
-   * assume tiledmap map where orientation is orthogonal, renderorder is right-down and infinite is true.
+   * assume tiled map orientation is orthogonal, renderorder is right-down and infinite is true.
    */
   constructor(data: ITiledMapData) {
     this.data = data;
