@@ -1,0 +1,14 @@
+{
+  "rulesDirectory": [
+    "tslint-microsoft-contrib"
+  ],
+  "extends": [
+    "tslint:recommended"
+  ],
+  "rules": {
+    "no-console": false,
+    "no-bitwise": false,
+    "quotemark": [true, "single"],
+    "max-line-length": [true, 160]
+  }
+}

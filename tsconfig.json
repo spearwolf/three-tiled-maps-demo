@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "outDir": "./build",
+    "sourceMap": true,
+    "module": "es6",
+    "target": "es2017",
+    "allowJs": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "importHelpers": false
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "src/index.ts",
+    "src/loadTiledMap.ts"
+  ]
+}
