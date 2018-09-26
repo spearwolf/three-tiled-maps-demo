@@ -1,10 +1,10 @@
 import { TiledMapLayerChunk } from './TiledMapLayerChunk';
 
-interface ITreeChildNodes {
+interface IChunkQuadTreeChildNodes {
     [index: string]: ChunkQuadTreeNode;
 }
 
-function addNode({ treeChildNodes }: { treeChildNodes: ITreeChildNodes }, quadrant: string, chunk: TiledMapLayerChunk) {
+function addNode({ treeChildNodes }: { treeChildNodes: IChunkQuadTreeChildNodes }, quadrant: string, chunk: TiledMapLayerChunk) {
   const node = treeChildNodes[quadrant];
   if (node) {
     node.add(chunk);
@@ -14,12 +14,12 @@ function addNode({ treeChildNodes }: { treeChildNodes: ITreeChildNodes }, quadra
 }
 
 export class ChunkQuadTreeNode {
-  public readonly chunkNodes: TiledMapLayerChunk[];
+  public chunkNodes: TiledMapLayerChunk[];
 
   public top?: number = null;
   public left?: number = null;
 
-  public readonly treeChildNodes: ITreeChildNodes = {
+  public readonly treeChildNodes: IChunkQuadTreeChildNodes = {
     NorthEast: null,
     NorthWest: null,
     SouthEast: null,
@@ -34,29 +34,86 @@ export class ChunkQuadTreeNode {
     return this.left === null;
   }
 
+  public toJson(): object {
+    return {
+      chunks: this.chunkNodes.map(({ left, top, right, bottom, width, height }) => ({
+        bottom,
+        height,
+        left,
+        right,
+        top,
+        width,
+      })),
+      isLeaf: this.isLeaf,
+      left: this.left,
+      northEast: this.treeChildNodes.NorthEast && this.treeChildNodes.NorthEast.toJson(),
+      northWest: this.treeChildNodes.NorthWest && this.treeChildNodes.NorthWest.toJson(),
+      southEast: this.treeChildNodes.SouthEast && this.treeChildNodes.SouthEast.toJson(),
+      southWest: this.treeChildNodes.SouthWest && this.treeChildNodes.SouthWest.toJson(),
+      top: this.top,
+    };
+  }
+
+  public subdivide(maxChunkNodes: number) {
+    if (this.isLeaf) {
+      if (this.chunkNodes.length > maxChunkNodes) {
+        // TODO find best x/y split axis
+        const chunks = this.chunkNodes.sort((a, b) => a.left - b.left);
+        this.chunkNodes = [];
+        const leftNode = chunks[Math.floor(chunks.length / 2)];
+        this.left = leftNode.left;
+        chunks.sort((a, b) => a.top - b.top);
+        const topNode = chunks[Math.floor(chunks.length / 2)];
+        this.top = topNode.top;
+        chunks.forEach((chunk) => this.add(chunk));
+        if (this.treeChildNodes.NorthEast) {
+          this.treeChildNodes.NorthEast.subdivide(maxChunkNodes);
+        }
+        if (this.treeChildNodes.NorthWest) {
+          this.treeChildNodes.NorthWest.subdivide(maxChunkNodes);
+        }
+        if (this.treeChildNodes.SouthEast) {
+          this.treeChildNodes.SouthEast.subdivide(maxChunkNodes);
+        }
+        if (this.treeChildNodes.SouthWest) {
+          this.treeChildNodes.SouthWest.subdivide(maxChunkNodes);
+        }
+      }
+    }
+  }
+
   public add(chunk: TiledMapLayerChunk) {
     if (this.isLeaf) {
       this.chunkNodes.push(chunk);
       return;
     }
-
+    console.log('addChunk', chunk);
     const { top, left } = this;
     if (chunk.left >= left) {
       if (chunk.top <= top) {
+        console.log('--southEast');
         addNode(this, 'SouthEast', chunk);
       } else if (chunk.bottom > top) {
+        console.log('--northEast');
         addNode(this, 'NorthEast', chunk);
       } else {
+        console.log('--TOP');
         this.chunkNodes.push(chunk);
       }
     } else if (chunk.right < left) {
       if (chunk.top <= top) {
+        console.log('--southWest');
         addNode(this, 'SouthWest', chunk);
       } else if (chunk.bottom > top) {
+        console.log('--northWest');
         addNode(this, 'NorthWest', chunk);
       } else {
+        console.log('--TOP');
         this.chunkNodes.push(chunk);
       }
+    } else {
+      console.log('--TOP');
+      this.chunkNodes.push(chunk);
     }
   }
 

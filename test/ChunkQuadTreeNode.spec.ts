@@ -24,5 +24,10 @@ describe('ChunkQuadTreeNode', () => {
     it('is instance of ChunkQuadTreeNode', () => expect(node).to.be.instanceOf(ChunkQuadTreeNode));
     it('is a leaf', () => expect(node.isLeaf).to.be.true);
     it('has chunk nodes', () => expect(node.chunkNodes).to.lengthOf(5));
+    it('subdivide', () => {
+      node.subdivide(2);
+      console.log('QuadTree', JSON.stringify(node.toJson(), null, 2));
+      expect(node.isLeaf).to.equal(false);
+    });
   });
 });
