@@ -36,13 +36,14 @@ export class ChunkQuadTreeNode {
 
   public toJson(): object {
     return {
-      chunks: this.chunkNodes.map(({ left, top, right, bottom, width, height }) => ({
+      chunks: this.chunkNodes.map(({ left, top, right, bottom, width, height, data }) => ({
         bottom,
         height,
         left,
         right,
         top,
         width,
+        data,
       })),
       isLeaf: this.isLeaf,
       left: this.left,
@@ -87,32 +88,24 @@ export class ChunkQuadTreeNode {
       this.chunkNodes.push(chunk);
       return;
     }
-    console.log('addChunk', chunk);
     const { top, left } = this;
     if (chunk.left >= left) {
       if (chunk.top <= top) {
-        console.log('--southEast');
         addNode(this, 'SouthEast', chunk);
-      } else if (chunk.bottom > top) {
-        console.log('--northEast');
+      } else if (chunk.bottom >= top) {
         addNode(this, 'NorthEast', chunk);
       } else {
-        console.log('--TOP');
         this.chunkNodes.push(chunk);
       }
-    } else if (chunk.right < left) {
+    } else if (chunk.right <= left) {
       if (chunk.top <= top) {
-        console.log('--southWest');
         addNode(this, 'SouthWest', chunk);
-      } else if (chunk.bottom > top) {
-        console.log('--northWest');
+      } else if (chunk.bottom >= top) {
         addNode(this, 'NorthWest', chunk);
       } else {
-        console.log('--TOP');
         this.chunkNodes.push(chunk);
       }
     } else {
-      console.log('--TOP');
       this.chunkNodes.push(chunk);
     }
   }

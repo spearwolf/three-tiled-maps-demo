@@ -28,12 +28,10 @@ export class TiledMapLayerChunk {
   }
 
   public getTileIdAt(x: number, y: number): number {
-    const { x: startx, y: starty } = this.data;
-    return this.getLocalTileIdAt(x - startx, y - starty);
+    return this.getLocalTileIdAt(x - this.left, this.top - y);
   }
 
   public containsTileIdAt(x: number, y: number): boolean {
-    const { x: startx, y: starty, width, height } = this.data;
-    return startx <= x && x < startx + width && starty <= y && y < starty + height;
+    return this.left <= x && x < this.right && this.top >= y && y > this.bottom;
   }
 }

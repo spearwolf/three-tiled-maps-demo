@@ -13,13 +13,13 @@ export class TiledMapLayer {
 
   get name(): string { return this.data.name; }
 
-  public getGlobalTileIdsAt(left: number, top: number, width: number, height: number, uint32arr?: Uint32Array): Uint32Array {
+  public getTileIdsAt(left: number, top: number, width: number, height: number, uint32arr?: Uint32Array): Uint32Array {
     const arr = uint32arr || new Uint32Array(width * height);
     let curChunk: TiledMapLayerChunk = null;
     for (let offsetY = 0; offsetY < height; offsetY++) {
       for (let offsetX = 0; offsetX < width; offsetX++) {
         const x = left + offsetX;
-        const y = top + offsetY;
+        const y = top - offsetY;
         if (!curChunk || !curChunk.containsTileIdAt(x, y)) {
           curChunk = this.findChunk(x, y);
         }
