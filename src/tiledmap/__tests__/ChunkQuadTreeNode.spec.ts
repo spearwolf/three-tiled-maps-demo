@@ -1,15 +1,13 @@
-import { expect } from 'chai';
-
-import { ChunkQuadTreeNode } from '../src/tiledmap/ChunkQuadTreeNode';
-import { TiledMapLayerChunk } from '../src/tiledmap/TiledMapLayerChunk';
+import { ChunkQuadTreeNode } from '../ChunkQuadTreeNode';
+import { TiledMapLayerChunk } from '../TiledMapLayerChunk';
 
 describe('ChunkQuadTreeNode', () => {
   describe('create without children', () => {
     const node = new ChunkQuadTreeNode();
 
-    it('is instance of ChunkQuadTreeNode', () => expect(node).to.be.instanceOf(ChunkQuadTreeNode));
-    it('is a leaf', () => expect(node.isLeaf).to.be.true);
-    it('has no chunk nodes', () => expect(node.chunkNodes).to.be.empty);
+    it('is instance of ChunkQuadTreeNode', () => expect(node).toBeInstanceOf(ChunkQuadTreeNode));
+    it('is a leaf', () => expect(node.isLeaf).toBeTruthy());
+    it('has no chunk nodes', () => expect(node.chunkNodes).toHaveLength(0));
   });
 
   describe('create', () => {
@@ -21,13 +19,13 @@ describe('ChunkQuadTreeNode', () => {
       new TiledMapLayerChunk({ x: -4, y: -4, width: 16, height: 16, data: 'xxx' }),
     ]);
 
-    it('is instance of ChunkQuadTreeNode', () => expect(node).to.be.instanceOf(ChunkQuadTreeNode));
-    it('is a leaf', () => expect(node.isLeaf).to.be.true);
-    it('has chunk nodes', () => expect(node.chunkNodes).to.lengthOf(5));
+    it('is instance of ChunkQuadTreeNode', () => expect(node).toBeInstanceOf(ChunkQuadTreeNode));
+    it('is a leaf', () => expect(node.isLeaf).toBeTruthy());
+    it('has chunk nodes', () => expect(node.chunkNodes).toHaveLength(5));
     it('subdivide', () => {
       node.subdivide(2);
       console.log('QuadTree', JSON.stringify(node.toJson(), null, 2));
-      expect(node.isLeaf).to.equal(false);
+      expect(node.isLeaf).toBeFalsy();
     });
   });
 });

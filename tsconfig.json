@@ -10,7 +10,8 @@
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "importHelpers": false
+    "importHelpers": false,
+    "esModuleInterop": true
   },
   "include": [
     "src/**/*.ts"
