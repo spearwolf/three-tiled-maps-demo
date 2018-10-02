@@ -7,16 +7,13 @@ export class TiledMap {
   private readonly data: ITiledMapData;
 
   /**
-   * assume tiled map orientation is orthogonal, renderorder is right-down and infinite is true.
+   * assume tiled map orientation is orthogonal and infinite is true.
    */
   constructor(data: ITiledMapData) {
     this.data = data;
     data.layers.forEach((layerData: ITiledMapLayerData) => {
       this.layers.set(layerData.name, new TiledMapLayer(layerData));
     });
-    if (this.renderorder !== 'right-down') {
-      throw new Error(`TiledMap: renderorder of map is '${this.renderorder}', but should be 'right-down' (nothing else is supported yet)`);
-    }
     if (!this.infinite) {
       throw new Error(`TiledMap: sorry only infinite === true maps are supported yet`);
     }
