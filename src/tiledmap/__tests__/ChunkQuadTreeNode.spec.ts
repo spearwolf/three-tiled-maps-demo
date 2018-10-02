@@ -12,7 +12,7 @@ describe('ChunkQuadTreeNode', () => {
     it('has no chunk nodes', () => expect(node.chunks).toHaveLength(0));
   });
 
-  describe('create', () => {
+  describe('create with irregular chunks', () => {
     const chunks = {
       A: new TiledMapLayerChunk({ x: -10, y: -10, width:  5, height:  5, data: 'A' }),
       B: new TiledMapLayerChunk({ x:  -5, y: -10, width:  5, height:  5, data: 'B' }),
@@ -53,20 +53,62 @@ describe('ChunkQuadTreeNode', () => {
 
     it('subdivide()', () => {
       node.subdivide();
-      console.log('QuadTree', JSON.stringify(node.toDebugJson(), null, 2));
+      //console.log('QuadTree', JSON.stringify(node.toDebugJson(), null, 2));
     });
 
     it('root is NOT a leaf', () => {
       expect(node.isLeaf).toBeFalsy();
     });
 
-    it('root origin is (0, -2)', () => {
+    it('root origin is (0, 0)', () => {
       expect(node.originX).toEqual(0);
-      expect(node.originY).toEqual(-2);
+      expect(node.originY).toEqual(0);
     });
 
-    it('root has chunkNodes: [Q, H, E, F, G, U, X]', () => {
-      expect(chunkNodeNames(node.chunks)).toEqual(['E', 'F', 'G', 'H', 'U', 'Q', 'X'].sort());
+    it('root has chunkNodes: [Q, T, U, V, X]', () => {
+      expect(chunkNodeNames(node.chunks)).toEqual(['Q', 'T', 'U', 'V', 'X'].sort());
+    });
+  });
+
+  describe('create with grid aligned chunks', () => {
+    const chunks = {
+      A: new TiledMapLayerChunk({ x: -10, y: -10, width:  5, height:  5, data: 'A' }),
+      B: new TiledMapLayerChunk({ x:  -5, y: -10, width:  5, height:  5, data: 'B' }),
+      C: new TiledMapLayerChunk({ x:   0, y: -10, width:  5, height:  5, data: 'C' }),
+      D: new TiledMapLayerChunk({ x:   5, y: -10, width:  5, height:  5, data: 'D' }),
+      E: new TiledMapLayerChunk({ x: -10, y:  -5, width:  5, height:  5, data: 'E' }),
+      F: new TiledMapLayerChunk({ x:  -5, y:  -5, width:  5, height:  5, data: 'F' }),
+      G: new TiledMapLayerChunk({ x:   0, y:  -5, width:  5, height:  5, data: 'G' }),
+      H: new TiledMapLayerChunk({ x:   5, y:  -5, width:  5, height:  5, data: 'H' }),
+      I: new TiledMapLayerChunk({ x: -10, y:   0, width:  5, height:  5, data: 'I' }),
+      J: new TiledMapLayerChunk({ x:  -5, y:   0, width:  5, height:  5, data: 'J' }),
+      K: new TiledMapLayerChunk({ x:   0, y:   0, width:  5, height:  5, data: 'K' }),
+      L: new TiledMapLayerChunk({ x:   5, y:   0, width:  5, height:  5, data: 'L' }),
+      M: new TiledMapLayerChunk({ x: -10, y:   5, width:  5, height:  5, data: 'M' }),
+      N: new TiledMapLayerChunk({ x:  -5, y:   5, width:  5, height:  5, data: 'N' }),
+      O: new TiledMapLayerChunk({ x:   0, y:   5, width:  5, height:  5, data: 'O' }),
+      P: new TiledMapLayerChunk({ x:   5, y:   5, width:  5, height:  5, data: 'P' }),
+    };
+    const node = new ChunkQuadTreeNode(Object.values(chunks));
+
+    it('has chunk nodes', () => expect(node.chunks).toHaveLength(16));
+
+    it('subdivide()', () => {
+      node.subdivide();
+      //console.log('QuadTree', JSON.stringify(node.toDebugJson(), null, 2));
+    });
+
+    it('root is NOT a leaf', () => {
+      expect(node.isLeaf).toBeFalsy();
+    });
+
+    it('root origin is (0, 0)', () => {
+      expect(node.originX).toEqual(0);
+      expect(node.originY).toEqual(0);
+    });
+
+    it('root has no [cross-axis] chunkNodes!', () => {
+      expect(node.chunks).toHaveLength(0);
     });
   });
 });

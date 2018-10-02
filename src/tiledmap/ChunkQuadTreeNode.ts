@@ -11,6 +11,7 @@ interface IChunkAxis {
 }
 
 const INTERSECT_DISTANCE_FACTOR = Math.PI;
+const BEFORE_AFTER_DELTA_FACTOR = Math.PI;
 
 const addNode = ({ nodes }: { nodes: IChunkQuadTreeChildNodes }, quadrant: string, chunk: TiledMapLayerChunk) => {
   const node = nodes[quadrant];
@@ -51,7 +52,7 @@ const calcAxis = (chunks: TiledMapLayerChunk[], beforeProp: string, afterProp: s
 
   return {
     origin,
-    distance: beforeDistance + intersectDistance + afterDistance,
+    distance: beforeDistance + intersectDistance + afterDistance + (Math.abs(afterDistance - beforeDistance) * BEFORE_AFTER_DELTA_FACTOR),
     noSubdivide: (beforeCount === 0 && intersectCount === 0) ||
       (beforeCount === 0 && afterCount === 0) ||
       (intersectCount === 0 && afterCount === 0),
@@ -94,7 +95,7 @@ export class ChunkQuadTreeNode {
     if (this.isLeaf && this.chunks.length > 1 && this.chunks.length > maxChunkNodes) {
       const chunks = this.chunks.slice(0);
       const xAxis = findAxis(chunks, 'right', 'left');
-      const yAxis = findAxis(chunks, 'top', 'bottom');
+      const yAxis = findAxis(chunks, 'bottom', 'top');
 
       if (xAxis && yAxis) {
         this.originX = xAxis.origin;
