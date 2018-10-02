@@ -9,9 +9,13 @@ export class TiledMapLayerChunk {
     this.data = data;
   }
 
+  get rawData(): string {
+    return this.data.data;
+  }
+
   get uint32Arr(): Uint32Array {
     if (this.cachedUint32Array === null) {
-      this.cachedUint32Array = base64toUint32Arr(this.data.data);
+      this.cachedUint32Array = base64toUint32Arr(this.rawData);
     }
     return this.cachedUint32Array;
   }
@@ -19,7 +23,7 @@ export class TiledMapLayerChunk {
   get left(): number { return this.data.x; }
   get top(): number { return this.data.y; }
   get right(): number { return this.data.x + this.data.width; }
-  get bottom(): number { return this.data.y - this.data.height; }
+  get bottom(): number { return this.data.y + this.data.height; }
   get width(): number { return this.data.width; }
   get height(): number { return this.data.height; }
 
@@ -28,10 +32,10 @@ export class TiledMapLayerChunk {
   }
 
   public getTileIdAt(x: number, y: number): number {
-    return this.getLocalTileIdAt(x - this.left, this.top - y);
+    return this.getLocalTileIdAt(x - this.left, y - this.top);
   }
 
   public containsTileIdAt(x: number, y: number): boolean {
-    return this.left <= x && x < this.right && this.top >= y && y > this.bottom;
+    return this.left <= x && x < this.right && this.top <= y && y < this.bottom;
   }
 }

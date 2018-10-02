@@ -18,13 +18,13 @@ describe('loadTiledMap', () => {
       expect(layer.name).toBe('main');
     });
 
-    it('layer#main->getTileIdsAt(-1, 0, 4, 6)', () => {
-      expect(Array.from(tm.layers.get('main').getTileIdsAt(-1, 0, 4, 6))).toEqual([
+    it('layer#main->getTileIdsAt(-1, -2, 4, 6)', () => {
+      expect(Array.from(tm.layers.get('main').getTileIdsAt(-1, -2, 4, 6))).toEqual([
+        2, 2, 7, 1,
+        13, 2, 7, 1,
         2, 2, 7, 1,
         2, 2, 7, 1,
         4, 4, 1, 1,
-        1, 1, 1, 1,
-        1, 1, 1, 1,
         1, 1, 1, 1,
       ]);
     });
