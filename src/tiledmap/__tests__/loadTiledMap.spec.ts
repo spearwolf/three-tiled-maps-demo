@@ -54,6 +54,13 @@ describe('loadTiledMap', () => {
         1, 1, 1, 1,
       ]);
     });
+
+    it('layer#main->getTileIdsAt(unreachable)', () => {
+      expect(Array.from(tm.layers.get('main').getTileIdsAt(10000, 20000, 3, 2))).toEqual([
+        0, 0, 0,
+        0, 0, 0,
+      ]);
+    });
   });
 
   describe('3: 181002-a-first-map-finite.json', () => {
