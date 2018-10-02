@@ -16,7 +16,7 @@ const BEFORE_AFTER_DELTA_FACTOR = Math.PI;
 const addNode = ({ nodes }: { nodes: IChunkQuadTreeChildNodes }, quadrant: string, chunk: TiledMapLayerChunk) => {
   const node = nodes[quadrant];
   if (node) {
-    node.add(chunk);
+    node.appendChunk(chunk);
   } else {
     nodes[quadrant] = new ChunkQuadTreeNode(chunk);
   }
@@ -103,7 +103,7 @@ export class ChunkQuadTreeNode {
         this.isLeaf = false;
 
         this.chunks.length = 0;
-        chunks.forEach((chunk) => this.add(chunk));
+        chunks.forEach((chunk) => this.appendChunk(chunk));
 
         if (this.nodes.NorthEast) this.nodes.NorthEast.subdivide(maxChunkNodes);
         if (this.nodes.NorthWest) this.nodes.NorthWest.subdivide(maxChunkNodes);
@@ -113,7 +113,7 @@ export class ChunkQuadTreeNode {
     }
   }
 
-  public add(chunk: TiledMapLayerChunk) {
+  public appendChunk(chunk: TiledMapLayerChunk) {
     if (this.isLeaf) {
       this.chunks.push(chunk);
       return;
@@ -138,6 +138,30 @@ export class ChunkQuadTreeNode {
     } else {
       this.chunks.push(chunk);
     }
+  }
+
+  public findChunksContained(left: number, top: number, width: number, height: number) {
+    const right = left + width;
+    const bottom = top + height;
+    const { originX, originY } = this;
+    let chunks = this.chunks.filter((chunk) => chunk.intersects(left, top, width, height));
+    const { NorthWest } = this.nodes;
+    if (NorthWest && (right <= originX || left <= originX) && (top <= originY || bottom <= originY)) {
+      chunks = chunks.concat(NorthWest.findChunksContained(left, top, width, height));
+    }
+    const { NorthEast } = this.nodes;
+    if (NorthEast && (right >= originX || left >= originX) && (top <= originY || bottom <= originY)) {
+      chunks = chunks.concat(NorthEast.findChunksContained(left, top, width, height));
+    }
+    const { SouthEast } = this.nodes;
+    if (SouthEast && (right >= originX || left >= originX) && (top >= originY || bottom >= originY)) {
+      chunks = chunks.concat(SouthEast.findChunksContained(left, top, width, height));
+    }
+    const { SouthWest } = this.nodes;
+    if (SouthWest && (right <= originX || left <= originX) && (top >= originY || bottom >= originY)) {
+      chunks = chunks.concat(SouthWest.findChunksContained(left, top, width, height));
+    }
+    return chunks;
   }
 
   public findChunksAt(x: number, y: number): TiledMapLayerChunk[] {

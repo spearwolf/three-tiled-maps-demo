@@ -38,4 +38,11 @@ export class TiledMapLayerChunk {
   public containsTileIdAt(x: number, y: number): boolean {
     return this.left <= x && x < this.right && this.top <= y && y < this.bottom;
   }
+
+  public intersects(left: number, top: number, width: number, height: number): boolean {
+    const right = left + width;
+    const bottom = top + height;
+    if (right <= this.left || left >= this.right || bottom <= this.top || top >= this.bottom) return false;
+    return true;
+  }
 }

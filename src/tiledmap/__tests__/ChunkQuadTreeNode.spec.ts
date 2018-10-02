@@ -110,5 +110,25 @@ describe('ChunkQuadTreeNode', () => {
     it('root has no [cross-axis] chunkNodes!', () => {
       expect(node.chunks).toHaveLength(0);
     });
+
+    it('find chunks contained: (2, 4)[6, 4]', () => {
+      const chunks = node.findChunksContained(2, 4, 6, 4);
+      expect(chunkNodeNames(chunks)).toEqual(['K', 'L', 'O', 'P'].sort());
+    });
+
+    it('find chunks contained: (-2, -2)[5, 5]', () => {
+      const chunks = node.findChunksContained(-2, -2, 5, 5);
+      expect(chunkNodeNames(chunks)).toEqual(['F', 'G', 'J', 'K'].sort());
+    });
+
+    it('find chunks contained: (-9, -8)[2, 2]', () => {
+      const chunks = node.findChunksContained(-9, -8, 2, 2);
+      expect(chunkNodeNames(chunks)).toEqual(['A'].sort());
+    });
+
+    it('find chunks contained: (-20, -20)[2, 2]', () => {
+      const chunks = node.findChunksContained(-20, -20, 2, 2);
+      expect(chunks).toHaveLength(0);
+    });
   });
 });
