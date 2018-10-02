@@ -53,7 +53,7 @@ describe('ChunkQuadTreeNode', () => {
 
     it('subdivide()', () => {
       node.subdivide();
-      //console.log('QuadTree', JSON.stringify(node.toDebugJson(), null, 2));
+      // console.log('QuadTree', JSON.stringify(node.toDebugJson(), null, 2));
     });
 
     it('root is NOT a leaf', () => {
@@ -95,7 +95,7 @@ describe('ChunkQuadTreeNode', () => {
 
     it('subdivide()', () => {
       node.subdivide();
-      //console.log('QuadTree', JSON.stringify(node.toDebugJson(), null, 2));
+      // console.log('QuadTree', JSON.stringify(node.toDebugJson(), null, 2));
     });
 
     it('root is NOT a leaf', () => {
@@ -112,23 +112,19 @@ describe('ChunkQuadTreeNode', () => {
     });
 
     it('find chunks contained: (2, 4)[6, 4]', () => {
-      const chunks = node.findChunksContained(2, 4, 6, 4);
-      expect(chunkNodeNames(chunks)).toEqual(['K', 'L', 'O', 'P'].sort());
+      expect(chunkNodeNames(node.findChunksContained(2, 4, 6, 4))).toEqual(['K', 'L', 'O', 'P'].sort());
     });
 
     it('find chunks contained: (-2, -2)[5, 5]', () => {
-      const chunks = node.findChunksContained(-2, -2, 5, 5);
-      expect(chunkNodeNames(chunks)).toEqual(['F', 'G', 'J', 'K'].sort());
+      expect(chunkNodeNames(node.findChunksContained(-2, -2, 5, 5))).toEqual(['F', 'G', 'J', 'K'].sort());
     });
 
     it('find chunks contained: (-9, -8)[2, 2]', () => {
-      const chunks = node.findChunksContained(-9, -8, 2, 2);
-      expect(chunkNodeNames(chunks)).toEqual(['A'].sort());
+      expect(chunkNodeNames(node.findChunksContained(-9, -8, 2, 2))).toEqual(['A'].sort());
     });
 
     it('find chunks contained: (-20, -20)[2, 2]', () => {
-      const chunks = node.findChunksContained(-20, -20, 2, 2);
-      expect(chunks).toHaveLength(0);
+      expect(node.findChunksContained(-20, -20, 2, 2)).toHaveLength(0);
     });
   });
 });

@@ -42,7 +42,11 @@ export class TiledMapLayerChunk {
   public intersects(left: number, top: number, width: number, height: number): boolean {
     const right = left + width;
     const bottom = top + height;
-    if (right <= this.left || left >= this.right || bottom <= this.top || top >= this.bottom) return false;
-    return true;
+    return !(
+      right <= this.left ||
+      left >= this.right ||
+      bottom <= this.top ||
+      top >= this.bottom
+    );
   }
 }

@@ -5,9 +5,9 @@ interface IChunkQuadTreeChildNodes {
 }
 
 interface IChunkAxis {
-  origin: number,
-  distance: number,
-  noSubdivide: boolean,
+  origin: number;
+  distance: number;
+  noSubdivide: boolean;
 }
 
 const INTERSECT_DISTANCE_FACTOR = Math.PI;
@@ -51,22 +51,22 @@ const calcAxis = (chunks: TiledMapLayerChunk[], beforeProp: string, afterProp: s
   const afterDistance = Math.abs(0.5 - (afterCount / chunksCount));
 
   return {
-    origin,
     distance: beforeDistance + intersectDistance + afterDistance + (Math.abs(afterDistance - beforeDistance) * BEFORE_AFTER_DELTA_FACTOR),
     noSubdivide: (beforeCount === 0 && intersectCount === 0) ||
       (beforeCount === 0 && afterCount === 0) ||
       (intersectCount === 0 && afterCount === 0),
+    origin,
   };
 };
 
 const findAxis = (chunks: TiledMapLayerChunk[], beforeProp: string, afterProp: string): IChunkAxis => {
   chunks.sort((a: any, b: any) => a[beforeProp] as number - b[beforeProp] as number);
-  return <IChunkAxis>(
+  return (
     chunks
       .map(calcAxis.bind(null, chunks, beforeProp, afterProp))
       .filter((axis: IChunkAxis) => !axis.noSubdivide)
       .sort((a: IChunkAxis, b: IChunkAxis) => a.distance - b.distance)
-  )[0];
+  )[0] as IChunkAxis;
 };
 
 export class ChunkQuadTreeNode {
@@ -105,10 +105,10 @@ export class ChunkQuadTreeNode {
         this.chunks.length = 0;
         chunks.forEach((chunk) => this.appendChunk(chunk));
 
-        if (this.nodes.NorthEast) this.nodes.NorthEast.subdivide(maxChunkNodes);
-        if (this.nodes.NorthWest) this.nodes.NorthWest.subdivide(maxChunkNodes);
-        if (this.nodes.SouthEast) this.nodes.SouthEast.subdivide(maxChunkNodes);
-        if (this.nodes.SouthWest) this.nodes.SouthWest.subdivide(maxChunkNodes);
+        if (this.nodes.NorthEast) { this.nodes.NorthEast.subdivide(maxChunkNodes); }
+        if (this.nodes.NorthWest) { this.nodes.NorthWest.subdivide(maxChunkNodes); }
+        if (this.nodes.SouthEast) { this.nodes.SouthEast.subdivide(maxChunkNodes); }
+        if (this.nodes.SouthWest) { this.nodes.SouthWest.subdivide(maxChunkNodes); }
       }
     }
   }
@@ -194,10 +194,10 @@ export class ChunkQuadTreeNode {
     if (this.chunks.length) {
       out._chunks = this.chunks.map((chunk) => chunk.rawData).join(', ');
     }
-    if (this.nodes.NorthEast) out.NorthEast = this.nodes.NorthEast.toDebugJson();
-    if (this.nodes.NorthWest) out.NorthWest = this.nodes.NorthWest.toDebugJson();
-    if (this.nodes.SouthEast) out.SouthEast = this.nodes.SouthEast.toDebugJson();
-    if (this.nodes.SouthWest) out.SouthWest = this.nodes.SouthWest.toDebugJson();
+    if (this.nodes.NorthEast) { out.NorthEast = this.nodes.NorthEast.toDebugJson(); }
+    if (this.nodes.NorthWest) { out.NorthWest = this.nodes.NorthWest.toDebugJson(); }
+    if (this.nodes.SouthEast) { out.SouthEast = this.nodes.SouthEast.toDebugJson(); }
+    if (this.nodes.SouthWest) { out.SouthWest = this.nodes.SouthWest.toDebugJson(); }
     return out;
   }
 }

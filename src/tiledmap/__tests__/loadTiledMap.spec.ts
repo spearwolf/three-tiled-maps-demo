@@ -1,7 +1,11 @@
 import { TiledMap } from '../TiledMap';
 import { TiledMapLayer } from '../TiledMapLayer';
 
-import { A_FIRST_MAP, A_FIRST_MAP_RIGHT_TOP, A_FIRST_MAP_FINITE } from './tiledmaps';
+import {
+  A_FIRST_MAP,
+  A_FIRST_MAP_FINITE,
+  A_FIRST_MAP_RIGHT_TOP,
+} from './tiledmaps';
 
 describe('loadTiledMap', () => {
   describe('1: 180917-a-first-map.json', () => {

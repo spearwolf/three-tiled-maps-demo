@@ -1,7 +1,7 @@
+import { ChunkQuadTreeNode } from './ChunkQuadTreeNode';
 import { ITiledMapLayerChunkData } from './ITiledMapLayerChunkData';
 import { ITiledMapLayerData } from './ITiledMapLayerData';
 import { TiledMapLayerChunk } from './TiledMapLayerChunk';
-import { ChunkQuadTreeNode } from './ChunkQuadTreeNode';
 
 const findChunk = (chunks: TiledMapLayerChunk[], x: number, y: number): TiledMapLayerChunk => {
   return chunks.find((chunk: TiledMapLayerChunk) => chunk.containsTileIdAt(x, y));
@@ -9,13 +9,12 @@ const findChunk = (chunks: TiledMapLayerChunk[], x: number, y: number): TiledMap
 
 export class TiledMapLayer {
   private readonly data: ITiledMapLayerData;
-  private readonly chunks: TiledMapLayerChunk[];
   private readonly rootNode: ChunkQuadTreeNode;
 
   constructor(data: ITiledMapLayerData, autoSubdivide: boolean = true) {
     this.data = data;
-    this.chunks = data.chunks.map((chunkData: ITiledMapLayerChunkData) => new TiledMapLayerChunk(chunkData));
-    this.rootNode = new ChunkQuadTreeNode(this.chunks);
+    const chunks: TiledMapLayerChunk[] = data.chunks.map((chunkData: ITiledMapLayerChunkData) => new TiledMapLayerChunk(chunkData));
+    this.rootNode = new ChunkQuadTreeNode(chunks);
     if (autoSubdivide) {
       this.subdivide();
     }
