@@ -60,8 +60,13 @@ describe('ChunkQuadTreeNode', () => {
       expect(node.isLeaf).toBeFalsy();
     });
 
-    it('root has chunkNodes: [U]', () => {
-      expect(chunkNodeNames(node.chunks)).toEqual(['U']);
+    it('root origin is (0, -2)', () => {
+      expect(node.originX).toEqual(0);
+      expect(node.originY).toEqual(-2);
+    });
+
+    it('root has chunkNodes: [Q, H, E, F, G, U, X]', () => {
+      expect(chunkNodeNames(node.chunks)).toEqual(['E', 'F', 'G', 'H', 'U', 'Q', 'X'].sort());
     });
   });
 });

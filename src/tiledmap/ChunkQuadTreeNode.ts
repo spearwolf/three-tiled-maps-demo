@@ -90,7 +90,7 @@ export class ChunkQuadTreeNode {
     this.chunks = chunks ? [].concat(chunks) : [];
   }
 
-  public subdivide(maxChunkNodes: number = 1): void {
+  public subdivide(maxChunkNodes: number = 2): void {
     if (this.isLeaf && this.chunks.length > 1 && this.chunks.length > maxChunkNodes) {
       const chunks = this.chunks.slice(0);
       const xAxis = findAxis(chunks, 'right', 'left');
