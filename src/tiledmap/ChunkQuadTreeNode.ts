@@ -1,8 +1,15 @@
 import { TiledMapLayerChunk } from './TiledMapLayerChunk';
 
-interface IChunkQuadTreeChildNodes {
-    [index: string]: ChunkQuadTreeNode;
+enum Quadrant {
+  NorthEast = 'NorthEast',
+  SouthEast = 'SouthEast',
+  SouthWest = 'SouthWest',
+  NorthWest = 'NorthWest',
 }
+
+type IChunkQuadTreeChildNodes = {
+  [index in Quadrant]: ChunkQuadTreeNode;
+};
 
 interface IChunkAxis {
   origin: number;
@@ -13,7 +20,7 @@ interface IChunkAxis {
 const INTERSECT_DISTANCE_FACTOR = Math.PI;
 const BEFORE_AFTER_DELTA_FACTOR = Math.PI;
 
-const addNode = ({ nodes }: { nodes: IChunkQuadTreeChildNodes }, quadrant: string, chunk: TiledMapLayerChunk) => {
+const addNode = ({ nodes }: { nodes: IChunkQuadTreeChildNodes }, quadrant: Quadrant, chunk: TiledMapLayerChunk) => {
   const node = nodes[quadrant];
   if (node) {
     node.appendChunk(chunk);
@@ -121,17 +128,17 @@ export class ChunkQuadTreeNode {
     const { originY, originX } = this;
     if (chunk.left >= originX) {
       if (chunk.top >= originY) {
-        addNode(this, 'SouthEast', chunk);
+        addNode(this, Quadrant.SouthEast, chunk);
       } else if (chunk.bottom <= originY) {
-        addNode(this, 'NorthEast', chunk);
+        addNode(this, Quadrant.NorthEast, chunk);
       } else {
         this.chunks.push(chunk);
       }
     } else if (chunk.right <= originX) {
       if (chunk.top >= originY) {
-        addNode(this, 'SouthWest', chunk);
+        addNode(this, Quadrant.SouthWest, chunk);
       } else if (chunk.bottom <= originY) {
-        addNode(this, 'NorthWest', chunk);
+        addNode(this, Quadrant.NorthWest, chunk);
       } else {
         this.chunks.push(chunk);
       }
