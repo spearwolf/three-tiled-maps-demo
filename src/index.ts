@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 import loadTiledMap from './loadTiledMap';
+import { MapTile } from './tiledmap/MapTile';
+import { TiledMap } from './tiledmap/TiledMap';
 
 console.log('hej ho 🦄');
 
@@ -58,4 +60,12 @@ const geometry = new THREE.BoxBufferGeometry(1, 1, 1);
 const meshMaterial = new THREE.MeshPhongMaterial({ color: 0x156289, emissive: 0x072534, side: THREE.DoubleSide, flatShading: true });
 scene.add(new THREE.Mesh(geometry, meshMaterial));
 
-loadTiledMap('180917-a-first-map.json');
+// load tiled map ////////////////////////////////////////////////////
+
+loadTiledMap('./maps/180917-a-first-map.json').then((tiledMap: TiledMap) => {
+  console.log('tiledMap', tiledMap);
+  console.log('(-1,0)->(4,6)', tiledMap.layers.get('main').getTileIdsAt(-1, 0, 4, 6));
+
+  const tile = new MapTile(tiledMap.layers.get('main'), 2, 2).setPosition(10, 0).fetchTileIds();
+  console.log('(10,0)->(2,2)', tile);
+});
