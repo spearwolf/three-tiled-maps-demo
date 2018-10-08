@@ -1,13 +1,22 @@
 import * as THREE from 'three';
+import GLTFLoader from 'three-gltf-loader';
+
 import loadTiledMap from './loadTiledMap';
 import { MapTile } from './tiledmap/MapTile';
 import { TiledMap } from './tiledmap/TiledMap';
 
 console.log('hej ho 🦄');
 
+THREE.Object3D.DefaultUp.set(0, 0, 1);
+console.log('Object3D.DefaultUp', THREE.Object3D.DefaultUp.x, THREE.Object3D.DefaultUp.y, THREE.Object3D.DefaultUp.z);
+
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
+
+// see https://threejs.org/docs/#examples/loaders/GLTFLoader
+renderer.gammaOutput = true;
+renderer.gammaFactor = 2.2;
 
 renderer.setPixelRatio(devicePixelRatio || 1);
 document.body.appendChild(renderer.domElement);
@@ -27,21 +36,23 @@ function resize(): void {
 
 resize();
 
-scene.rotation.x = -0.8;
-camera.position.z = 2;
+camera.position.set(1, -2, 2);
+camera.lookAt(0, 0, 0);
+camera.up.set(0, 0, 1);
 
 function animate(time: number): void {
   requestAnimationFrame(animate);
   resize();
 
   const seconds = time / 1000;
-  scene.rotation.z = seconds * 0.4;
+  scene.rotation.z = seconds * -0.4;
 
   renderer.render(scene, camera);
 }
 
 requestAnimationFrame(animate);
 
+/*
 const lights = [
   new THREE.PointLight(0xffffff, 1, 0),
   new THREE.PointLight(0xffffff, 1, 0),
@@ -59,6 +70,7 @@ scene.add(lights[2]);
 const geometry = new THREE.BoxBufferGeometry(1, 1, 1);
 const meshMaterial = new THREE.MeshPhongMaterial({ color: 0x156289, emissive: 0x072534, side: THREE.DoubleSide, flatShading: true });
 scene.add(new THREE.Mesh(geometry, meshMaterial));
+*/
 
 // load tiled map ////////////////////////////////////////////////////
 
@@ -69,3 +81,14 @@ loadTiledMap('./maps/180917-a-first-map.json').then((tiledMap: TiledMap) => {
   const tile = new MapTile(tiledMap.layers.get('main'), 2, 2).setPosition(10, 0).fetchTileIds();
   console.log('(10,0)->(2,2)', tile);
 });
+
+// load gltf mesh /////////////////////////////////////////////////////
+
+const loader: any = new GLTFLoader();
+loader.load(
+  './gltf/flat-ground.gltf',
+  (gltf: any) => {
+    scene.add(gltf.scene);
+    console.log(gltf);
+  },
+);
