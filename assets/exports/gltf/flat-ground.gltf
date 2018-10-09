@@ -75,6 +75,82 @@
                 0.0
             ],
             "type" : "VEC2"
+        },
+        {
+            "bufferView" : 5,
+            "componentType" : 5121,
+            "count" : 12,
+            "max" : [
+                7
+            ],
+            "min" : [
+                0
+            ],
+            "type" : "SCALAR"
+        },
+        {
+            "bufferView" : 6,
+            "componentType" : 5126,
+            "count" : 8,
+            "max" : [
+                0.5,
+                0.5,
+                0.0
+            ],
+            "min" : [
+                -0.5,
+                -0.5,
+                -1.0
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 7,
+            "componentType" : 5126,
+            "count" : 8,
+            "max" : [
+                1.0,
+                0.0,
+                1.0
+            ],
+            "min" : [
+                0.0,
+                0.0,
+                -5.960464477539063e-08
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 8,
+            "componentType" : 5126,
+            "count" : 8,
+            "max" : [
+                1.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "min" : [
+                -5.960464477539063e-08,
+                0.0,
+                -1.0,
+                1.0
+            ],
+            "type" : "VEC4"
+        },
+        {
+            "bufferView" : 9,
+            "componentType" : 5126,
+            "count" : 8,
+            "max" : [
+                1.0,
+                1.0
+            ],
+            "min" : [
+                0.0,
+                0.0
+            ],
+            "type" : "VEC2"
         }
     ],
     "asset" : {
@@ -111,11 +187,41 @@
             "byteLength" : 32,
             "byteOffset" : 168,
             "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 12,
+            "byteOffset" : 200,
+            "target" : 34963
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 96,
+            "byteOffset" : 212,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 96,
+            "byteOffset" : 308,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 128,
+            "byteOffset" : 404,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 64,
+            "byteOffset" : 532,
+            "target" : 34962
         }
     ],
     "buffers" : [
         {
-            "byteLength" : 200,
+            "byteLength" : 596,
             "uri" : "flat-ground.bin"
         }
     ],
@@ -126,6 +232,10 @@
         {
             "name" : "floor_019",
             "uri" : "floor_019.png"
+        },
+        {
+            "name" : "wall_4",
+            "uri" : "wall_4.png"
         }
     ],
     "materials" : [
@@ -147,6 +257,25 @@
                 "metallicFactor" : 0.0,
                 "roughnessFactor" : 0.9
             }
+        },
+        {
+            "extensions" : {
+                "KHR_materials_unlit" : {}
+            },
+            "name" : "Material.wall_4",
+            "pbrMetallicRoughness" : {
+                "baseColorFactor" : [
+                    0.6400000190734865,
+                    0.6400000190734865,
+                    0.6400000190734865,
+                    1.0
+                ],
+                "baseColorTexture" : {
+                    "index" : 1
+                },
+                "metallicFactor" : 0.0,
+                "roughnessFactor" : 0.9
+            }
         }
     ],
     "meshes" : [
@@ -162,6 +291,21 @@
                     },
                     "indices" : 0,
                     "material" : 0
+                }
+            ]
+        },
+        {
+            "name" : "Plane.002",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "NORMAL" : 7,
+                        "POSITION" : 6,
+                        "TANGENT" : 8,
+                        "TEXCOORD_0" : 9
+                    },
+                    "indices" : 5,
+                    "material" : 1
                 }
             ]
         }
@@ -208,6 +352,21 @@
                 0.5,
                 0.0
             ]
+        },
+        {
+            "mesh" : 1,
+            "name" : "Mesh.wall_4",
+            "rotation" : [
+                0.0,
+                -0.7071068286895752,
+                0.0,
+                0.7071068286895752
+            ],
+            "translation" : [
+                1.0,
+                0.5,
+                0.5
+            ]
         }
     ],
     "samplers" : [
@@ -218,6 +377,7 @@
         {
             "name" : "Scene",
             "nodes" : [
+                3,
                 2,
                 1,
                 0
@@ -228,6 +388,10 @@
         {
             "sampler" : 0,
             "source" : 0
+        },
+        {
+            "sampler" : 0,
+            "source" : 1
         }
     ]
 }
