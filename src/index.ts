@@ -1,8 +1,9 @@
 import * as THREE from 'three';
-import GLTFLoader from 'three-gltf-loader';
+// import GLTFLoader from 'three-gltf-loader';
 
 import loadTiledMap from './loadTiledMap';
-import { MapTile } from './tiledmap/MapTile';
+import { Map2DGridTile } from './tiledmap/Map2DGridTile';
+import { Map2DView } from './tiledmap/Map2DView';
 import { TiledMap } from './tiledmap/TiledMap';
 
 console.log('hej ho 🦄');
@@ -78,12 +79,15 @@ loadTiledMap('./maps/180917-a-first-map.json').then((tiledMap: TiledMap) => {
   console.log('tiledMap', tiledMap);
   console.log('(-1,0)->(4,6)', tiledMap.layers.get('main').getTileIdsAt(-1, 0, 4, 6));
 
-  const tile = new MapTile(tiledMap.layers.get('main'), 2, 2).setPosition(10, 0).fetchTileIds();
+  const tile = new Map2DGridTile(tiledMap.layers.get('main'), 2, 2).setPosition(10, 0).fetchTileIds();
   console.log('(10,0)->(2,2)', tile);
+
+  const view = new Map2DView(tiledMap, 320, 240, 0, 0);
+  view.update();
 });
 
 // load gltf mesh /////////////////////////////////////////////////////
-
+/*
 const loader: any = new GLTFLoader();
 loader.load(
   './gltf/flat-ground.gltf',
@@ -92,3 +96,4 @@ loader.load(
     console.log(gltf);
   },
 );
+*/

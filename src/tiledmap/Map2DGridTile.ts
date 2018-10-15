@@ -1,6 +1,8 @@
+// tslint:disable:variable-name
+
 import { TiledMapLayer } from './TiledMapLayer';
 
-export class MapTile {
+export class Map2DGridTile {
   public readonly width: number;
   public readonly height: number;
 
@@ -8,15 +10,12 @@ export class MapTile {
 
   public tileIdsNeedsUpdate: boolean = true;
 
-  // tslint:disable-next-line:variable-name
   private _top: number = 0;
-  // tslint:disable-next-line:variable-name
   private _left: number = 0;
 
-  // tslint:disable-next-line:variable-name
   private _layer: TiledMapLayer;
 
-  constructor(layer: TiledMapLayer , width: number, height: number) {
+  constructor(layer: TiledMapLayer, width: number, height: number) {
     this._layer = layer;
 
     this.width = width;
