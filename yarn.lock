@@ -593,10 +593,10 @@
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.117.tgz#695a7f514182771a1e0f4345d189052ee33c8778"
   integrity sha512-xyf2m6tRbz8qQKcxYZa7PA4SllYcay+eh25DN3jmNYY6gSTL7Htc/bttVdkqj2wfJGbeWlQiX8pIyJpKU+tubw==
 
-"@types/three@^0.92.21":
-  version "0.92.25"
-  resolved "https://registry.yarnpkg.com/@types/three/-/three-0.92.25.tgz#875f401f85411d63bd756d2e529c5461956167f2"
-  integrity sha512-xutT9mv07h4hmVR5UyL6qTZf+NJGeVpKd/2ZNMBIFN+y51RfavWHePayX5e3qGrZlP5+FeIpRhsCv9zeNqKHjQ==
+"@types/three@^0.93.3":
+  version "0.93.3"
+  resolved "https://registry.yarnpkg.com/@types/three/-/three-0.93.3.tgz#f0476c57e9f6b24927bf68f79cb836b0da277a5c"
+  integrity sha512-/2cbodZS2A0Sqw3ZgbAMF1ThpcS9spyn+tq3k4Gtg43EkLwmcSeJGXVJ8jsNjkQ1rwI1XTpPPf1/ZI/X3c6TZw==
 
 "@webassemblyjs/ast@1.7.8":
   version "1.7.8"
@@ -6251,10 +6251,10 @@ three-gltf-loader@^1.97.0:
   resolved "https://registry.yarnpkg.com/three-gltf-loader/-/three-gltf-loader-1.97.0.tgz#5bfb17b5e5817276b65855a86286f98c51efb415"
   integrity sha512-TVjBeuOQSlmZOXXFhrQplxuNQQjmk2HAY+IfMGh0I2uqy0bR/dfrU/ioNeigJ4IyZre62eeW7eUhSvqU6K7kIg==
 
-three@^0.96.0:
-  version "0.96.0"
-  resolved "https://registry.yarnpkg.com/three/-/three-0.96.0.tgz#6f48bb9e321506906ae4708bda69b0ffa808ee7f"
-  integrity sha512-tS+A5kelQgBblElc/E1G5zR3m6wNjbqmrf6OAjijuNJM7yoYQjOktPoa+Lglx73OTiTOJ3+Ff+pgWdOFt7cOhQ==
+three@^0.97.0:
+  version "0.97.0"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.97.0.tgz#76141e1b0ace14246fe9198a458fefddc98a4e30"
+  integrity sha512-ctZF79O1R2aMIDnz9cV5GUIONyFnYvfQKg4+EAwEVaEr1mgy99rglstH6hhRdIThu3SOa4Ns5da/Ee5fTbWc9A==
 
 throat@^4.0.0:
   version "4.1.0"

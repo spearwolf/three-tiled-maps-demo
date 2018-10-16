@@ -17,7 +17,7 @@
     "@babel/preset-env": "^7.1.0",
     "@types/jest": "^23.3.2",
     "@types/lodash": "^4.14.116",
-    "@types/three": "^0.92.21",
+    "@types/three": "^0.93.3",
     "babel-jest": "^23.6.0",
     "jest": "^23.6.0",
     "npm-run-all": "^4.1.3",
@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "lodash": "^4.17.11",
-    "three": "^0.96.0",
+    "three": "^0.97.0",
     "three-gltf-loader": "^1.97.0"
   },
   "babel": {
