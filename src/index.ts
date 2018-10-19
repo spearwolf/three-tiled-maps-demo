@@ -83,6 +83,7 @@ loadTiledMap('./maps/180917-a-first-map.json').then((tiledMap: TiledMap) => {
   console.log('(10,0)->(2,2)', tile);
 
   const view = new Map2DView(tiledMap, 320, 240, 0, 0);
+  view.appendTo(scene);
   view.update();
 });
 
