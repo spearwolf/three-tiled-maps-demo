@@ -3148,6 +3148,11 @@ ignore-walk@^3.0.1:
   dependencies:
     minimatch "^3.0.4"
 
+immutable@^3.8.2:
+  version "3.8.2"
+  resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.8.2.tgz#c2439951455bb39913daf281376f1530e104adf3"
+  integrity sha1-wkOZUUVbs5kT2vKBN28VMOEErfM=
+
 import-local@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/import-local/-/import-local-1.0.0.tgz#5e4ffdc03f4fe6c009c6729beb29631c2f8227bc"
@@ -6387,6 +6392,13 @@ tslint-microsoft-contrib@^5.2.1:
   integrity sha512-PDYjvpo0gN9IfMULwKk0KpVOPMhU6cNoT9VwCOLeDl/QS8v8W2yspRpFFuUS7/c5EIH/n8ApMi8TxJAz1tfFUA==
   dependencies:
     tsutils "^2.27.2 <2.29.0"
+
+tslint-sonarts@^1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/tslint-sonarts/-/tslint-sonarts-1.8.0.tgz#80f2e8addd418c3b8807fc0155dec33b5a81e8d1"
+  integrity sha512-tpijO5VR18e+Ny99uMNNov3Hw7diiYQ8KoJkezpHGw9hSFFrO5g2PhwdQQo7O9puhJKMIutLl9g+ICMgg+bh0w==
+  dependencies:
+    immutable "^3.8.2"
 
 tslint@^5.11.0:
   version "5.11.0"

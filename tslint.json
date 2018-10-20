@@ -3,12 +3,18 @@
     "tslint-microsoft-contrib"
   ],
   "extends": [
-    "tslint:recommended"
+    "tslint:recommended",
+    "tslint-sonarts"
   ],
   "rules": {
     "no-console": false,
     "no-bitwise": false,
     "quotemark": [true, "single"],
     "max-line-length": [true, 160]
+  },
+  "linterOptions": {
+    "exclude": [
+      "**/__tests__/*"
+    ]
   }
 }
