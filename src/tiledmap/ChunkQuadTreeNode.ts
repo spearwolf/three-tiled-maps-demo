@@ -20,15 +20,6 @@ interface IChunkAxis {
 const INTERSECT_DISTANCE_FACTOR = Math.PI;
 const BEFORE_AFTER_DELTA_FACTOR = Math.PI;
 
-const addNode = ({ nodes }: { nodes: IChunkQuadTreeChildNodes }, quadrant: Quadrant, chunk: TiledMapLayerChunk) => {
-  const node = nodes[quadrant];
-  if (node) {
-    node.appendChunk(chunk);
-  } else {
-    nodes[quadrant] = new ChunkQuadTreeNode(chunk);
-  }
-};
-
 const calcAxis = (chunks: TiledMapLayerChunk[], beforeProp: string, afterProp: string, chunk: TiledMapLayerChunk): IChunkAxis => {
   const chunksCount = chunks.length;
   const origin = (chunk as any)[beforeProp] as number;
@@ -67,7 +58,7 @@ const calcAxis = (chunks: TiledMapLayerChunk[], beforeProp: string, afterProp: s
 };
 
 const findAxis = (chunks: TiledMapLayerChunk[], beforeProp: string, afterProp: string): IChunkAxis => {
-  chunks.sort((a: any, b: any) => a[beforeProp] as number - b[beforeProp] as number);
+  chunks.sort((a: any, b: any) => a[beforeProp] - b[beforeProp]);
   return (
     chunks
       .map(calcAxis.bind(null, chunks, beforeProp, afterProp))
@@ -128,17 +119,17 @@ export class ChunkQuadTreeNode {
     const { originY, originX } = this;
     if (chunk.left >= originX) {
       if (chunk.top >= originY) {
-        addNode(this, Quadrant.SouthEast, chunk);
+        this.appendToNode(Quadrant.SouthEast, chunk);
       } else if (chunk.bottom <= originY) {
-        addNode(this, Quadrant.NorthEast, chunk);
+        this.appendToNode(Quadrant.NorthEast, chunk);
       } else {
         this.chunks.push(chunk);
       }
     } else if (chunk.right <= originX) {
       if (chunk.top >= originY) {
-        addNode(this, Quadrant.SouthWest, chunk);
+        this.appendToNode(Quadrant.SouthWest, chunk);
       } else if (chunk.bottom <= originY) {
-        addNode(this, Quadrant.NorthWest, chunk);
+        this.appendToNode(Quadrant.NorthWest, chunk);
       } else {
         this.chunks.push(chunk);
       }
@@ -206,5 +197,14 @@ export class ChunkQuadTreeNode {
     if (this.nodes.SouthEast) { out.SouthEast = this.nodes.SouthEast.toDebugJson(); }
     if (this.nodes.SouthWest) { out.SouthWest = this.nodes.SouthWest.toDebugJson(); }
     return out;
+  }
+
+  private appendToNode(quadrant: Quadrant, chunk: TiledMapLayerChunk) {
+    const node = this.nodes[quadrant];
+    if (node) {
+      node.appendChunk(chunk);
+    } else {
+      this.nodes[quadrant] = new ChunkQuadTreeNode(chunk);
+    }
   }
 }
