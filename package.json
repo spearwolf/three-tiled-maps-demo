@@ -9,6 +9,7 @@
     "build": "run-p build:*",
     "serve": "serve public",
     "start": "webpack-dev-server --open",
+    "lint": "tslint --format verbose --project ./tsconfig.json",
     "test": "jest"
   },
   "author": "Wolfger Schramm <wolfger@spearwolf.de>",
