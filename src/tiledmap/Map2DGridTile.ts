@@ -1,4 +1,4 @@
-import { TiledMapLayer } from './TiledMapLayer';
+import { IMap2DLayer } from './IMap2DLayer';
 
 /**
  * Represents a specific 2d section (a *grid tile*) of a Map2DLayerGrid.
@@ -13,12 +13,25 @@ export class Map2DGridTile {
 
   tileIdsNeedsUpdate: boolean = true;
 
+  gridTileLeft: number;
+  gridTileTop: number;
+
+  /**
+   * View position in *pixels*
+   */
+  viewOffsetX: number;
+
+  /**
+   * View position in *pixels*
+   */
+  viewOffsetY: number;
+
   private _top: number = 0;
   private _left: number = 0;
 
-  private _layer: TiledMapLayer;
+  private _layer: IMap2DLayer;
 
-  constructor(layer: TiledMapLayer, width: number, height: number) {
+  constructor(layer: IMap2DLayer, width: number, height: number) {
     this._layer = layer;
 
     this.width = width;
@@ -27,14 +40,28 @@ export class Map2DGridTile {
     this.tileIds = new Uint32Array(width * height);
   }
 
-  set layer(layer: TiledMapLayer) {
+  setGridTilePosition(left: number, top: number) {
+    this.gridTileLeft = left;
+    this.gridTileTop = top;
+  }
+
+  isGridTilePosition(left: number, top: number) {
+    return this.gridTileLeft === left && this.gridTileTop === top;
+  }
+
+  setViewOffset(x: number, y: number) {
+    this.viewOffsetX = x;
+    this.viewOffsetY = y;
+  }
+
+  set layer(layer: IMap2DLayer) {
     if (this._layer !== layer) {
       this._layer = layer;
       this.tileIdsNeedsUpdate = true;
     }
   }
 
-  get layer(): TiledMapLayer { return this._layer; }
+  get layer(): IMap2DLayer { return this._layer; }
 
   set top(top: number) {
     if (this._top !== top) {
