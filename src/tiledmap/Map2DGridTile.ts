@@ -1,14 +1,13 @@
-// tslint:disable:variable-name
-
+// import { AABB2 } from './AABB2';
 import { TiledMapLayer } from './TiledMapLayer';
 
 export class Map2DGridTile {
-  public readonly width: number;
-  public readonly height: number;
+  readonly width: number;
+  readonly height: number;
 
-  public readonly tileIds: Uint32Array;
+  readonly tileIds: Uint32Array;
 
-  public tileIdsNeedsUpdate: boolean = true;
+  tileIdsNeedsUpdate: boolean = true;
 
   private _top: number = 0;
   private _left: number = 0;
@@ -24,34 +23,34 @@ export class Map2DGridTile {
     this.tileIds = new Uint32Array(width * height);
   }
 
-  public set layer(layer: TiledMapLayer) {
+  set layer(layer: TiledMapLayer) {
     if (this._layer !== layer) {
       this._layer = layer;
       this.tileIdsNeedsUpdate = true;
     }
   }
 
-  public get layer(): TiledMapLayer { return this._layer; }
+  get layer(): TiledMapLayer { return this._layer; }
 
-  public set top(top: number) {
+  set top(top: number) {
     if (this._top !== top) {
       this._top = top;
       this.tileIdsNeedsUpdate = true;
     }
   }
 
-  public get top(): number { return this._top; }
+  get top(): number { return this._top; }
 
-  public set left(left: number) {
+  set left(left: number) {
     if (this._left !== left) {
       this._left = left;
       this.tileIdsNeedsUpdate = true;
     }
   }
 
-  public get left(): number { return this._left; }
+  get left(): number { return this._left; }
 
-  public setPosition(left: number, top: number) {
+  setPosition(left: number, top: number) {
     if (this._top !== top || this._left !== left) {
       this._top = top;
       this._left = left;
@@ -60,9 +59,10 @@ export class Map2DGridTile {
     return this;
   }
 
-  public fetchTileIds() {
+  fetchTileIds() {
     if (this.tileIdsNeedsUpdate) {
       this._layer.getTileIdsAt(this._left, this._top, this.width, this.height, this.tileIds);
+      // this._layer.getTileIdsAt(new AABB2(this._left, this._top, this.width, this.height), this.tileIds);
       this.tileIdsNeedsUpdate = false;
     }
     return this;

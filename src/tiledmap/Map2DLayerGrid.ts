@@ -4,15 +4,15 @@ import { Map2DView } from './Map2DView';
 import { TiledMapLayer } from './TiledMapLayer';
 
 export class Map2DLayerGrid {
-  public readonly view: Map2DView;
-  public readonly layer: TiledMapLayer;
+  readonly view: Map2DView;
+  readonly layer: TiledMapLayer;
 
   constructor(view: Map2DView, layer: TiledMapLayer) {
     this.view = view;
     this.layer = layer;
   }
 
-  public update() {
+  update() {
     // I. create visible map tiles (and remove/dispose unvisible)
     //
     const { tilewidth, tileheight } = this.view.tiledMap;

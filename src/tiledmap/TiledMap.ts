@@ -3,7 +3,7 @@ import { ITiledMapLayerData } from './ITiledMapLayerData';
 import { TiledMapLayer } from './TiledMapLayer';
 
 export class TiledMap {
-  public readonly layers: Map<string, TiledMapLayer> = new Map();
+  readonly layers: Map<string, TiledMapLayer> = new Map();
   private readonly data: ITiledMapData;
 
   /**

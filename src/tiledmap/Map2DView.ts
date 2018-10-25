@@ -4,16 +4,16 @@ import { Map2DLayerGrid } from './Map2DLayerGrid';
 import { TiledMap } from './TiledMap';
 
 export class Map2DView {
-  public readonly tiledMap: TiledMap;
-  public readonly scene: THREE.Scene;
+  readonly tiledMap: TiledMap;
+  readonly scene: THREE.Scene;
 
-  public readonly origin: THREE.Vector2;
-  public readonly dimension: THREE.Vector2;
+  readonly origin: THREE.Vector2;
+  readonly dimension: THREE.Vector2;
 
-  public readonly layers: Map2DLayerGrid[] = [];
+  readonly layers: Map2DLayerGrid[] = [];
 
   /**
-   * Represents a 2d view into a tiled map along the x- and y- axis.
+   * Represents a 2D view into a tiled map along the x- and y- axis.
    * The unit of measurement are pixels unless otherwise stated.
    *
    * @param width width
@@ -33,25 +33,25 @@ export class Map2DView {
     }
   }
 
-  public setOrigin(originX: number, originY: number) {
+  setOrigin(originX: number, originY: number) {
     this.origin.set(originX, originY);
   }
 
-  public setDimension(width: number, height: number) {
+  setDimension(width: number, height: number) {
     this.dimension.set(width, height);
   }
 
-  public appendTo(scene: THREE.Scene) {
+  appendTo(scene: THREE.Scene) {
     if (!scene.children.includes(this.scene)) {
       scene.add(this.scene);
     }
   }
 
-  public removeFrom(scene: THREE.Scene) {
+  removeFrom(scene: THREE.Scene) {
     scene.remove(this.scene);
   }
 
-  public update() {
+  update() {
     this.layers.forEach((layer) => layer.update());
   }
 }

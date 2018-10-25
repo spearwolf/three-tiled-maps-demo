@@ -1,10 +1,11 @@
+// import { AABB2 } from './AABB2';
 import { TiledMapLayerChunk } from './TiledMapLayerChunk';
 
 enum Quadrant {
-  NorthEast = 'NorthEast',
-  SouthEast = 'SouthEast',
-  SouthWest = 'SouthWest',
-  NorthWest = 'NorthWest',
+  NorthEast = 'northEast',
+  SouthEast = 'southEast',
+  SouthWest = 'southWest',
+  NorthWest = 'northWest',
 }
 
 type IChunkQuadTreeChildNodes = {
@@ -68,28 +69,28 @@ const findAxis = (chunks: TiledMapLayerChunk[], beforeProp: string, afterProp: s
 };
 
 export class ChunkQuadTreeNode {
-  public originX: number = null;
-  public originY: number = null;
+  originX: number = null;
+  originY: number = null;
 
-  public chunks: TiledMapLayerChunk[];
+  chunks: TiledMapLayerChunk[];
 
-  public isLeaf = true;
+  isLeaf = true;
 
-  public readonly nodes: IChunkQuadTreeChildNodes = {
-    NorthEast: null,
-    NorthWest: null,
-    SouthEast: null,
-    SouthWest: null,
+  readonly nodes: IChunkQuadTreeChildNodes = {
+    northEast: null,
+    northWest: null,
+    southEast: null,
+    southWest: null,
   };
 
   /**
-   * use a right(x) / down(y) coordinate system
+   * Uses a right-handed coordinate system
    */
   constructor(chunks?: TiledMapLayerChunk|TiledMapLayerChunk[]) {
     this.chunks = chunks ? [].concat(chunks) : [];
   }
 
-  public subdivide(maxChunkNodes: number = 2): void {
+  subdivide(maxChunkNodes: number = 2): void {
     if (this.isLeaf && this.chunks.length > 1 && this.chunks.length > maxChunkNodes) {
       const chunks = this.chunks.slice(0);
       const xAxis = findAxis(chunks, 'right', 'left');
@@ -103,15 +104,22 @@ export class ChunkQuadTreeNode {
         this.chunks.length = 0;
         chunks.forEach((chunk) => this.appendChunk(chunk));
 
-        if (this.nodes.NorthEast) { this.nodes.NorthEast.subdivide(maxChunkNodes); }
-        if (this.nodes.NorthWest) { this.nodes.NorthWest.subdivide(maxChunkNodes); }
-        if (this.nodes.SouthEast) { this.nodes.SouthEast.subdivide(maxChunkNodes); }
-        if (this.nodes.SouthWest) { this.nodes.SouthWest.subdivide(maxChunkNodes); }
+        this.subdivideNode(Quadrant.NorthEast, maxChunkNodes);
+        this.subdivideNode(Quadrant.NorthWest, maxChunkNodes);
+        this.subdivideNode(Quadrant.SouthEast, maxChunkNodes);
+        this.subdivideNode(Quadrant.SouthWest, maxChunkNodes);
       }
     }
   }
 
-  public appendChunk(chunk: TiledMapLayerChunk) {
+  private subdivideNode(quadrant: Quadrant, maxChunkNodes: number) {
+    const node = this.nodes[quadrant];
+    if (node) {
+      node.subdivide(maxChunkNodes);
+    }
+  }
+
+  appendChunk(chunk: TiledMapLayerChunk) {
     if (this.isLeaf) {
       this.chunks.push(chunk);
       return;
@@ -138,50 +146,89 @@ export class ChunkQuadTreeNode {
     }
   }
 
-  public findChunksContained(left: number, top: number, width: number, height: number) {
+  private appendToNode(quadrant: Quadrant, chunk: TiledMapLayerChunk) {
+    const node = this.nodes[quadrant];
+    if (node) {
+      node.appendChunk(chunk);
+    } else {
+      this.nodes[quadrant] = new ChunkQuadTreeNode(chunk);
+    }
+  }
+
+  // tslint:disable-next-line:cognitive-complexity
+  findVisibleChunks(left: number, top: number, width: number, height: number) {
     const right = left + width;
     const bottom = top + height;
     const { originX, originY } = this;
-    let chunks = this.chunks.filter((chunk) => chunk.intersects(left, top, width, height));
-    const { NorthWest } = this.nodes;
-    if (NorthWest && (right <= originX || left <= originX) && (top <= originY || bottom <= originY)) {
-      chunks = chunks.concat(NorthWest.findChunksContained(left, top, width, height));
+
+    let chunks = this.chunks.filter((chunk) => chunk.isIntersecting(left, top, width, height));
+
+    const { northWest } = this.nodes;
+    if (northWest && (right <= originX || left <= originX) && (top <= originY || bottom <= originY)) {
+      chunks = chunks.concat(northWest.findVisibleChunks(left, top, width, height));
     }
-    const { NorthEast } = this.nodes;
-    if (NorthEast && (right >= originX || left >= originX) && (top <= originY || bottom <= originY)) {
-      chunks = chunks.concat(NorthEast.findChunksContained(left, top, width, height));
+    const { northEast } = this.nodes;
+    if (northEast && (right >= originX || left >= originX) && (top <= originY || bottom <= originY)) {
+      chunks = chunks.concat(northEast.findVisibleChunks(left, top, width, height));
     }
-    const { SouthEast } = this.nodes;
-    if (SouthEast && (right >= originX || left >= originX) && (top >= originY || bottom >= originY)) {
-      chunks = chunks.concat(SouthEast.findChunksContained(left, top, width, height));
+    const { southEast } = this.nodes;
+    if (southEast && (right >= originX || left >= originX) && (top >= originY || bottom >= originY)) {
+      chunks = chunks.concat(southEast.findVisibleChunks(left, top, width, height));
     }
-    const { SouthWest } = this.nodes;
-    if (SouthWest && (right <= originX || left <= originX) && (top >= originY || bottom >= originY)) {
-      chunks = chunks.concat(SouthWest.findChunksContained(left, top, width, height));
+    const { southWest } = this.nodes;
+    if (southWest && (right <= originX || left <= originX) && (top >= originY || bottom >= originY)) {
+      chunks = chunks.concat(southWest.findVisibleChunks(left, top, width, height));
     }
+
     return chunks;
   }
 
-  public findChunksAt(x: number, y: number): TiledMapLayerChunk[] {
+  // findVisibleChunks(aabb: AABB2) {
+  //   const { originX, originY } = this;
+  //   const { top, left, bottom, right } = aabb;
+
+  //   let chunks = this.chunks.filter((chunk) => chunk.isIntersecting(aabb));
+
+  //   const { northWest } = this.nodes;
+  //   if (northWest && (right <= originX || left <= originX) && (top <= originY || bottom <= originY)) {
+  //     chunks = chunks.concat(northWest.findVisibleChunks(aabb));
+  //   }
+  //   const { northEast } = this.nodes;
+  //   if (northEast && (right >= originX || left >= originX) && (top <= originY || bottom <= originY)) {
+  //     chunks = chunks.concat(northEast.findVisibleChunks(aabb));
+  //   }
+  //   const { southEast } = this.nodes;
+  //   if (southEast && (right >= originX || left >= originX) && (top >= originY || bottom >= originY)) {
+  //     chunks = chunks.concat(southEast.findVisibleChunks(aabb));
+  //   }
+  //   const { southWest } = this.nodes;
+  //   if (southWest && (right <= originX || left <= originX) && (top >= originY || bottom >= originY)) {
+  //     chunks = chunks.concat(southWest.findVisibleChunks(aabb));
+  //   }
+
+  //   return chunks;
+  // }
+
+  findChunksAt(x: number, y: number): TiledMapLayerChunk[] {
     const chunks: TiledMapLayerChunk[] = this.chunks.filter((chunk: TiledMapLayerChunk) => chunk.containsTileIdAt(x, y));
     let moreChunks: TiledMapLayerChunk[] = null;
     if (x < this.originX) {
       if (y < this.originY) {
-        moreChunks = this.nodes.NorthWest.findChunksAt(x, y);
+        moreChunks = this.nodes.northWest.findChunksAt(x, y);
       } else {
-        moreChunks = this.nodes.SouthWest.findChunksAt(x, y);
+        moreChunks = this.nodes.southWest.findChunksAt(x, y);
       }
     } else {
       if (y < this.originY) {
-        moreChunks = this.nodes.NorthEast.findChunksAt(x, y);
+        moreChunks = this.nodes.northEast.findChunksAt(x, y);
       } else {
-        moreChunks = this.nodes.SouthEast.findChunksAt(x, y);
+        moreChunks = this.nodes.southEast.findChunksAt(x, y);
       }
     }
     return chunks.concat(moreChunks);
   }
 
-  public toDebugJson(): object|string {
+  toDebugJson(): object|string {
     if (this.isLeaf) {
       return this.chunks.map((chunk) => chunk.rawData).join(', ');
     }
@@ -192,19 +239,10 @@ export class ChunkQuadTreeNode {
     if (this.chunks.length) {
       out._chunks = this.chunks.map((chunk) => chunk.rawData).join(', ');
     }
-    if (this.nodes.NorthEast) { out.NorthEast = this.nodes.NorthEast.toDebugJson(); }
-    if (this.nodes.NorthWest) { out.NorthWest = this.nodes.NorthWest.toDebugJson(); }
-    if (this.nodes.SouthEast) { out.SouthEast = this.nodes.SouthEast.toDebugJson(); }
-    if (this.nodes.SouthWest) { out.SouthWest = this.nodes.SouthWest.toDebugJson(); }
+    if (this.nodes.northEast) { out.NorthEast = this.nodes.northEast.toDebugJson(); }
+    if (this.nodes.northWest) { out.NorthWest = this.nodes.northWest.toDebugJson(); }
+    if (this.nodes.southEast) { out.SouthEast = this.nodes.southEast.toDebugJson(); }
+    if (this.nodes.southWest) { out.SouthWest = this.nodes.southWest.toDebugJson(); }
     return out;
-  }
-
-  private appendToNode(quadrant: Quadrant, chunk: TiledMapLayerChunk) {
-    const node = this.nodes[quadrant];
-    if (node) {
-      node.appendChunk(chunk);
-    } else {
-      this.nodes[quadrant] = new ChunkQuadTreeNode(chunk);
-    }
   }
 }
