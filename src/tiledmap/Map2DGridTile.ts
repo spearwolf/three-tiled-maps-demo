@@ -2,7 +2,8 @@ import { IMap2DLayer } from './IMap2DLayer';
 
 /**
  * Represents a specific 2d section (a *grid tile*) of a Map2DLayerGrid.
- * Holds a group of *tile ids*.
+ * Holds a set of *tile ids*.
+ *
  * The unit of measurement are *tiles* unless otherwise stated.
  */
 export class Map2DGridTile {
@@ -17,12 +18,12 @@ export class Map2DGridTile {
   gridTileTop: number;
 
   /**
-   * View position in *pixels*
+   * View position offset in *pixels*
    */
   viewOffsetX: number;
 
   /**
-   * View position in *pixels*
+   * View position offset in *pixels*
    */
   viewOffsetY: number;
 
