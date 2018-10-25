@@ -1,4 +1,3 @@
-// import { AABB2 } from '../AABB2';
 import { TiledMap } from '../TiledMap';
 import { TiledMapLayer } from '../TiledMapLayer';
 
@@ -24,8 +23,7 @@ describe('loadTiledMap', () => {
     });
 
     it('layer#main->getTileIdsAt(-1, -2, 4, 6)', () => {
-      // expect(Array.from(tm.layers.get('main').getTileIdsAt(new AABB2(-1, -2, 4, 6)))).toEqual([
-      expect(Array.from(tm.layers.get('main').getTileIdsAt(-1, -2, 4, 6))).toEqual([
+      expect(Array.from(tm.layers.get('main').getTileIdsWithin(-1, -2, 4, 6))).toEqual([
         2, 2, 7, 1,
         13, 2, 7, 1,
         2, 2, 7, 1,
@@ -51,8 +49,7 @@ describe('loadTiledMap', () => {
     });
 
     it('layer#main->getTileIdsAt(-1, 0, 4, 6)', () => {
-      // expect(Array.from(tm.layers.get('main').getTileIdsAt(new AABB2(-1, 0, 4, 6)))).toEqual([
-      expect(Array.from(tm.layers.get('main').getTileIdsAt(-1, 0, 4, 6))).toEqual([
+      expect(Array.from(tm.layers.get('main').getTileIdsWithin(-1, 0, 4, 6))).toEqual([
         2, 2, 7, 1,
         2, 2, 7, 1,
         4, 4, 1, 1,
@@ -63,8 +60,7 @@ describe('loadTiledMap', () => {
     });
 
     it('layer#main->getTileIdsAt(unreachable)', () => {
-      // expect(Array.from(tm.layers.get('main').getTileIdsAt(new AABB2(10000, 20000, 3, 2)))).toEqual([
-      expect(Array.from(tm.layers.get('main').getTileIdsAt(10000, 20000, 3, 2))).toEqual([
+      expect(Array.from(tm.layers.get('main').getTileIdsWithin(10000, 20000, 3, 2))).toEqual([
         0, 0, 0,
         0, 0, 0,
       ]);

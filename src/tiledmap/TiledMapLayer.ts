@@ -30,7 +30,7 @@ export class TiledMapLayer {
   /**
    * Uses a right-handed coordinate system.
    */
-  getTileIdsAt(left: number, top: number, width: number, height: number, uint32arr?: Uint32Array): Uint32Array {
+  getTileIdsWithin(left: number, top: number, width: number, height: number, uint32arr?: Uint32Array): Uint32Array {
     const arr = uint32arr || new Uint32Array(width * height);
     const chunks = this.rootNode.findVisibleChunks(new AABB2(left, top, width, height));
 

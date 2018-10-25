@@ -1,4 +1,3 @@
-// import { AABB2 } from './AABB2';
 import { TiledMapLayer } from './TiledMapLayer';
 
 export class Map2DGridTile {
@@ -61,8 +60,7 @@ export class Map2DGridTile {
 
   fetchTileIds() {
     if (this.tileIdsNeedsUpdate) {
-      this._layer.getTileIdsAt(this._left, this._top, this.width, this.height, this.tileIds);
-      // this._layer.getTileIdsAt(new AABB2(this._left, this._top, this.width, this.height), this.tileIds);
+      this._layer.getTileIdsWithin(this._left, this._top, this.width, this.height, this.tileIds);
       this.tileIdsNeedsUpdate = false;
     }
     return this;
