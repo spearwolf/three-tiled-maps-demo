@@ -155,31 +155,55 @@ export class ChunkQuadTreeNode {
     }
   }
 
-  // tslint:disable-next-line:cognitive-complexity
   findVisibleChunks(aabb: AABB2) {
-    const { originX, originY } = this;
-    const { top, left, bottom, right } = aabb;
-
     let chunks = this.chunks.filter((chunk) => chunk.isIntersecting(aabb));
 
-    const { northWest } = this.nodes;
-    if (northWest && (right <= originX || left <= originX) && (top <= originY || bottom <= originY)) {
-      chunks = chunks.concat(northWest.findVisibleChunks(aabb));
+    if (this.isNorthWest(aabb)) {
+      chunks = chunks.concat(this.nodes.northWest.findVisibleChunks(aabb));
     }
-    const { northEast } = this.nodes;
-    if (northEast && (right >= originX || left >= originX) && (top <= originY || bottom <= originY)) {
-      chunks = chunks.concat(northEast.findVisibleChunks(aabb));
+    if (this.isNorthEast(aabb)) {
+      chunks = chunks.concat(this.nodes.northEast.findVisibleChunks(aabb));
     }
-    const { southEast } = this.nodes;
-    if (southEast && (right >= originX || left >= originX) && (top >= originY || bottom >= originY)) {
-      chunks = chunks.concat(southEast.findVisibleChunks(aabb));
+    if (this.isSouthEast(aabb)) {
+      chunks = chunks.concat(this.nodes.southEast.findVisibleChunks(aabb));
     }
-    const { southWest } = this.nodes;
-    if (southWest && (right <= originX || left <= originX) && (top >= originY || bottom >= originY)) {
-      chunks = chunks.concat(southWest.findVisibleChunks(aabb));
+    if (this.isSouthWest(aabb)) {
+      chunks = chunks.concat(this.nodes.southWest.findVisibleChunks(aabb));
     }
 
     return chunks;
+  }
+
+  isNorthWest(aabb: AABB2) {
+    return (
+      this.nodes.northWest &&
+        (aabb.right <= this.originX || aabb.left <= this.originX) &&
+        (aabb.top <= this.originY || aabb.bottom <= this.originY)
+    );
+  }
+
+  isNorthEast(aabb: AABB2) {
+    return (
+      this.nodes.northEast &&
+        (aabb.right >= this.originX || aabb.left >= this.originX) &&
+        (aabb.top <= this.originY || aabb.bottom <= this.originY)
+      );
+  }
+
+  isSouthEast(aabb: AABB2) {
+    return (
+      this.nodes.southEast &&
+        (aabb.right >= this.originX || aabb.left >= this.originX) &&
+        (aabb.top >= this.originY || aabb.bottom >= this.originY)
+      );
+  }
+
+  isSouthWest(aabb: AABB2) {
+    return (
+      this.nodes.southWest &&
+        (aabb.right <= this.originX || aabb.left <= this.originX) &&
+        (aabb.top >= this.originY || aabb.bottom >= this.originY)
+      );
   }
 
   findChunksAt(x: number, y: number): TiledMapLayerChunk[] {
