@@ -1,18 +1,25 @@
 import { AABB2 } from './AABB2';
 import { ChunkQuadTreeNode } from './ChunkQuadTreeNode';
+import { IMap2DLayer } from './IMap2DLayer';
 import { ITiledMapLayerChunkData } from './ITiledMapLayerChunkData';
 import { ITiledMapLayerData } from './ITiledMapLayerData';
+import { TiledMap } from './TiledMap';
 import { TiledMapLayerChunk } from './TiledMapLayerChunk';
 
 const findChunk = (chunks: TiledMapLayerChunk[], x: number, y: number): TiledMapLayerChunk => {
   return chunks.find((chunk: TiledMapLayerChunk) => chunk.containsTileIdAt(x, y));
 };
 
-export class TiledMapLayer {
+/**
+ * Represents a specific layer of a TiledMap.
+ */
+export class TiledMapLayer implements IMap2DLayer {
+  private readonly tiledMap: TiledMap;
   private readonly data: ITiledMapLayerData;
   private readonly rootNode: ChunkQuadTreeNode;
 
-  constructor(data: ITiledMapLayerData, autoSubdivide: boolean = true) {
+  constructor(tiledMap: TiledMap, data: ITiledMapLayerData, autoSubdivide: boolean = true) {
+    this.tiledMap = tiledMap;
     this.data = data;
     const chunks: TiledMapLayerChunk[] = data.chunks.map((chunkData: ITiledMapLayerChunkData) => new TiledMapLayerChunk(chunkData));
     this.rootNode = new ChunkQuadTreeNode(chunks);
@@ -23,13 +30,13 @@ export class TiledMapLayer {
 
   get name() { return this.data.name; }
 
+  get tileWidth() { return this.tiledMap.tilewidth; }
+  get tileHeight() { return this.tiledMap.tileheight; }
+
   subdivide(maxChunkPerNodes: number = 2) {
     this.rootNode.subdivide(maxChunkPerNodes);
   }
 
-  /**
-   * Uses a right-handed coordinate system.
-   */
   getTileIdsWithin(left: number, top: number, width: number, height: number, uint32arr?: Uint32Array): Uint32Array {
     const arr = uint32arr || new Uint32Array(width * height);
     const chunks = this.rootNode.findVisibleChunks(new AABB2(left, top, width, height));

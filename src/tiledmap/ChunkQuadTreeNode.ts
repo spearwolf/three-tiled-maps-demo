@@ -90,8 +90,12 @@ export class ChunkQuadTreeNode {
     this.chunks = chunks ? [].concat(chunks) : [];
   }
 
+  canSubdivide() {
+    return this.isLeaf && this.chunks.length > 1;
+  }
+
   subdivide(maxChunkNodes: number = 2): void {
-    if (this.isLeaf && this.chunks.length > 1 && this.chunks.length > maxChunkNodes) {
+    if (this.canSubdivide() && this.chunks.length > maxChunkNodes) {
       const chunks = this.chunks.slice(0);
       const xAxis = findAxis(chunks, 'right', 'left');
       const yAxis = findAxis(chunks, 'bottom', 'top');
@@ -104,15 +108,15 @@ export class ChunkQuadTreeNode {
         this.chunks.length = 0;
         chunks.forEach((chunk) => this.appendChunk(chunk));
 
-        this.subdivideNode(Quadrant.NorthEast, maxChunkNodes);
-        this.subdivideNode(Quadrant.NorthWest, maxChunkNodes);
-        this.subdivideNode(Quadrant.SouthEast, maxChunkNodes);
-        this.subdivideNode(Quadrant.SouthWest, maxChunkNodes);
+        this.subdivideQuadrant(Quadrant.NorthEast, maxChunkNodes);
+        this.subdivideQuadrant(Quadrant.NorthWest, maxChunkNodes);
+        this.subdivideQuadrant(Quadrant.SouthEast, maxChunkNodes);
+        this.subdivideQuadrant(Quadrant.SouthWest, maxChunkNodes);
       }
     }
   }
 
-  private subdivideNode(quadrant: Quadrant, maxChunkNodes: number) {
+  private subdivideQuadrant(quadrant: Quadrant, maxChunkNodes: number) {
     const node = this.nodes[quadrant];
     if (node) {
       node.subdivide(maxChunkNodes);
@@ -175,35 +179,19 @@ export class ChunkQuadTreeNode {
   }
 
   isNorthWest(aabb: AABB2) {
-    return (
-      this.nodes.northWest &&
-        (aabb.right <= this.originX || aabb.left <= this.originX) &&
-        (aabb.top <= this.originY || aabb.bottom <= this.originY)
-    );
+    return this.nodes.northWest && aabb.isNorthWest(this.originX, this.originY);
   }
 
   isNorthEast(aabb: AABB2) {
-    return (
-      this.nodes.northEast &&
-        (aabb.right >= this.originX || aabb.left >= this.originX) &&
-        (aabb.top <= this.originY || aabb.bottom <= this.originY)
-      );
+    return this.nodes.northEast && aabb.isNorthEast(this.originX, this.originY);
   }
 
   isSouthEast(aabb: AABB2) {
-    return (
-      this.nodes.southEast &&
-        (aabb.right >= this.originX || aabb.left >= this.originX) &&
-        (aabb.top >= this.originY || aabb.bottom >= this.originY)
-      );
+    return this.nodes.southEast && aabb.isSouthEast(this.originX, this.originY);
   }
 
   isSouthWest(aabb: AABB2) {
-    return (
-      this.nodes.southWest &&
-        (aabb.right <= this.originX || aabb.left <= this.originX) &&
-        (aabb.top >= this.originY || aabb.bottom >= this.originY)
-      );
+    return this.nodes.southWest && aabb.isSouthWest(this.originX, this.originY);
   }
 
   findChunksAt(x: number, y: number): TiledMapLayerChunk[] {

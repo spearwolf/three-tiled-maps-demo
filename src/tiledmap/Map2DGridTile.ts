@@ -1,5 +1,10 @@
 import { TiledMapLayer } from './TiledMapLayer';
 
+/**
+ * Represents a specific 2d section (a *grid tile*) of a Map2DLayerGrid.
+ * Holds a group of *tile ids*.
+ * The unit of measurement are *tiles* unless otherwise stated.
+ */
 export class Map2DGridTile {
   readonly width: number;
   readonly height: number;

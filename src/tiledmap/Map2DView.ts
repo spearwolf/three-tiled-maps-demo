@@ -1,10 +1,15 @@
 import * as THREE from 'three';
 
+import { IMap2DLayer } from './IMap2DLayer';
 import { Map2DLayerGrid } from './Map2DLayerGrid';
-import { TiledMap } from './TiledMap';
 
+/**
+ * Represents a 2d section in a 2d map along the x- and y- axis.
+ * A 2d map is defined by one or more layers.
+ *
+ * The unit of measurement are *pixels* unless otherwise stated.
+ */
 export class Map2DView {
-  readonly tiledMap: TiledMap;
   readonly scene: THREE.Scene;
 
   readonly origin: THREE.Vector2;
@@ -13,24 +18,22 @@ export class Map2DView {
   readonly layers: Map2DLayerGrid[] = [];
 
   /**
-   * Represents a 2D view into a tiled map along the x- and y- axis.
-   * The unit of measurement are pixels unless otherwise stated.
-   *
    * @param width width
    * @param height height
    * @param originX horizontal center position
    * @param originY vertical center position
    */
-  constructor(tiledMap: TiledMap, width: number, height: number, originX: number, originY: number) {
-    this.tiledMap = tiledMap;
+  constructor(width: number, height: number, originX: number, originY: number, layers?: IMap2DLayer[]) {
     this.dimension = new THREE.Vector2(width, height);
     this.origin = new THREE.Vector2(originX, originY);
-
     this.scene = new THREE.Scene();
-
-    for (const layer of tiledMap.layers.values()) {
-      this.layers.push(new Map2DLayerGrid(this, layer));
+    if (layers) {
+      layers.forEach((layer: IMap2DLayer) => this.appendLayer(new Map2DLayerGrid(this, layer)));
     }
+  }
+
+  appendLayer(layer: Map2DLayerGrid) {
+    this.layers.push(layer);
   }
 
   setOrigin(originX: number, originY: number) {

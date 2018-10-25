@@ -1,13 +1,16 @@
 import * as THREE from 'three';
 
+import { IMap2DLayer } from './IMap2DLayer';
 import { Map2DView } from './Map2DView';
-import { TiledMapLayer } from './TiledMapLayer';
 
+/**
+ * Represents a grid of *grid tiles* (see Map2DGridTile) for a specific layer.
+ */
 export class Map2DLayerGrid {
   readonly view: Map2DView;
-  readonly layer: TiledMapLayer;
+  readonly layer: IMap2DLayer;
 
-  constructor(view: Map2DView, layer: TiledMapLayer) {
+  constructor(view: Map2DView, layer: IMap2DLayer) {
     this.view = view;
     this.layer = layer;
   }
@@ -15,8 +18,8 @@ export class Map2DLayerGrid {
   update() {
     // I. create visible map tiles (and remove/dispose unvisible)
     //
-    const { tilewidth, tileheight } = this.view.tiledMap;
-    const tileSize = new THREE.Vector2(tilewidth, tileheight);
+    const { tileWidth, tileHeight } = this.layer;
+    const tileSize = new THREE.Vector2(tileWidth, tileHeight);
 
     const halfDimension = this.view.dimension.clone();
     halfDimension.multiplyScalar(0.5);

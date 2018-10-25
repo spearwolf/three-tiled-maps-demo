@@ -44,4 +44,32 @@ export class AABB2 {
       aabb.top >= this.bottom
     );
   }
+
+  isNorthWest(x: number, y: number) {
+    return (
+      (this.right <= x || this.left < x) &&
+      (this.top < y || this.bottom <= y)
+    );
+  }
+
+  isNorthEast(x: number, y: number) {
+    return (
+      (this.right > x || this.left >= x) &&
+      (this.top < y || this.bottom <= y)
+    );
+  }
+
+  isSouthEast(x: number, y: number) {
+    return (
+      (this.right > x || this.left >= x) &&
+      (this.top >= y || this.bottom > y)
+    );
+  }
+
+  isSouthWest(x: number, y: number) {
+    return (
+      (this.right <= x || this.left < x) &&
+      (this.top >= y || this.bottom > y)
+    );
+  }
 }

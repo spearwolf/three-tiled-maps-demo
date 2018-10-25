@@ -77,12 +77,12 @@ scene.add(new THREE.Mesh(geometry, meshMaterial));
 
 loadTiledMap('./maps/180917-a-first-map.json').then((tiledMap: TiledMap) => {
   console.log('tiledMap', tiledMap);
-  console.log('(-1,0)->(4,6)', tiledMap.layers.get('main').getTileIdsAt(-1, 0, 4, 6));
+  console.log('(-1,0)->(4,6)', tiledMap.getLayer('main').getTileIdsWithin(-1, 0, 4, 6));
 
-  const tile = new Map2DGridTile(tiledMap.layers.get('main'), 2, 2).setPosition(10, 0).fetchTileIds();
+  const tile = new Map2DGridTile(tiledMap.getLayer('main'), 2, 2).setPosition(10, 0).fetchTileIds();
   console.log('(10,0)->(2,2)', tile);
 
-  const view = new Map2DView(tiledMap, 320, 240, 0, 0);
+  const view = new Map2DView(320, 240, 0, 0, tiledMap.getAllLayers());
   view.appendTo(scene);
   view.update();
 });

@@ -17,13 +17,13 @@ describe('loadTiledMap', () => {
     });
 
     it('has "main" layer', () => {
-      const layer = tm.layers.get('main');
+      const layer = tm.getLayer('main');
       expect(layer).toBeInstanceOf(TiledMapLayer);
       expect(layer.name).toBe('main');
     });
 
     it('layer#main->getTileIdsAt(-1, -2, 4, 6)', () => {
-      expect(Array.from(tm.layers.get('main').getTileIdsWithin(-1, -2, 4, 6))).toEqual([
+      expect(Array.from(tm.getLayer('main').getTileIdsWithin(-1, -2, 4, 6))).toEqual([
         2, 2, 7, 1,
         13, 2, 7, 1,
         2, 2, 7, 1,
@@ -43,13 +43,13 @@ describe('loadTiledMap', () => {
     });
 
     it('has "main" layer', () => {
-      const layer = tm.layers.get('main');
+      const layer = tm.getLayer('main');
       expect(layer).toBeInstanceOf(TiledMapLayer);
       expect(layer.name).toBe('main');
     });
 
     it('layer#main->getTileIdsAt(-1, 0, 4, 6)', () => {
-      expect(Array.from(tm.layers.get('main').getTileIdsWithin(-1, 0, 4, 6))).toEqual([
+      expect(Array.from(tm.getLayer('main').getTileIdsWithin(-1, 0, 4, 6))).toEqual([
         2, 2, 7, 1,
         2, 2, 7, 1,
         4, 4, 1, 1,
@@ -60,7 +60,7 @@ describe('loadTiledMap', () => {
     });
 
     it('layer#main->getTileIdsAt(unreachable)', () => {
-      expect(Array.from(tm.layers.get('main').getTileIdsWithin(10000, 20000, 3, 2))).toEqual([
+      expect(Array.from(tm.getLayer('main').getTileIdsWithin(10000, 20000, 3, 2))).toEqual([
         0, 0, 0,
         0, 0, 0,
       ]);

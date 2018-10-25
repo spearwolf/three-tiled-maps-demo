@@ -3,16 +3,16 @@ import { ITiledMapLayerData } from './ITiledMapLayerData';
 import { TiledMapLayer } from './TiledMapLayer';
 
 export class TiledMap {
-  readonly layers: Map<string, TiledMapLayer> = new Map();
+  private readonly layerMap: Map<string, TiledMapLayer> = new Map();
   private readonly data: ITiledMapData;
 
   /**
-   * assume tiled map orientation is orthogonal and infinite is true.
+   * Assume tiled map orientation is orthogonal and infinite is true.
    */
   constructor(data: ITiledMapData) {
     this.data = data;
     data.layers.forEach((layerData: ITiledMapLayerData) => {
-      this.layers.set(layerData.name, new TiledMapLayer(layerData));
+      this.layerMap.set(layerData.name, new TiledMapLayer(this, layerData));
     });
     if (!this.infinite) {
       throw new Error(`TiledMap: sorry only infinite === true maps are supported yet`);
@@ -28,4 +28,7 @@ export class TiledMap {
 
   get tilewidth() { return this.data.tilewidth; }
   get tileheight() { return this.data.tileheight; }
+
+  getLayer(name: string) { return this.layerMap.get(name); }
+  getAllLayers(): TiledMapLayer[] { return Array.from(this.layerMap.values()); }
 }
