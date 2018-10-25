@@ -4,55 +4,33 @@
  * Uses a right-handed coordinate system.
  */
 export class AABB2 {
-  minX: number;
-  maxX: number;
-  minY: number;
-  maxY: number;
+  left: number;
+  top: number;
+  width: number;
+  height: number;
 
   constructor(left: number, top: number, width: number, height: number) {
-    this.minX = left;
-    this.maxX = left + width;
-    this.minY = top;
-    this.maxY = top + height;
+    this.left = left;
+    this.top = top;
+    this.width = width;
+    this.height = height;
   }
 
   clone() {
     return new AABB2(this.left, this.top, this.width, this.height);
   }
 
-  get left() { return this.minX; }
-  get top() { return this.minY; }
-  get right() { return this.maxX; }
-  get bottom() { return this.maxY; }
+  get right() { return this.left + this.width; }
+  get bottom() { return this.top + this.height; }
 
-  get width() { return this.maxX + this.minX; }
-  get height() { return this.maxY + this.minY; }
-
-  get centerX() { return this.minX + ((this.maxX - this.minX) / 2); }
-  get centerY() { return this.minY + ((this.maxY - this.minY) / 2); }
-
-  /**
-   * Extend the boundary box.
-   */
-  addPoint(x: number, y: number) {
-    if (x < this.minX) {
-      this.minX = x;
-    } else if (x > this.maxX) {
-      this.maxX = x;
-    }
-
-    if (y < this.minY) {
-      this.minY = y;
-    } else if (y > this.maxY) {
-      this.maxY = y;
-    }
-  }
+  get centerX() { return this.left + (this.width / 2); }
+  get centerY() { return this.top + (this.height / 2); }
 
   /**
    * @return Return `true` if point is within
    */
   isInside(x: number, y: number) {
-    return x >= this.minX && x < this.maxX && y >= this.minY && y < this.maxY;
+    return this.left <= x && x < this.right && this.top <= y && y < this.bottom;
   }
 
   /**
@@ -60,10 +38,10 @@ export class AABB2 {
    */
   isIntersecting(aabb: AABB2) {
     return !(
-      aabb.maxX <= this.minX ||
-      aabb.minX >= this.maxX ||
-      aabb.maxY <= this.minY ||
-      aabb.minY >= this.maxY
+      aabb.right <= this.left ||
+      aabb.left >= this.right ||
+      aabb.bottom <= this.top ||
+      aabb.top >= this.bottom
     );
   }
 }

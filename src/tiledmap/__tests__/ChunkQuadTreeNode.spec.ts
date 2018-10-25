@@ -1,4 +1,4 @@
-// import { AABB2 } from '../AABB2';
+import { AABB2 } from '../AABB2';
 import { ChunkQuadTreeNode } from '../ChunkQuadTreeNode';
 import { TiledMapLayerChunk } from '../TiledMapLayerChunk';
 
@@ -113,21 +113,19 @@ describe('ChunkQuadTreeNode', () => {
     });
 
     it('find chunks contained: (2, 4)[6, 4]', () => {
-      // expect(chunkNodeNames(node.findVisibleChunks(new AABB2(2, 4, 6, 4)))).toEqual(['K', 'L', 'O', 'P'].sort());
-      expect(chunkNodeNames(node.findVisibleChunks(2, 4, 6, 4))).toEqual(['K', 'L', 'O', 'P'].sort());
+      expect(chunkNodeNames(node.findVisibleChunks(new AABB2(2, 4, 6, 4)))).toEqual(['K', 'L', 'O', 'P'].sort());
     });
 
     it('find chunks contained: (-2, -2)[5, 5]', () => {
-      expect(chunkNodeNames(node.findVisibleChunks(-2, -2, 5, 5))).toEqual(['F', 'G', 'J', 'K'].sort());
+      expect(chunkNodeNames(node.findVisibleChunks(new AABB2(-2, -2, 5, 5)))).toEqual(['F', 'G', 'J', 'K'].sort());
     });
 
     it('find chunks contained: (-9, -8)[2, 2]', () => {
-      expect(chunkNodeNames(node.findVisibleChunks(-9, -8, 2, 2))).toEqual(['A'].sort());
+      expect(chunkNodeNames(node.findVisibleChunks(new AABB2(-9, -8, 2, 2)))).toEqual(['A'].sort());
     });
 
     it('find chunks contained: (-20, -20)[2, 2]', () => {
-      // expect(node.findVisibleChunks(new AABB2(-20, -20, 2, 2))).toHaveLength(0);
-      expect(node.findVisibleChunks(-20, -20, 2, 2)).toHaveLength(0);
+      expect(node.findVisibleChunks(new AABB2(-20, -20, 2, 2))).toHaveLength(0);
     });
   });
 });

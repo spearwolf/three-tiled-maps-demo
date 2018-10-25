@@ -1,4 +1,4 @@
-// import { AABB2 } from './AABB2';
+import { AABB2 } from './AABB2';
 import { TiledMapLayerChunk } from './TiledMapLayerChunk';
 
 enum Quadrant {
@@ -156,58 +156,31 @@ export class ChunkQuadTreeNode {
   }
 
   // tslint:disable-next-line:cognitive-complexity
-  findVisibleChunks(left: number, top: number, width: number, height: number) {
-    const right = left + width;
-    const bottom = top + height;
+  findVisibleChunks(aabb: AABB2) {
     const { originX, originY } = this;
+    const { top, left, bottom, right } = aabb;
 
-    let chunks = this.chunks.filter((chunk) => chunk.isIntersecting(left, top, width, height));
+    let chunks = this.chunks.filter((chunk) => chunk.isIntersecting(aabb));
 
     const { northWest } = this.nodes;
     if (northWest && (right <= originX || left <= originX) && (top <= originY || bottom <= originY)) {
-      chunks = chunks.concat(northWest.findVisibleChunks(left, top, width, height));
+      chunks = chunks.concat(northWest.findVisibleChunks(aabb));
     }
     const { northEast } = this.nodes;
     if (northEast && (right >= originX || left >= originX) && (top <= originY || bottom <= originY)) {
-      chunks = chunks.concat(northEast.findVisibleChunks(left, top, width, height));
+      chunks = chunks.concat(northEast.findVisibleChunks(aabb));
     }
     const { southEast } = this.nodes;
     if (southEast && (right >= originX || left >= originX) && (top >= originY || bottom >= originY)) {
-      chunks = chunks.concat(southEast.findVisibleChunks(left, top, width, height));
+      chunks = chunks.concat(southEast.findVisibleChunks(aabb));
     }
     const { southWest } = this.nodes;
     if (southWest && (right <= originX || left <= originX) && (top >= originY || bottom >= originY)) {
-      chunks = chunks.concat(southWest.findVisibleChunks(left, top, width, height));
+      chunks = chunks.concat(southWest.findVisibleChunks(aabb));
     }
 
     return chunks;
   }
-
-  // findVisibleChunks(aabb: AABB2) {
-  //   const { originX, originY } = this;
-  //   const { top, left, bottom, right } = aabb;
-
-  //   let chunks = this.chunks.filter((chunk) => chunk.isIntersecting(aabb));
-
-  //   const { northWest } = this.nodes;
-  //   if (northWest && (right <= originX || left <= originX) && (top <= originY || bottom <= originY)) {
-  //     chunks = chunks.concat(northWest.findVisibleChunks(aabb));
-  //   }
-  //   const { northEast } = this.nodes;
-  //   if (northEast && (right >= originX || left >= originX) && (top <= originY || bottom <= originY)) {
-  //     chunks = chunks.concat(northEast.findVisibleChunks(aabb));
-  //   }
-  //   const { southEast } = this.nodes;
-  //   if (southEast && (right >= originX || left >= originX) && (top >= originY || bottom >= originY)) {
-  //     chunks = chunks.concat(southEast.findVisibleChunks(aabb));
-  //   }
-  //   const { southWest } = this.nodes;
-  //   if (southWest && (right <= originX || left <= originX) && (top >= originY || bottom >= originY)) {
-  //     chunks = chunks.concat(southWest.findVisibleChunks(aabb));
-  //   }
-
-  //   return chunks;
-  // }
 
   findChunksAt(x: number, y: number): TiledMapLayerChunk[] {
     const chunks: TiledMapLayerChunk[] = this.chunks.filter((chunk: TiledMapLayerChunk) => chunk.containsTileIdAt(x, y));
