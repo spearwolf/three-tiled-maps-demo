@@ -68,7 +68,7 @@ export class Map2DLayerGrid {
 
     // II. create geometries for all *new* map tiles
     //
-    const previousGridTiles = this.gridTiles.slice(0);
+    const prevGridTiles = this.gridTiles.slice(0);
     const newTiles: Map2DGridTile[] = [];
     const knownTiles: Map2DGridTile[] = [];
 
@@ -76,8 +76,9 @@ export class Map2DLayerGrid {
       for (let xOffset = 0; xOffset < sizes.x; ++xOffset) {
         const x = topLeft.x + xOffset;
         const y = topLeft.y + yOffset;
-        let tile = takeFrom(previousGridTiles, x, y);
+        let tile = takeFrom(prevGridTiles, x, y);
         if (!tile) {
+          // maybe re-use obsolete tiles?
           tile = new Map2DGridTile(this.layer, this.gridTileColumns, this.gridTileRows);
           tile.setGridTilePosition(x, y);
           tile.setPosition(x * this.gridTileColumns, y * this.gridTileRows);

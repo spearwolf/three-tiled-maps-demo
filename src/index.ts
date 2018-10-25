@@ -82,7 +82,8 @@ loadTiledMap('./maps/180917-a-first-map.json').then((tiledMap: TiledMap) => {
   const tile = new Map2DGridTile(tiledMap.getLayer('main'), 2, 2).setPosition(10, 0).fetchTileIds();
   console.log('(10,0)->(2,2)', tile);
 
-  const view = new Map2DView(320, 200, 0, 0, 100, 100, tiledMap.getAllLayers());
+  const view = new Map2DView(320, 200, 0, 0, 100, 100);
+  view.appendLayer(...tiledMap.getAllLayers());
   view.appendTo(scene);
   view.update();
   view.update();
