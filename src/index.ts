@@ -87,7 +87,7 @@ loadTiledMap('./maps/180917-a-first-map.json').then((tiledMap: TiledMap) => {
   const map2dRenderer = new Map2DSceneTHREE();
   map2dRenderer.appendTo(scene);
 
-  const view = new Map2DView(map2dRenderer, 320, 200, 0, 0, 100, 100);
+  const view = new Map2DView(map2dRenderer, 0, 0, 320, 200, 100, 100);
   view.appendLayer(...tiledMap.getAllLayers());
   view.update();
   view.centerX += 50;

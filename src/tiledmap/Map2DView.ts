@@ -27,7 +27,7 @@ export class Map2DView {
    * @param gridTileWidth desired width of a *grid tile* (see Map2DGridTile) in *pixels*
    * @param gridTileHeight desired height of a *grid tile* (see Map2DGridTile) in *pixels*
    */
-  constructor(renderer: IMap2DRenderer, width: number, height: number, centerX: number, centerY: number, gridTileWidth: number, gridTileHeight: number) {
+  constructor(renderer: IMap2DRenderer, centerX: number, centerY: number, width: number, height: number, gridTileWidth: number, gridTileHeight: number) {
     this.renderer = renderer;
 
     this.width = width;
