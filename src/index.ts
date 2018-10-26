@@ -86,6 +86,10 @@ loadTiledMap('./maps/180917-a-first-map.json').then((tiledMap: TiledMap) => {
   view.appendLayer(...tiledMap.getAllLayers());
   view.appendTo(scene);
   view.update();
+  view.centerX += 50;
+  view.centerY += 50;
+  view.update();
+  view.centerY -= 50;
   view.update();
 });
 

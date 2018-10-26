@@ -39,14 +39,15 @@ export class Map2DLayerGrid {
 
   update() {
     // I. create visible map tiles (and remove/dispose unvisible)
-    //
-    const viewHalfWidth = this.view.dimension.x * 0.5;
-    const viewHalfHeight = this.view.dimension.y * 0.5;
+    // ---------------------------------------------------------------
 
-    const left = Math.floor((this.view.origin.x - viewHalfWidth) / this.gridTileWidth);
-    const top = Math.floor((this.view.origin.y - viewHalfHeight) / this.gridTileHeight);
-    const right = Math.floor((this.view.origin.x + viewHalfWidth) / this.gridTileWidth);
-    const bottom = Math.floor((this.view.origin.y + viewHalfHeight) / this.gridTileHeight);
+    const viewHalfWidth = this.view.width * 0.5;
+    const viewHalfHeight = this.view.height * 0.5;
+
+    const left = Math.floor((this.view.centerX - viewHalfWidth) / this.gridTileWidth);
+    const top = Math.floor((this.view.centerY - viewHalfHeight) / this.gridTileHeight);
+    const right = Math.floor((this.view.centerX + viewHalfWidth) / this.gridTileWidth);
+    const bottom = Math.floor((this.view.centerY + viewHalfHeight) / this.gridTileHeight);
 
     const width = right - left + 1;
     const height = bottom - top + 1;
@@ -57,37 +58,49 @@ export class Map2DLayerGrid {
     // tslint:disable-next-line:max-line-length
     console.log('[pixels] topLeft', left * this.gridTileWidth, top * this.gridTileHeight, 'bottomRight', right * this.gridTileWidth, bottom * this.gridTileHeight, 'sizes', width * this.gridTileWidth, height * this.gridTileHeight);
 
-    // II. create geometries for all *new* map tiles
-    //
-    const prevTiles = this.gridTiles.slice(0);
-    const newTiles: Map2DGridTile[] = [];
-    const knownTiles: Map2DGridTile[] = [];
+    const prevGridTiles = this.gridTiles.slice(0);
+    const knownGridTiles: Map2DGridTile[] = [];
+    const newGridTileCoords: number[][] = [];
 
     for (let yOffset = 0; yOffset < height; ++yOffset) {
       for (let xOffset = 0; xOffset < width; ++xOffset) {
         const x = left + xOffset;
         const y = top + yOffset;
-        let tile = takeFrom(prevTiles, x, y);
-        if (!tile) {
-          // maybe re-use obsolete tiles?
-          tile = new Map2DGridTile(this.layer, this.gridTileColumns, this.gridTileRows);
-          tile.setGridTilePosition(x, y);
-          tile.setPosition(x * this.gridTileColumns, y * this.gridTileRows);
-          tile.setViewOffset(x * this.gridTileWidth, y * this.gridTileHeight);
-          console.log('create new tile:', tile);
-          newTiles.push(tile);
+        const tile = takeFrom(prevGridTiles, x, y);
+        if (tile) {
+          console.log('found previous grid-tile:', tile.id, tile);
+          knownGridTiles.push(tile);
         } else {
-          console.log('found previous tile:', tile);
-          knownTiles.push(tile);
+          newGridTileCoords.push([x, y]);
         }
       }
     }
 
-    this.gridTiles = knownTiles.concat(newTiles);
-    // TODO remove obsolete tiles
+    // II. create geometries for all *new* map tiles
+    // -------------------------------------------------
 
-    // 3. render all tiles
-    //
-    this.gridTiles.forEach((gridTile) => gridTile.fetchTileIds());
+    const newGridTiles: Map2DGridTile[] = newGridTileCoords.map(([x, y]: number[]): Map2DGridTile => {
+      return this.makeGridTile(x, y, prevGridTiles.shift());
+    });
+
+    // III. render visible tiles
+    // -------------------------------
+
+    this.gridTiles = knownGridTiles.concat(newGridTiles);
+    this.gridTiles.forEach((tile) => tile.fetchTileIds());
+
+    // IV. remove unused tiles
+    // -----------------------------
+
+    prevGridTiles.forEach((tile) => console.log('remove grid-tile:', tile.id, tile));
+  }
+
+  private makeGridTile(x: number, y: number, prevGridTile?: Map2DGridTile) {
+    const tile = prevGridTile || new Map2DGridTile(this.layer, this.gridTileColumns, this.gridTileRows);
+    tile.setGridTilePosition(x, y);
+    tile.setPosition(x * this.gridTileColumns, y * this.gridTileRows);
+    tile.setViewOffset(x * this.gridTileWidth, y * this.gridTileHeight);
+    console.log(prevGridTile ? 're-init grid-tile:' : 'create new grid-tile:', tile.id, tile);
+    return tile;
   }
 }

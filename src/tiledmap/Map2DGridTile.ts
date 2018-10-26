@@ -7,6 +7,8 @@ import { IMap2DLayer } from './IMap2DLayer';
  * The unit of measurement are *tiles* unless otherwise stated.
  */
 export class Map2DGridTile {
+  readonly layer: IMap2DLayer;
+
   readonly width: number;
   readonly height: number;
 
@@ -30,15 +32,17 @@ export class Map2DGridTile {
   private _top: number = 0;
   private _left: number = 0;
 
-  private _layer: IMap2DLayer;
-
   constructor(layer: IMap2DLayer, width: number, height: number) {
-    this._layer = layer;
+    this.layer = layer;
 
     this.width = width;
     this.height = height;
 
     this.tileIds = new Uint32Array(width * height);
+  }
+
+  get id() {
+    return `${this.left},${this.top}|${this.width}x${this.height}|${this.layer.name}|M2DGT`;
   }
 
   setGridTilePosition(left: number, top: number) {
@@ -54,15 +58,6 @@ export class Map2DGridTile {
     this.viewOffsetX = x;
     this.viewOffsetY = y;
   }
-
-  set layer(layer: IMap2DLayer) {
-    if (this._layer !== layer) {
-      this._layer = layer;
-      this.tileIdsNeedsUpdate = true;
-    }
-  }
-
-  get layer(): IMap2DLayer { return this._layer; }
 
   set top(top: number) {
     if (this._top !== top) {
@@ -93,7 +88,7 @@ export class Map2DGridTile {
 
   fetchTileIds() {
     if (this.tileIdsNeedsUpdate) {
-      this._layer.getTileIdsWithin(this._left, this._top, this.width, this.height, this.tileIds);
+      this.layer.getTileIdsWithin(this._left, this._top, this.width, this.height, this.tileIds);
       this.tileIdsNeedsUpdate = false;
     }
     return this;

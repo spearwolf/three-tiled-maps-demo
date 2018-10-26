@@ -12,8 +12,10 @@ import { Map2DLayerGrid } from './Map2DLayerGrid';
 export class Map2DView {
   readonly scene: THREE.Scene;
 
-  readonly origin: THREE.Vector2;
-  readonly dimension: THREE.Vector2;
+  width: number;
+  height: number;
+  centerX: number;
+  centerY: number;
 
   readonly gridTileWidth: number;
   readonly gridTileHeight: number;
@@ -23,14 +25,16 @@ export class Map2DView {
   /**
    * @param width width
    * @param height height
-   * @param originX horizontal center position
-   * @param originY vertical center position
-   * @param gridTileWidth width of a *grid tile* in *pixels*
-   * @param gridTileHeight height of a *grid tile* in *pixels*
+   * @param centerX horizontal center position
+   * @param centerY vertical center position
+   * @param gridTileWidth desired width of a *grid tile* (see Map2DGridTile) in *pixels*
+   * @param gridTileHeight desired height of a *grid tile* (see Map2DGridTile) in *pixels*
    */
-  constructor(width: number, height: number, originX: number, originY: number, gridTileWidth: number, gridTileHeight: number) {
-    this.dimension = new THREE.Vector2(width, height);
-    this.origin = new THREE.Vector2(originX, originY);
+  constructor(width: number, height: number, centerX: number, centerY: number, gridTileWidth: number, gridTileHeight: number) {
+    this.width = width;
+    this.height = height;
+    this.centerX = centerX;
+    this.centerY = centerY;
 
     this.gridTileWidth = gridTileWidth;
     this.gridTileHeight = gridTileHeight;
@@ -42,12 +46,14 @@ export class Map2DView {
     layers.forEach((layer) => this.layers.push(new Map2DLayerGrid(this, layer)));
   }
 
-  setOrigin(originX: number, originY: number) {
-    this.origin.set(originX, originY);
+  setOrigin(centerX: number, centerY: number) {
+    this.centerX = centerX;
+    this.centerY = centerY;
   }
 
   setDimension(width: number, height: number) {
-    this.dimension.set(width, height);
+    this.width = width;
+    this.height = height;
   }
 
   appendTo(scene: THREE.Scene) {
