@@ -1,10 +1,12 @@
 import * as THREE from 'three';
 // import GLTFLoader from 'three-gltf-loader';
 
-import loadTiledMap from './loadTiledMap';
 import { Map2DGridTile } from './tiledmap/Map2DGridTile';
+import { Map2DSceneTHREE } from './tiledmap/Map2DSceneTHREE';
 import { Map2DView } from './tiledmap/Map2DView';
 import { TiledMap } from './tiledmap/TiledMap';
+
+import loadTiledMap from './loadTiledMap';
 
 console.log('hej ho 🦄');
 
@@ -82,9 +84,11 @@ loadTiledMap('./maps/180917-a-first-map.json').then((tiledMap: TiledMap) => {
   const tile = new Map2DGridTile(tiledMap.getLayer('main'), 2, 2).setPosition(10, 0).fetchTileIds();
   console.log('(10,0)->(2,2)', tile);
 
-  const view = new Map2DView(320, 200, 0, 0, 100, 100);
+  const map2dRenderer = new Map2DSceneTHREE();
+  map2dRenderer.appendTo(scene);
+
+  const view = new Map2DView(map2dRenderer, 320, 200, 0, 0, 100, 100);
   view.appendLayer(...tiledMap.getAllLayers());
-  view.appendTo(scene);
   view.update();
   view.centerX += 50;
   view.centerY += 50;

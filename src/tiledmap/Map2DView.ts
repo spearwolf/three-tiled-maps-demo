@@ -1,6 +1,5 @@
-import * as THREE from 'three';
-
 import { IMap2DLayer } from './IMap2DLayer';
+import { IMap2DRenderer } from './IMap2DRenderer';
 import { Map2DLayerGrid } from './Map2DLayerGrid';
 
 /**
@@ -10,7 +9,7 @@ import { Map2DLayerGrid } from './Map2DLayerGrid';
  * The unit of measurement are *pixels* unless otherwise stated.
  */
 export class Map2DView {
-  readonly scene: THREE.Scene;
+  readonly renderer: IMap2DRenderer;
 
   width: number;
   height: number;
@@ -23,14 +22,14 @@ export class Map2DView {
   readonly layers: Map2DLayerGrid[] = [];
 
   /**
-   * @param width width
-   * @param height height
    * @param centerX horizontal center position
    * @param centerY vertical center position
    * @param gridTileWidth desired width of a *grid tile* (see Map2DGridTile) in *pixels*
    * @param gridTileHeight desired height of a *grid tile* (see Map2DGridTile) in *pixels*
    */
-  constructor(width: number, height: number, centerX: number, centerY: number, gridTileWidth: number, gridTileHeight: number) {
+  constructor(renderer: IMap2DRenderer, width: number, height: number, centerX: number, centerY: number, gridTileWidth: number, gridTileHeight: number) {
+    this.renderer = renderer;
+
     this.width = width;
     this.height = height;
     this.centerX = centerX;
@@ -38,8 +37,6 @@ export class Map2DView {
 
     this.gridTileWidth = gridTileWidth;
     this.gridTileHeight = gridTileHeight;
-
-    this.scene = new THREE.Scene();
   }
 
   appendLayer(...layers: IMap2DLayer[]) {
@@ -56,17 +53,8 @@ export class Map2DView {
     this.height = height;
   }
 
-  appendTo(scene: THREE.Scene) {
-    if (!scene.children.includes(this.scene)) {
-      scene.add(this.scene);
-    }
-  }
-
-  removeFrom(scene: THREE.Scene) {
-    scene.remove(this.scene);
-  }
-
   update() {
+    console.log('[Map2DView] UPDATE!');
     this.layers.forEach((layer) => layer.update());
   }
 }
