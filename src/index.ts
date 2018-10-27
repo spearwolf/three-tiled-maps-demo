@@ -5,6 +5,7 @@ import { Map2DGridTile } from './tiledmap/Map2DGridTile';
 import { Map2DSceneTHREE } from './tiledmap/Map2DSceneTHREE';
 import { Map2DView } from './tiledmap/Map2DView';
 import { TiledMap } from './tiledmap/TiledMap';
+import { Vector2Link } from './tiledmap/Vector2Link';
 
 import loadTiledMap from './loadTiledMap';
 
@@ -84,14 +85,14 @@ loadTiledMap('./maps/180917-a-first-map.json').then((tiledMap: TiledMap) => {
   const tile = new Map2DGridTile(tiledMap.getLayer('main'), 2, 2).setPosition(10, 0).fetchTileIds();
   console.log('(10,0)->(2,2)', tile);
 
-  const map2dRenderer = new Map2DSceneTHREE();
-  map2dRenderer.appendTo(scene);
+  const map2dScene = new Map2DSceneTHREE();
+  map2dScene.appendTo(scene);
 
-  const view = new Map2DView(map2dRenderer, 0, 0, 320, 200, 100, 100);
+  const view = new Map2DView(map2dScene, 0, 0, 320, 200, 100, 100);
   view.appendLayer(...tiledMap.getAllLayers());
   view.update();
-  view.centerX += 50;
-  view.centerY += 50;
+  const center = new Vector2Link(view, 'centerX', 'centerY');
+  center.addScalar(50);
   view.update();
   view.centerY -= 50;
   view.update();
