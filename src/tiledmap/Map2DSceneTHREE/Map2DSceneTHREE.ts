@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
-import { IMap2DRenderer } from './IMap2DRenderer';
-import { Map2DGridTile } from './Map2DGridTile';
+import { IMap2DRenderer } from '../IMap2DRenderer';
+import { Map2DGridTile } from '../Map2DGridTile';
 
 export class Map2DSceneTHREE implements IMap2DRenderer {
   readonly scene: THREE.Scene;

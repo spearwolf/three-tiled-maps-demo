@@ -2,7 +2,7 @@ import * as THREE from 'three';
 // import GLTFLoader from 'three-gltf-loader';
 
 import { Map2DGridTile } from './tiledmap/Map2DGridTile';
-import { Map2DSceneTHREE } from './tiledmap/Map2DSceneTHREE';
+import { Map2DSceneTHREE, TextureBakery } from './tiledmap/Map2DSceneTHREE';
 import { Map2DView } from './tiledmap/Map2DView';
 import { TiledMap } from './tiledmap/TiledMap';
 import { Vector2Link } from './tiledmap/Vector2Link';
@@ -23,6 +23,7 @@ renderer.gammaOutput = true;
 renderer.gammaFactor = 2.2;
 
 renderer.setPixelRatio(devicePixelRatio || 1);
+renderer.domElement.classList.add('three');
 document.body.appendChild(renderer.domElement);
 
 function resize(): void {
@@ -109,3 +110,8 @@ loader.load(
   },
 );
 */
+
+// texture bakery example /////////////////////////////////////////////////////
+const textureBakery = new TextureBakery(256, 256);
+textureBakery.appendTo(document.body);
+textureBakery.make('TextureBakery sample');
