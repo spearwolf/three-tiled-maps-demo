@@ -45,6 +45,16 @@ export class Map2DGridTile {
     return `${this.left},${this.top}|${this.width}x${this.height}|${this.layer.name}|M2DGT`;
   }
 
+  /**
+   * View dimension in *pixels*
+   */
+  get viewWidth() { return this.layer.tileWidth * this.width; }
+
+  /**
+   * View dimension in *pixels*
+   */
+  get viewHeight() { return this.layer.tileHeight * this.height; }
+
   setGridTilePosition(left: number, top: number) {
     this.gridTileLeft = left;
     this.gridTileTop = top;

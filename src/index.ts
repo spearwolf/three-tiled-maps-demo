@@ -2,10 +2,11 @@ import * as THREE from 'three';
 // import GLTFLoader from 'three-gltf-loader';
 
 import { Map2DGridTile } from './tiledmap/Map2DGridTile';
-import { Map2DSceneTHREE, TextureBakery } from './tiledmap/Map2DSceneTHREE';
+// import { Map2DSceneTHREE, TextureBakery } from './tiledmap/Map2DSceneTHREE';
+import { Map2DSceneTHREE } from './tiledmap/Map2DSceneTHREE';
 import { Map2DView } from './tiledmap/Map2DView';
 import { TiledMap } from './tiledmap/TiledMap';
-import { Vector2Link } from './tiledmap/Vector2Link';
+// import { Vector2Link } from './tiledmap/Vector2Link';
 
 import loadTiledMap from './loadTiledMap';
 
@@ -41,16 +42,16 @@ function resize(): void {
 
 resize();
 
-camera.position.set(1, -2, 2);
+camera.position.set(0, -100, 300);
 camera.lookAt(0, 0, 0);
 camera.up.set(0, 0, 1);
 
-function animate(time: number): void {
+function animate(_time: number): void {
   requestAnimationFrame(animate);
   resize();
 
-  const seconds = time / 1000;
-  scene.rotation.z = seconds * -0.4;
+  // const seconds = time / 1000;
+  // scene.rotation.z = seconds * -0.4;
 
   renderer.render(scene, camera);
 }
@@ -92,11 +93,36 @@ loadTiledMap('./maps/180917-a-first-map.json').then((tiledMap: TiledMap) => {
   const view = new Map2DView(map2dScene, 0, 0, 320, 200, 100, 100);
   view.appendLayer(...tiledMap.getAllLayers());
   view.update();
-  const center = new Vector2Link(view, 'centerX', 'centerY');
-  center.addScalar(50);
-  view.update();
-  view.centerY -= 50;
-  view.update();
+
+  // const center = new Vector2Link(view, 'centerX', 'centerY');
+  // center.addScalar(50);
+  // view.update();
+  // view.centerY -= 50;
+  // view.update();
+
+  const translate = (x: number, y: number) => {
+    view.centerX += x;
+    view.centerY += y;
+    view.update();
+  };
+
+  document.addEventListener('keydown', (event) => {
+    const { key } = event;
+    switch (key) {
+      case 'ArrowUp':
+        translate(0, 10);
+        break;
+      case 'ArrowDown':
+        translate(0, -10);
+        break;
+      case 'ArrowLeft':
+        translate(-10, 0);
+        break;
+      case 'ArrowRight':
+        translate(10, 0);
+        break;
+    }
+  });
 });
 
 // load gltf mesh /////////////////////////////////////////////////////
@@ -112,6 +138,6 @@ loader.load(
 */
 
 // texture bakery example /////////////////////////////////////////////////////
-const textureBakery = new TextureBakery(256, 256);
-textureBakery.appendTo(document.body);
-textureBakery.make('TextureBakery sample');
+// const textureBakery = new TextureBakery(256, 256);
+// textureBakery.appendTo(document.body);
+// textureBakery.make('TextureBakery sample');

@@ -21,6 +21,7 @@ export class TextureBakery {
     this.setFont('16px monospace');
     this.ctx.lineWidth = 2;
     this.texture = new THREE.CanvasTexture(this.canvas);
+    this.texture.magFilter = THREE.NearestFilter;
   }
 
   get width() { return this.canvas.width; }
@@ -76,5 +77,12 @@ export class TextureBakery {
     const { canvas } = this;
     canvas.classList.add('textureBakery');
     el.appendChild(canvas);
+  }
+
+  dispose() {
+    const { parentNode } = this.canvas;
+    if (parentNode !== null) {
+      parentNode.removeChild(this.canvas);
+    }
   }
 }

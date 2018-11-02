@@ -39,6 +39,16 @@ export class Map2DView {
     this.gridTileHeight = gridTileHeight;
   }
 
+  get left() {
+    const halfWidth = this.width / 2;
+    return this.centerX - halfWidth;
+  }
+
+  get top() {
+    const halfHeight = this.height / 2;
+    return this.centerY - halfHeight;
+  }
+
   appendLayer(...layers: IMap2DLayer[]) {
     layers.forEach((layer) => this.layers.push(new Map2DLayerGrid(this, layer)));
   }
@@ -56,5 +66,6 @@ export class Map2DView {
   update() {
     console.log('[Map2DView] UPDATE!');
     this.layers.forEach((layer) => layer.update());
+    this.renderer.postRender(this);
   }
 }
