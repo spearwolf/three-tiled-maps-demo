@@ -46,11 +46,11 @@ export class Map2DLayerGrid {
 
     const left = Math.floor((this.view.centerX - viewHalfWidth) / this.gridTileWidth);
     const top = Math.floor((this.view.centerY - viewHalfHeight) / this.gridTileHeight);
-    const right = Math.floor((this.view.centerX + viewHalfWidth) / this.gridTileWidth);
-    const bottom = Math.floor((this.view.centerY + viewHalfHeight) / this.gridTileHeight);
+    const right = Math.ceil((this.view.centerX + viewHalfWidth) / this.gridTileWidth);
+    const bottom = Math.ceil((this.view.centerY + viewHalfHeight) / this.gridTileHeight);
 
-    const width = right - left + 1;
-    const height = bottom - top + 1;
+    const width = right - left;
+    const height = bottom - top;
 
     console.log('[Map2DGridTile] (gridTiles) topLeft', left, top, 'bottomRight', right, bottom, 'sizes', width, height);
     // tslint:disable-next-line:max-line-length

@@ -55,7 +55,7 @@ export class Map2DSceneTHREE implements IMap2DRenderer {
   }
 
   postRender(view: Map2DView) {
-    this.viewFrame.update(view.left, view.top, view.width, view.height);
+    this.viewFrame.update(view.centerX, view.centerY, view.width, view.height);
   }
 
   private destroyMesh(id: string): THREE.Mesh | null {
@@ -75,9 +75,10 @@ export class Map2DSceneTHREE implements IMap2DRenderer {
       textureBakery: new TextureBakery(256, 256),
     };
     gtm.textureBakery.make(tile.id);
-    console.log('createMesh:', tile.viewOffsetX, tile.viewOffsetY, tile.viewWidth, tile.viewHeight);
-    const geometry = new THREE.PlaneBufferGeometry(tile.viewWidth, tile.viewHeight);
-    geometry.translate(tile.viewOffsetX, tile.viewOffsetY, 0);
+    const { viewWidth, viewHeight } = tile;
+    const geometry = new THREE.PlaneBufferGeometry(viewWidth, viewHeight);
+    geometry.translate(tile.viewOffsetX + (viewWidth / 2), tile.viewOffsetY + (viewHeight / 2), 0);
+    console.log('createMesh:', tile.viewOffsetX, tile.viewOffsetY, viewWidth, viewHeight, geometry);
     const material = new THREE.MeshBasicMaterial({
       color: 0xffffff,
       map: gtm.textureBakery.texture,
