@@ -3,17 +3,13 @@ import * as THREE from 'three';
 import { IMap2DRenderer } from '../IMap2DRenderer';
 import { Map2DGridTile } from '../Map2DGridTile';
 import { Map2DView } from '../Map2DView';
-import { TextureBakery } from './TextureBakery';
-import { ViewFrame } from './ViewFrame';
 
-interface IGridTileMesh {
-  mesh: THREE.Mesh;
-  textureBakery: TextureBakery;
-}
+import { GridTileMesh } from './GridTileMesh';
+import { ViewFrame } from './ViewFrame';
 
 export class Map2DSceneTHREE implements IMap2DRenderer {
   readonly scene: THREE.Scene;
-  readonly mesh: Map<string, IGridTileMesh> = new Map();
+  readonly mesh: Map<string, GridTileMesh> = new Map();
 
   viewFrame: ViewFrame;
   viewFrameZOffset = 0.5;
@@ -58,32 +54,18 @@ export class Map2DSceneTHREE implements IMap2DRenderer {
     this.viewFrame.update(view.centerX, view.centerY, view.width, view.height);
   }
 
-  private destroyMesh(id: string): THREE.Mesh | null {
+  private destroyMesh(id: string): THREE.Mesh {
     if (this.mesh.has(id)) {
       const gtm = this.mesh.get(id);
-      gtm.mesh.geometry.dispose();
-      gtm.textureBakery.dispose();
       this.mesh.delete(id);
+      gtm.dispose();
       return gtm.mesh;
     }
     return null;
   }
 
   private createMesh(tile: Map2DGridTile): THREE.Mesh {
-    const gtm: IGridTileMesh = {
-      mesh: null,
-      textureBakery: new TextureBakery(256, 256),
-    };
-    gtm.textureBakery.make(tile.id);
-    const { viewWidth, viewHeight } = tile;
-    const geometry = new THREE.PlaneBufferGeometry(viewWidth, viewHeight);
-    geometry.translate(tile.viewOffsetX + (viewWidth / 2), tile.viewOffsetY + (viewHeight / 2), 0);
-    console.log('createMesh:', tile.viewOffsetX, tile.viewOffsetY, viewWidth, viewHeight, geometry);
-    const material = new THREE.MeshBasicMaterial({
-      color: 0xffffff,
-      map: gtm.textureBakery.texture,
-    });
-    gtm.mesh = new THREE.Mesh(geometry, material);
+    const gtm = new GridTileMesh(tile);
     this.mesh.set(tile.id, gtm);
     return gtm.mesh;
   }
