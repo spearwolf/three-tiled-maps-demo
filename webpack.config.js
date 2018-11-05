@@ -11,6 +11,8 @@ module.exports = {
       "./assets/exports",
     ],
     host: "0.0.0.0",
+    useLocalIp: true,
+    disableHostCheck: true,
   },
   module: {
     rules: [
