@@ -34,15 +34,16 @@ export class Map2DSceneTHREE implements IMap2DRenderer {
 
   addGridTile(tile: Map2DGridTile) {
     console.log('[Map2DSceneTHREE] add grid-tile:', tile.id);
-    const mesh = this.createMesh(tile);
-    this.scene.add(mesh);
+    const gtm = this.createMesh(tile);
+    this.scene.add(gtm.mesh);
   }
 
   removeGridTile(tileId: string) {
     console.log('[Map2DSceneTHREE] remove grid-tile:', tileId);
-    const mesh = this.destroyMesh(tileId);
-    if (mesh !== null) {
-      this.scene.remove(mesh);
+    const gtm = this.destroyMesh(tileId);
+    if (gtm !== null) {
+      this.scene.remove(gtm.mesh);
+      gtm.dispose();
     }
  }
 
@@ -54,19 +55,18 @@ export class Map2DSceneTHREE implements IMap2DRenderer {
     this.viewFrame.update(view.centerX, view.centerY, view.width, view.height);
   }
 
-  private destroyMesh(id: string): THREE.Mesh {
+  private destroyMesh(id: string): GridTileMesh {
     if (this.mesh.has(id)) {
       const gtm = this.mesh.get(id);
       this.mesh.delete(id);
-      gtm.dispose();
-      return gtm.mesh;
+      return gtm;
     }
     return null;
   }
 
-  private createMesh(tile: Map2DGridTile): THREE.Mesh {
+  private createMesh(tile: Map2DGridTile): GridTileMesh {
     const gtm = new GridTileMesh(tile);
     this.mesh.set(tile.id, gtm);
-    return gtm.mesh;
+    return gtm;
   }
 }
