@@ -32,9 +32,6 @@ export class Map2DLayerGrid {
     this.gridTileRows = Math.ceil(view.gridTileHeight / layer.tileHeight);
     this.gridTileWidth = this.gridTileColumns * layer.tileWidth;
     this.gridTileHeight = this.gridTileRows * layer.tileHeight;
-
-    // tslint:disable-next-line:max-line-length
-    console.log('gridTileColumns=', this.gridTileColumns, 'gridTileRows=', this.gridTileRows, 'gridTileWidth=', this.gridTileWidth, 'gridTileHeight=', this.gridTileHeight);
   }
 
   update() {
