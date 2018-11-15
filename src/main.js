@@ -12,7 +12,10 @@ THREE.Object3D.DefaultUp.set(0, 0, 1);
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer({ antialias: true });
+const renderer = new THREE.WebGLRenderer({
+  antialias: false,
+  powerPreference: "high-performance",
+});
 
 // see https://threejs.org/docs/#examples/loaders/GLTFLoader
 renderer.gammaOutput = true;
@@ -27,9 +30,10 @@ function resize() {
   const container = el.parentNode;
   const w = container.clientWidth;
   const h = container.clientHeight;
+  const dpr = window.devicePixelRatio || 1;
 
   if (w !== el.clientWidth || h !== el.clientHeight) {
-    renderer.setSize(w, h);
+    renderer.setSize(Math.floor(w / dpr), Math.floor(h / dpr));
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
   }

@@ -4,12 +4,11 @@ import { TiledMapLayer } from './TiledMapLayer';
 
 export class TiledMap {
   private readonly layerMap: Map<string, TiledMapLayer> = new Map();
-  private readonly data: ITiledMapData;
 
   /**
    * Assume tiled map orientation is orthogonal and infinite is true.
    */
-  constructor(data: ITiledMapData) {
+  constructor(private readonly data: ITiledMapData) {
     this.data = data;
     data.layers.forEach((layerData: ITiledMapLayerData) => {
       this.layerMap.set(layerData.name, new TiledMapLayer(this, layerData));

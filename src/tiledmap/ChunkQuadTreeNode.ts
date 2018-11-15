@@ -21,19 +21,21 @@ interface IChunkAxis {
 const INTERSECT_DISTANCE_FACTOR = Math.PI;
 const BEFORE_AFTER_DELTA_FACTOR = Math.PI;
 
-const calcAxis = (chunks: TiledMapLayerChunk[], beforeProp: string, afterProp: string, chunk: TiledMapLayerChunk): IChunkAxis => {
+type ChunkAabbValues = 'top' | 'right' | 'bottom' | 'left';
+
+const calcAxis = (chunks: TiledMapLayerChunk[], beforeProp: ChunkAabbValues, afterProp: ChunkAabbValues, chunk: TiledMapLayerChunk): IChunkAxis => {
   const chunksCount = chunks.length;
-  const origin = (chunk as any)[beforeProp] as number;
+  const origin = chunk[beforeProp];
   const beforeChunks: TiledMapLayerChunk[] = [];
   const intersectChunks: TiledMapLayerChunk[] = [];
   const afterChunks: TiledMapLayerChunk[] = [];
 
   for (let i = 0; i < chunksCount; i++) {
-    const beforeValue = (chunks[i] as any)[beforeProp] as number;
+    const beforeValue = chunks[i][beforeProp];
     if (beforeValue <= origin) {
       beforeChunks.push(chunk);
     } else {
-      const afterValue = (chunks[i] as any)[afterProp] as number;
+      const afterValue = chunks[i][afterProp];
       if (afterValue >= origin) {
         afterChunks.push(chunk);
       } else {
@@ -58,8 +60,8 @@ const calcAxis = (chunks: TiledMapLayerChunk[], beforeProp: string, afterProp: s
   };
 };
 
-const findAxis = (chunks: TiledMapLayerChunk[], beforeProp: string, afterProp: string): IChunkAxis => {
-  chunks.sort((a: any, b: any) => a[beforeProp] - b[beforeProp]);
+const findAxis = (chunks: TiledMapLayerChunk[], beforeProp: ChunkAabbValues, afterProp: ChunkAabbValues): IChunkAxis => {
+  chunks.sort((a: TiledMapLayerChunk, b: TiledMapLayerChunk) => a[beforeProp] - b[beforeProp]);
   return (
     chunks
       .map(calcAxis.bind(null, chunks, beforeProp, afterProp))
