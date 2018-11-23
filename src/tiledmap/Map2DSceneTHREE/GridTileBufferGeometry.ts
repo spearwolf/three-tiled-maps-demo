@@ -27,23 +27,22 @@ export class GridTileBufferGeometry extends THREE.BufferGeometry {
     const tileWidth = width / tileCols;
     const tileHeight = height / tileRows;
 
+    const vertices = [];
     const normals = [];
     const uvs = [];
-    const vertices = [];
 
     let y = -offsetY;
     for (let row = 0; row < tileRows; ++row) {
       let x = offsetX;
       for (let col = 0; col < tileCols; ++col) {
-        const x0 = x;
         const y0 = height - y;
         const x1 = x + tileWidth;
         const y1 = height - (y + tileHeight);
 
-        vertices.push(x0, y0, 0);
-        vertices.push(x0, y1, 0);
+        vertices.push(x, y0, 0);
+        vertices.push(x, y1, 0);
         vertices.push(x1, y0, 0);
-        vertices.push(x0, y1, 0);
+        vertices.push(x, y1, 0);
         vertices.push(x1, y1, 0);
         vertices.push(x1, y0, 0);
 
