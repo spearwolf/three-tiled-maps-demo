@@ -30,10 +30,11 @@ function resize() {
   const container = el.parentNode;
   const w = container.clientWidth;
   const h = container.clientHeight;
-  const dpr = window.devicePixelRatio || 1;
+  // const dpr = window.devicePixelRatio || 1;
 
   if (w !== el.clientWidth || h !== el.clientHeight) {
-    renderer.setSize(Math.floor(w / dpr), Math.floor(h / dpr));
+    // renderer.setSize(Math.floor(w / dpr), Math.floor(h / dpr));
+    renderer.setSize(w, h);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
   }
