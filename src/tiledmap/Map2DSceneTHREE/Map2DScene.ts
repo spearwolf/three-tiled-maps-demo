@@ -4,12 +4,12 @@ import { IMap2DRenderer } from '../IMap2DRenderer';
 import { Map2DGridTile } from '../Map2DGridTile';
 import { Map2DView } from '../Map2DView';
 
-import { GridTileTHREE } from './GridTileTHREE';
+import { GridTile } from './GridTile';
 import { ViewFrame } from './ViewFrame';
 
 export class Map2DScene implements IMap2DRenderer {
   readonly scene: THREE.Scene;
-  readonly gridTiles: Map<string, GridTileTHREE> = new Map();
+  readonly gridTiles: Map<string, GridTile> = new Map();
 
   viewFrame: ViewFrame;
   viewFrameZOffset = 0.5;
@@ -54,7 +54,7 @@ export class Map2DScene implements IMap2DRenderer {
     this.viewFrame.update(view.centerX, view.centerY, view.width, view.height);
   }
 
-  private destroyGridTile(id: string): GridTileTHREE {
+  private destroyGridTile(id: string): GridTile {
     if (this.gridTiles.has(id)) {
       const gt = this.gridTiles.get(id);
       this.gridTiles.delete(id);
@@ -63,8 +63,8 @@ export class Map2DScene implements IMap2DRenderer {
     return null;
   }
 
-  private createGridTile(tile: Map2DGridTile): GridTileTHREE {
-    const gt = new GridTileTHREE(tile);
+  private createGridTile(tile: Map2DGridTile): GridTile {
+    const gt = new GridTile(tile);
     this.gridTiles.set(tile.id, gt);
     return gt;
   }

@@ -4,7 +4,7 @@ import { Map2DGridTile } from '../Map2DGridTile';
 import { GridTileBufferGeometry } from './GridTileBufferGeometry';
 import { TextureBakery } from './TextureBakery';
 
-export class GridTileTHREE {
+export class GridTile {
   mesh: THREE.Mesh;
   readonly textureBakery: TextureBakery;
   gridTileGeometry: GridTileBufferGeometry;
