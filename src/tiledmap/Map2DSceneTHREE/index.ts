@@ -1,2 +1,2 @@
-export * from './Map2DSceneTHREE';
+export * from './Map2DScene';
 export * from './TextureBakery';

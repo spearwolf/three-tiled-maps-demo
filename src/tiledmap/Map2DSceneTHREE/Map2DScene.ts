@@ -7,7 +7,7 @@ import { Map2DView } from '../Map2DView';
 import { GridTileTHREE } from './GridTileTHREE';
 import { ViewFrame } from './ViewFrame';
 
-export class Map2DSceneTHREE implements IMap2DRenderer {
+export class Map2DScene implements IMap2DRenderer {
   readonly scene: THREE.Scene;
   readonly gridTiles: Map<string, GridTileTHREE> = new Map();
 

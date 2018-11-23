@@ -1,7 +1,7 @@
 // tslint:disable:no-console
 import * as THREE from "three";
 
-import { Map2DSceneTHREE } from "./tiledmap/Map2DSceneTHREE";
+import { Map2DScene } from "./tiledmap/Map2DSceneTHREE";
 import { Map2DView } from "./tiledmap/Map2DView";
 
 import loadTiledMap from "./loadTiledMap";
@@ -61,7 +61,7 @@ requestAnimationFrame(animate);
 // load tiled map ////////////////////////////////////////////////////
 
 loadTiledMap("./maps/180917-a-first-map.json").then((tiledMap) => {
-  const map2dScene = new Map2DSceneTHREE();
+  const map2dScene = new Map2DScene();
   map2dScene.appendTo(scene);
 
   const view = new Map2DView(map2dScene, 0, 0, 320, 200, 100, 100);
