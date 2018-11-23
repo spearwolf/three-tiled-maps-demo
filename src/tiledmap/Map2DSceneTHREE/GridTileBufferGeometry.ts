@@ -1,43 +1,32 @@
 import * as THREE from 'three';
 
+import { Map2DGridTile } from '../Map2DGridTile';
+
 export class GridTileBufferGeometry extends THREE.BufferGeometry {
   readonly type: string = 'GridTileBufferGeometry';
 
-  readonly parameters: {
-    readonly width: number,
-    readonly height: number,
-    readonly tileCols: number,
-    readonly tileRows: number,
-    readonly offsetX: number,
-    readonly offsetY: number,
-  };
-
-  constructor(width: number, height: number, tileCols: number, tileRows: number, offsetX: number, offsetY: number) {
+  constructor(public map2dGridTile: Map2DGridTile) {
     super();
 
-    this.parameters = {
-      height,
-      offsetX,
-      offsetY,
-      tileCols,
-      tileRows,
-      width,
-    };
+    const { viewWidth, viewHeight, viewOffsetX, viewOffsetY } = map2dGridTile;
 
-    const tileWidth = width / tileCols;
-    const tileHeight = height / tileRows;
+    const tileCols = map2dGridTile.width;
+    const tileRows = map2dGridTile.height;
+
+    const tileWidth = viewWidth / tileCols;
+    const tileHeight = viewHeight / tileRows;
 
     const vertices = [];
     const normals = [];
     const uvs = [];
 
-    let y = -offsetY;
+    let y = -viewOffsetY;
     for (let row = 0; row < tileRows; ++row) {
-      let x = offsetX;
+      let x = viewOffsetX;
       for (let col = 0; col < tileCols; ++col) {
-        const y0 = height - y;
+        const y0 = viewHeight - y;
         const x1 = x + tileWidth;
-        const y1 = height - (y + tileHeight);
+        const y1 = viewHeight - (y + tileHeight);
 
         vertices.push(x, y0, 0);
         vertices.push(x, y1, 0);
