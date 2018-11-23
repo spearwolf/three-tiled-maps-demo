@@ -4,12 +4,12 @@ import { IMap2DRenderer } from '../IMap2DRenderer';
 import { Map2DGridTile } from '../Map2DGridTile';
 import { Map2DView } from '../Map2DView';
 
-import { GridTileMesh } from './GridTileMesh';
+import { GridTileTHREE } from './GridTileTHREE';
 import { ViewFrame } from './ViewFrame';
 
 export class Map2DSceneTHREE implements IMap2DRenderer {
   readonly scene: THREE.Scene;
-  readonly mesh: Map<string, GridTileMesh> = new Map();
+  readonly gridTiles: Map<string, GridTileTHREE> = new Map();
 
   viewFrame: ViewFrame;
   viewFrameZOffset = 0.5;
@@ -34,16 +34,15 @@ export class Map2DSceneTHREE implements IMap2DRenderer {
 
   addGridTile(tile: Map2DGridTile) {
     console.log('[Map2DSceneTHREE] add grid-tile:', tile.id);
-    const gtm = this.createMesh(tile);
-    this.scene.add(gtm.mesh);
+    this.createGridTile(tile).appendTo(this.scene);
   }
 
   removeGridTile(tileId: string) {
     console.log('[Map2DSceneTHREE] remove grid-tile:', tileId);
-    const gtm = this.destroyMesh(tileId);
-    if (gtm !== null) {
-      this.scene.remove(gtm.mesh);
-      gtm.dispose();
+    const gt = this.destroyGridTile(tileId);
+    if (gt !== null) {
+      gt.removeFrom(this.scene);
+      gt.dispose();
     }
  }
 
@@ -55,18 +54,18 @@ export class Map2DSceneTHREE implements IMap2DRenderer {
     this.viewFrame.update(view.centerX, view.centerY, view.width, view.height);
   }
 
-  private destroyMesh(id: string): GridTileMesh {
-    if (this.mesh.has(id)) {
-      const gtm = this.mesh.get(id);
-      this.mesh.delete(id);
-      return gtm;
+  private destroyGridTile(id: string): GridTileTHREE {
+    if (this.gridTiles.has(id)) {
+      const gt = this.gridTiles.get(id);
+      this.gridTiles.delete(id);
+      return gt;
     }
     return null;
   }
 
-  private createMesh(tile: Map2DGridTile): GridTileMesh {
-    const gtm = new GridTileMesh(tile);
-    this.mesh.set(tile.id, gtm);
-    return gtm;
+  private createGridTile(tile: Map2DGridTile): GridTileTHREE {
+    const gt = new GridTileTHREE(tile);
+    this.gridTiles.set(tile.id, gt);
+    return gt;
   }
 }

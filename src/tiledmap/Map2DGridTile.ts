@@ -20,12 +20,12 @@ export class Map2DGridTile {
   gridTileTop: number;
 
   /**
-   * View position offset in *pixels*
+   * Uppler left view position offset in *pixels*
    */
   viewOffsetX: number;
 
   /**
-   * View position offset in *pixels*
+   * Uppler left view position offset in *pixels*
    */
   viewOffsetY: number;
 

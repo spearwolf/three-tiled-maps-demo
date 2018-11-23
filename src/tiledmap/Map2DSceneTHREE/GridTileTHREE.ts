@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { Map2DGridTile } from '../Map2DGridTile';
 import { TextureBakery } from './TextureBakery';
 
-export class GridTileMesh {
+export class GridTileTHREE {
   mesh: THREE.Mesh;
   readonly textureBakery: TextureBakery;
 
@@ -21,6 +21,14 @@ export class GridTileMesh {
     });
 
     this.mesh = new THREE.Mesh(geometry, material);
+  }
+
+  appendTo(scene: THREE.Scene) {
+    scene.add(this.mesh);
+  }
+
+  removeFrom(scene: THREE.Scene) {
+    scene.remove(this.mesh);
   }
 
   dispose() {
