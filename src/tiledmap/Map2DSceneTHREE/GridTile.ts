@@ -13,8 +13,7 @@ export class GridTile {
     this.textureBakery = new TextureBakery(256, 256);
     this.textureBakery.make(tile.id);
 
-    const { viewWidth, viewHeight } = tile;
-    this.gridTileGeometry = new GridTileBufferGeometry(viewWidth, viewHeight, tile.width, tile.height, tile.viewOffsetX, tile.viewOffsetY);
+    this.gridTileGeometry = new GridTileBufferGeometry(tile);
 
     const material = new THREE.MeshBasicMaterial({
       color: 0xffffff,

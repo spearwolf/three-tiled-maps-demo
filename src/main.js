@@ -6,6 +6,8 @@ import { Map2DView } from "./tiledmap/Map2DView";
 
 import loadTiledMap from "./loadTiledMap";
 
+const urlParams = new URLSearchParams(window.location.search);
+
 console.log("hej ho 🦄");
 
 THREE.Object3D.DefaultUp.set(0, 0, 1);
@@ -21,23 +23,30 @@ const renderer = new THREE.WebGLRenderer({
 renderer.gammaOutput = true;
 renderer.gammaFactor = 2.2;
 
-renderer.setPixelRatio(devicePixelRatio || 1);
-renderer.domElement.classList.add("three");
+const DPR = window.devicePixelRatio || 1;
+
+renderer.setPixelRatio(DPR);
 document.body.appendChild(renderer.domElement);
+
+const min = (a, b) => a > b ? b : a;
 
 function resize() {
   const el = renderer.domElement;
   const container = el.parentNode;
-  const w = container.clientWidth;
-  const h = container.clientHeight;
-  // const dpr = window.devicePixelRatio || 1;
-
-  if (w !== el.clientWidth || h !== el.clientHeight) {
-    // renderer.setSize(Math.floor(w / dpr), Math.floor(h / dpr));
-    renderer.setSize(w, h);
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
+  const s = min(container.clientWidth, container.clientHeight);
+  const pixelate = parseInt(urlParams.get('pixelate'), 10) || 1;
+  if (pixelate > 1) {
+    renderer.domElement.classList.add('pixelate');
+  } else {
+    renderer.domElement.classList.remove('pixelate');
   }
+  const size = Math.floor(s / pixelate);
+
+  renderer.setSize(size, size);
+  renderer.domElement.style.width = `${Math.floor(size * pixelate)}px`;
+  renderer.domElement.style.height = `${Math.floor(size * pixelate)}px`;
+  camera.aspect = 1;
+  camera.updateProjectionMatrix();
 }
 
 resize();
@@ -46,7 +55,7 @@ camera.position.set(0, -100, 300);
 camera.lookAt(0, 0, 0);
 camera.up.set(0, 0, 1);
 
-function animate() {
+function animate(time) {
   requestAnimationFrame(animate);
   resize();
 
