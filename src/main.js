@@ -1,4 +1,3 @@
-// tslint:disable:no-console
 import * as THREE from "three";
 
 import { Map2DScene } from "./tiledmap/Map2DSceneTHREE";
@@ -26,43 +25,62 @@ renderer.gammaFactor = 2.2;
 const DPR = window.devicePixelRatio || 1;
 
 renderer.setPixelRatio(DPR);
-document.body.appendChild(renderer.domElement);
+
+const threeContainerElement = document.getElementById('three-container');
+threeContainerElement.appendChild(renderer.domElement);
+
+const infoDisplayElement = document.createElement('div');
+infoDisplayElement.classList.add('infoDisplay');
+threeContainerElement.appendChild(infoDisplayElement);
 
 const min = (a, b) => a > b ? b : a;
 
+let lastSize = null;
+
 function resize() {
-  const el = renderer.domElement;
-  const container = el.parentNode;
+  const container = renderer.domElement.parentNode;
   const s = min(container.clientWidth, container.clientHeight);
   const pixelate = parseInt(urlParams.get('pixelate'), 10) || 1;
-  if (pixelate > 1) {
-    renderer.domElement.classList.add('pixelate');
-  } else {
-    renderer.domElement.classList.remove('pixelate');
+
+  const newSize = `${s}x${s}\npixelate=${pixelate}`;
+  if (lastSize !== newSize) {
+    lastSize = newSize;
+    infoDisplayElement.innerHTML = newSize.replace('\n', '<br>');
+
+    if (pixelate > 1) {
+      renderer.domElement.classList.add('pixelate');
+    } else {
+      renderer.domElement.classList.remove('pixelate');
+    }
+    const size = Math.floor(s / pixelate);
+
+    renderer.setSize(size, size);
+    renderer.domElement.style.width = `${Math.floor(size * pixelate)}px`;
+    renderer.domElement.style.height = `${Math.floor(size * pixelate)}px`;
+    camera.aspect = 1;
+    camera.updateProjectionMatrix();
+
+    return true;
   }
-  const size = Math.floor(s / pixelate);
-
-  renderer.setSize(size, size);
-  renderer.domElement.style.width = `${Math.floor(size * pixelate)}px`;
-  renderer.domElement.style.height = `${Math.floor(size * pixelate)}px`;
-  camera.aspect = 1;
-  camera.updateProjectionMatrix();
 }
-
-resize();
 
 camera.position.set(0, -100, 300);
 camera.lookAt(0, 0, 0);
 camera.up.set(0, 0, 1);
 
-function animate(time) {
+let rendererShouldRender = true;
+
+function animate() {
   requestAnimationFrame(animate);
-  resize();
+  let isResized = resize();
 
   // const seconds = time / 1000;
   // scene.rotation.z = seconds * -0.4;
 
-  renderer.render(scene, camera);
+  if (isResized || rendererShouldRender) {
+    renderer.render(scene, camera);
+    rendererShouldRender = false;
+  }
 }
 
 requestAnimationFrame(animate);
@@ -77,6 +95,8 @@ loadTiledMap("./maps/180917-a-first-map.json").then((tiledMap) => {
   view.appendLayer(...tiledMap.getAllLayers());
   view.update();
 
+  rendererShouldRender = true;
+
   // const center = new Vector2Link(view, 'centerX', 'centerY');
   // center.addScalar(50);
   // view.update();
@@ -87,6 +107,7 @@ loadTiledMap("./maps/180917-a-first-map.json").then((tiledMap) => {
     view.centerX += x;
     view.centerY += y;
     view.update();
+    rendererShouldRender = true;
   };
 
   document.addEventListener("keydown", (event) => {

@@ -11,10 +11,27 @@
       background-color: #111;
         text-align: center;
     }
+    #three-container {
+      position: relative;
+      height: 100vh;
+      width: 100vw;
+    }
     .pixelate {
       -moz-image-rendering: pixelated;
       -webkit-image-rendering: pixelated;
       image-rendering: pixelated;
+    }
+    .infoDisplay {
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 2px 4px;
+      text-align: right;
+      font-family: monospace;
+      font-size: 10px;
+      color: #eee;
+      text-shadow: 1px 1px #000;
+      background-color: rgba(0, 0, 0, 0.5);
     }
     .textureBakery {
       position: fixed;
