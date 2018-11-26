@@ -14,7 +14,21 @@ console.log('hej ho 🦄');
 THREE.Object3D.DefaultUp.set(0, 0, 1);
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+scene.background = new THREE.Color(0x203040);
+
+const camera3d = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera3d.position.set(0, -75, 350);
+camera3d.lookAt(0, 0, 0);
+camera3d.up.set(0, 0, 1);
+
+const halfWidth = window.innerWidth / 2;
+const halfHeight = window.innerHeight / 2;
+const scale2d = 1/2.2;
+const cam2dZ = 100;
+const camera2d = new THREE.OrthographicCamera(-halfWidth * scale2d, halfWidth * scale2d, halfHeight * scale2d, -halfHeight * scale2d, 1, 1000 );
+
+let curCamera = camera3d;
+
 const renderer = new THREE.WebGLRenderer({
   antialias: false,
   powerPreference: 'high-performance',
@@ -33,7 +47,7 @@ const threeContainerElement = document.getElementById('three-container');
 threeContainerElement.appendChild(renderer.domElement);
 
 const infoDisplayElement = document.createElement('div');
-infoDisplayElement.classList.add('infoDisplay');
+infoDisplayElement.setAttribute('class', 'infoDisplay infoText');
 threeContainerElement.appendChild(infoDisplayElement);
 
 const min = (a, b) => a > b ? b : a;
@@ -54,15 +68,16 @@ function resize() {
   const { clientWidth, clientHeight } = renderer.domElement.parentNode;
   const minSize = min(clientWidth, clientHeight);
   const size = Math.floor(minSize / pixelate);
-  const newSizeInfo = `container: ${clientWidth}x${clientHeight}<br>canvas: ${size}x${size}<br>${PIXELATE}=${pixelate}`;
+  const newSizeInfo = `container: ${clientWidth}x${clientHeight}<br>canvas: ${size}x${size}<br>?${PIXELATE}=${pixelate}`;
+
+  infoDisplayElement.innerHTML = view ? `${newSizeInfo}<br>x=${Math.round(view.centerX)} y=${Math.round(view.centerY)}` : newSizeInfo;
 
   if (lastSizeInfo !== newSizeInfo) {
     lastSizeInfo = newSizeInfo;
-    infoDisplayElement.innerHTML = newSizeInfo;
 
     renderer.setSize(size, size);
-    camera.aspect = 1;
-    camera.updateProjectionMatrix();
+    camera3d.aspect = 1;
+    curCamera.updateProjectionMatrix();
 
     renderer.domElement.classList[PIXELATE > 1 ? 'add' : 'remove'](PIXELATE);
     renderer.domElement.style.width = `${minSize}px`;
@@ -70,10 +85,6 @@ function resize() {
     return true;
   }
 }
-
-camera.position.set(0, -75, 350);
-camera.lookAt(0, 0, 0);
-camera.up.set(0, 0, 1);
 
 const stats = new Stats();
 stats.showPanel(1);
@@ -113,8 +124,10 @@ function render(time) {
       view.centerX += speedEast * t;
       view.centerX -= speedWest * t;
       view.update();
+
+      camera2d.position.set(view.centerX, view.centerY, cam2dZ);
     }
-    renderer.render(scene, camera);
+    renderer.render(scene, curCamera);
     rendererShouldRender = false;
   }
 }
@@ -178,6 +191,14 @@ loadTiledMap('./maps/180917-a-first-map.json').then((tiledMap) => {
       break;
     case 'ArrowRight':
       speedEast = 0;
+      break;
+    case '1':
+      curCamera = camera2d;
+      rendererShouldRender = true;
+      break;
+    case '2':
+      curCamera = camera3d;
+      rendererShouldRender = true;
       break;
     }
   });

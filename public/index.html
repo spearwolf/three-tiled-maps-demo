@@ -21,17 +21,26 @@
       -webkit-image-rendering: pixelated;
       image-rendering: pixelated;
     }
-    .infoDisplay {
-      position: absolute;
-      top: 0;
-      right: 0;
+    .infoText {
       padding: 2px 4px;
-      text-align: right;
       font-family: monospace;
       font-size: 10px;
       color: #eee;
       text-shadow: 1px 1px #000;
       background-color: rgba(0, 0, 0, 0.5);
+    }
+    .infoDisplay {
+      position: absolute;
+      top: 0;
+      right: 0;
+      text-align: right;
+    }
+    .statusBar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      text-align: center;
     }
     .textureBakery {
       position: fixed;
@@ -45,6 +54,9 @@
 </head>
 <body>
   <div id="three-container"></div>
+  <div class="statusBar infoText">
+    press keys [1] &rarr; orthographic 2d view [2] &rarr; perspective 3d view
+  </div>
   <script src="bundle.js"></script>
 </body>
 </html>
