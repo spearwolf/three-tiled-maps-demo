@@ -9,6 +9,8 @@ import loadTiledMap from './loadTiledMap';
 
 const urlParams = new URLSearchParams(window.location.search);
 
+const min = (a, b) => a > b ? b : a;
+
 console.log('hej ho 🦄');
 
 THREE.Object3D.DefaultUp.set(0, 0, 1);
@@ -16,16 +18,14 @@ THREE.Object3D.DefaultUp.set(0, 0, 1);
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x203040);
 
-const camera3d = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const camera3d = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
 camera3d.position.set(0, -75, 350);
 camera3d.lookAt(0, 0, 0);
 camera3d.up.set(0, 0, 1);
 
-const halfWidth = window.innerWidth / 2;
-const halfHeight = window.innerHeight / 2;
-const scale2d = 1/2.2;
+const halfSize = 360 / 2;
 const cam2dZ = 100;
-const camera2d = new THREE.OrthographicCamera(-halfWidth * scale2d, halfWidth * scale2d, halfHeight * scale2d, -halfHeight * scale2d, 1, 1000 );
+const camera2d = new THREE.OrthographicCamera(-halfSize, halfSize, halfSize, -halfSize, 1, 1000 );
 
 let curCamera = camera3d;
 
@@ -49,8 +49,6 @@ threeContainerElement.appendChild(renderer.domElement);
 const infoDisplayElement = document.createElement('div');
 infoDisplayElement.setAttribute('class', 'infoDisplay infoText');
 threeContainerElement.appendChild(infoDisplayElement);
-
-const min = (a, b) => a > b ? b : a;
 
 const PIXELATE = 'pixelate';
 
