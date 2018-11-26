@@ -1,14 +1,15 @@
-import * as THREE from "three";
+/* eslint no-console: 0 */
+import * as THREE from 'three';
 import Stats from 'stats.js';
 
-import { Map2DScene } from "./tiledmap/Map2DSceneTHREE";
-import { Map2DView } from "./tiledmap/Map2DView";
+import { Map2DScene } from './tiledmap/Map2DSceneTHREE';
+import { Map2DView } from './tiledmap/Map2DView';
 
-import loadTiledMap from "./loadTiledMap";
+import loadTiledMap from './loadTiledMap';
 
 const urlParams = new URLSearchParams(window.location.search);
 
-console.log("hej ho 🦄");
+console.log('hej ho 🦄');
 
 THREE.Object3D.DefaultUp.set(0, 0, 1);
 
@@ -16,7 +17,7 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({
   antialias: false,
-  powerPreference: "high-performance",
+  powerPreference: 'high-performance',
 });
 
 // see https://threejs.org/docs/#examples/loaders/GLTFLoader
@@ -56,21 +57,16 @@ function resize() {
   const newSizeInfo = `container: ${clientWidth}x${clientHeight}<br>canvas: ${size}x${size}<br>${PIXELATE}=${pixelate}`;
 
   if (lastSizeInfo !== newSizeInfo) {
-    infoDisplayElement.innerHTML = newSizeInfo;
     lastSizeInfo = newSizeInfo;
-
-    if (pixelate > 1) {
-      renderer.domElement.classList.add(PIXELATE);
-    } else {
-      renderer.domElement.classList.remove(PIXELATE);
-    }
+    infoDisplayElement.innerHTML = newSizeInfo;
 
     renderer.setSize(size, size);
+    camera.aspect = 1;
+    camera.updateProjectionMatrix();
+
+    renderer.domElement.classList[PIXELATE > 1 ? 'add' : 'remove'](PIXELATE);
     renderer.domElement.style.width = `${minSize}px`;
     renderer.domElement.style.height = `${minSize}px`;
-    camera.aspect = 1;
-
-    camera.updateProjectionMatrix();
     return true;
   }
 }
@@ -108,23 +104,14 @@ function render(time) {
     lastTime = t0;
   }
 
-  if (speedNorth) {
-    view.centerY += speedNorth * t;
-  }
-  if (speedSouth) {
-    view.centerY -= speedSouth * t;
-  }
-  if (speedEast) {
-    view.centerX += speedEast * t;
-  }
-  if (speedWest) {
-    view.centerX -= speedWest * t;
-  }
-
   rendererShouldRender = rendererShouldRender || 0 < (speedNorth + speedEast + speedSouth + speedWest);
 
   if (isResized || rendererShouldRender) {
     if (view) {
+      view.centerY += speedNorth * t;
+      view.centerY -= speedSouth * t;
+      view.centerX += speedEast * t;
+      view.centerX -= speedWest * t;
       view.update();
     }
     renderer.render(scene, camera);
@@ -143,7 +130,7 @@ requestAnimationFrame(animate);
 
 // load tiled map ////////////////////////////////////////////////////
 
-loadTiledMap("./maps/180917-a-first-map.json").then((tiledMap) => {
+loadTiledMap('./maps/180917-a-first-map.json').then((tiledMap) => {
   const map2dScene = new Map2DScene();
   map2dScene.appendTo(scene);
 
@@ -159,39 +146,39 @@ loadTiledMap("./maps/180917-a-first-map.json").then((tiledMap) => {
   // view.centerY -= 50;
   // view.update();
 
-  document.addEventListener("keydown", (event) => {
+  document.addEventListener('keydown', (event) => {
     const { key } = event;
     switch (key) {
-      case "ArrowUp":
-        speedNorth = SPEED;
-        break;
-      case "ArrowDown":
-        speedSouth = SPEED;
-        break;
-      case "ArrowLeft":
-        speedWest = SPEED;
-        break;
-      case "ArrowRight":
-        speedEast = SPEED;
-        break;
+    case 'ArrowUp':
+      speedNorth = SPEED;
+      break;
+    case 'ArrowDown':
+      speedSouth = SPEED;
+      break;
+    case 'ArrowLeft':
+      speedWest = SPEED;
+      break;
+    case 'ArrowRight':
+      speedEast = SPEED;
+      break;
     }
   });
 
-  document.addEventListener("keyup", (event) => {
+  document.addEventListener('keyup', (event) => {
     const { key } = event;
     switch (key) {
-      case "ArrowUp":
-        speedNorth = 0;
-        break;
-      case "ArrowDown":
-        speedSouth = 0;
-        break;
-      case "ArrowLeft":
-        speedWest = 0;
-        break;
-      case "ArrowRight":
-        speedEast = 0;
-        break;
+    case 'ArrowUp':
+      speedNorth = 0;
+      break;
+    case 'ArrowDown':
+      speedSouth = 0;
+      break;
+    case 'ArrowLeft':
+      speedWest = 0;
+      break;
+    case 'ArrowRight':
+      speedEast = 0;
+      break;
     }
   });
 });
