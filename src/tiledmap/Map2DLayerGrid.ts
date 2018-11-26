@@ -49,11 +49,11 @@ export class Map2DLayerGrid {
     const width = right - left;
     const height = bottom - top;
 
-    console.log('[Map2DGridTile] (gridTiles) topLeft', left, top, 'bottomRight', right, bottom, 'sizes', width, height);
+    // console.log('[Map2DGridTile] (gridTiles) topLeft', left, top, 'bottomRight', right, bottom, 'sizes', width, height);
     // tslint:disable-next-line:max-line-length
-    console.log('[Map2DGridTile] (tiles) topLeft', left * this.gridTileColumns, top * this.gridTileRows, 'bottomRight', right * this.gridTileColumns, bottom * this.gridTileRows, 'sizes', width * this.gridTileColumns, height * this.gridTileRows);
+    // console.log('[Map2DGridTile] (tiles) topLeft', left * this.gridTileColumns, top * this.gridTileRows, 'bottomRight', right * this.gridTileColumns, bottom * this.gridTileRows, 'sizes', width * this.gridTileColumns, height * this.gridTileRows);
     // tslint:disable-next-line:max-line-length
-    console.log('[Map2DGridTile] (pixels) topLeft', left * this.gridTileWidth, top * this.gridTileHeight, 'bottomRight', right * this.gridTileWidth, bottom * this.gridTileHeight, 'sizes', width * this.gridTileWidth, height * this.gridTileHeight);
+    // console.log('[Map2DGridTile] (pixels) topLeft', left * this.gridTileWidth, top * this.gridTileHeight, 'bottomRight', right * this.gridTileWidth, bottom * this.gridTileHeight, 'sizes', width * this.gridTileWidth, height * this.gridTileHeight);
 
     const prevGridTiles = this.gridTiles.slice(0);
     const knownGridTiles: Map2DGridTile[] = [];
@@ -66,7 +66,7 @@ export class Map2DLayerGrid {
         const y = top + yOffset;
         const tile = takeFrom(prevGridTiles, x, y);
         if (tile) {
-          console.log('[Map2DGridTile] found previous grid-tile:', tile.id, tile);
+          // console.log('[Map2DGridTile] found previous grid-tile:', tile.id, tile);
           knownGridTiles.push(tile);
         } else {
           newGridTileCoords.push([x, y]);
@@ -106,9 +106,9 @@ export class Map2DLayerGrid {
     tile.setGridTilePosition(x, y);
     tile.setPosition(x * this.gridTileColumns, y * this.gridTileRows);
     tile.setViewOffset(x * this.gridTileWidth, y * this.gridTileHeight);
-    if (prevGridTile) {
-      console.log('[Map2DGridTile] re-init grid-tile:', tile.id, tile);
-    }
+    // if (prevGridTile) {
+      // console.log('[Map2DGridTile] re-init grid-tile:', tile.id, tile);
+    // }
     this.view.renderer.addGridTile(tile);
     return tile;
   }

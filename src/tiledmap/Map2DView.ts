@@ -64,7 +64,6 @@ export class Map2DView {
   }
 
   update() {
-    console.log('[Map2DView] UPDATE!');
     this.layers.forEach((layer) => layer.update());
     this.renderer.postRender(this);
   }

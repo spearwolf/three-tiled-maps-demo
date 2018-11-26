@@ -23,6 +23,7 @@ renderer.gammaOutput = true;
 renderer.gammaFactor = 2.2;
 
 const DPR = window.devicePixelRatio || 1;
+const PIXELATE_MIN = 1 / DPR;
 
 renderer.setPixelRatio(DPR);
 
@@ -40,10 +41,18 @@ const PIXELATE = 'pixelate';
 let lastSizeInfo = null;
 
 function resize() {
-  const pixelate = parseInt(urlParams.get(PIXELATE), 10) || 1;
+  let pixelate = Number(urlParams.get(PIXELATE));
+  if (pixelate === 0 || isNaN(pixelate)) {
+    pixelate = 1;
+  }
+  if (pixelate < PIXELATE_MIN) {
+    pixelate = PIXELATE_MIN;
+  }
+
   const { clientWidth, clientHeight } = renderer.domElement.parentNode;
   const minSize = min(clientWidth, clientHeight);
-  const newSizeInfo = `container: ${clientWidth}x${clientHeight}<br>canvas: ${minSize}x${minSize}<br>${PIXELATE}=${pixelate}`;
+  const size = Math.floor(minSize / pixelate);
+  const newSizeInfo = `container: ${clientWidth}x${clientHeight}<br>canvas: ${size}x${size}<br>${PIXELATE}=${pixelate}`;
 
   if (lastSizeInfo !== newSizeInfo) {
     infoDisplayElement.innerHTML = newSizeInfo;
@@ -54,7 +63,6 @@ function resize() {
     } else {
       renderer.domElement.classList.remove(PIXELATE);
     }
-    const size = Math.floor(minSize / pixelate);
 
     renderer.setSize(size, size);
     renderer.domElement.style.width = `${minSize}px`;
