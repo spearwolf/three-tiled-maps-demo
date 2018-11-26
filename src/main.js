@@ -35,49 +35,86 @@ threeContainerElement.appendChild(infoDisplayElement);
 
 const min = (a, b) => a > b ? b : a;
 
-let lastSize = null;
+const PIXELATE = 'pixelate';
+
+let lastSizeInfo = null;
 
 function resize() {
-  const container = renderer.domElement.parentNode;
-  const s = min(container.clientWidth, container.clientHeight);
-  const pixelate = parseInt(urlParams.get('pixelate'), 10) || 1;
+  const pixelate = parseInt(urlParams.get(PIXELATE), 10) || 1;
+  const { clientWidth, clientHeight } = renderer.domElement.parentNode;
+  const minSize = min(clientWidth, clientHeight);
+  const newSizeInfo = `container: ${clientWidth}x${clientHeight}<br>canvas: ${minSize}x${minSize}<br>${PIXELATE}=${pixelate}`;
 
-  const newSize = `${s}x${s}\npixelate=${pixelate}`;
-  if (lastSize !== newSize) {
-    lastSize = newSize;
-    infoDisplayElement.innerHTML = newSize.replace('\n', '<br>');
+  if (lastSizeInfo !== newSizeInfo) {
+    infoDisplayElement.innerHTML = newSizeInfo;
+    lastSizeInfo = newSizeInfo;
 
     if (pixelate > 1) {
-      renderer.domElement.classList.add('pixelate');
+      renderer.domElement.classList.add(PIXELATE);
     } else {
-      renderer.domElement.classList.remove('pixelate');
+      renderer.domElement.classList.remove(PIXELATE);
     }
-    const size = Math.floor(s / pixelate);
+    const size = Math.floor(minSize / pixelate);
 
     renderer.setSize(size, size);
-    renderer.domElement.style.width = `${Math.floor(size * pixelate)}px`;
-    renderer.domElement.style.height = `${Math.floor(size * pixelate)}px`;
+    renderer.domElement.style.width = `${minSize}px`;
+    renderer.domElement.style.height = `${minSize}px`;
     camera.aspect = 1;
-    camera.updateProjectionMatrix();
 
+    camera.updateProjectionMatrix();
     return true;
   }
 }
 
-camera.position.set(0, -100, 300);
+camera.position.set(0, -75, 350);
 camera.lookAt(0, 0, 0);
 camera.up.set(0, 0, 1);
 
 let rendererShouldRender = true;
 
-function animate() {
+const SPEED = 130; // pixels per second
+
+let view = null;
+
+let speedNorth = 0;
+let speedEast = 0;
+let speedSouth = 0;
+let speedWest = 0;
+
+let lastTime = 0;
+
+function animate(time) {
   requestAnimationFrame(animate);
   let isResized = resize();
 
-  // const seconds = time / 1000;
-  // scene.rotation.z = seconds * -0.4;
+  let t = 0;
+  if (lastTime ===  0) {
+    lastTime = time / 1000;
+  } else {
+    const t0 = time / 1000;
+    t = t0 - lastTime;
+    lastTime = t0;
+  }
+
+  if (speedNorth) {
+    view.centerY += speedNorth * t;
+  }
+  if (speedSouth) {
+    view.centerY -= speedSouth * t;
+  }
+  if (speedEast) {
+    view.centerX += speedEast * t;
+  }
+  if (speedWest) {
+    view.centerX -= speedWest * t;
+  }
+
+  rendererShouldRender = rendererShouldRender || 0 < (speedNorth + speedEast + speedSouth + speedWest);
 
   if (isResized || rendererShouldRender) {
+    if (view) {
+      view.update();
+    }
     renderer.render(scene, camera);
     rendererShouldRender = false;
   }
@@ -91,9 +128,9 @@ loadTiledMap("./maps/180917-a-first-map.json").then((tiledMap) => {
   const map2dScene = new Map2DScene();
   map2dScene.appendTo(scene);
 
-  const view = new Map2DView(map2dScene, 0, 0, 320, 200, 100, 100);
+  view = new Map2DView(map2dScene, 0, 0, 320, 200, 100, 100);
   view.appendLayer(...tiledMap.getAllLayers());
-  view.update();
+  // view.update();
 
   rendererShouldRender = true;
 
@@ -103,27 +140,38 @@ loadTiledMap("./maps/180917-a-first-map.json").then((tiledMap) => {
   // view.centerY -= 50;
   // view.update();
 
-  const translate = (x, y) => {
-    view.centerX += x;
-    view.centerY += y;
-    view.update();
-    rendererShouldRender = true;
-  };
-
   document.addEventListener("keydown", (event) => {
     const { key } = event;
     switch (key) {
       case "ArrowUp":
-        translate(0, 10);
+        speedNorth = SPEED;
         break;
       case "ArrowDown":
-        translate(0, -10);
+        speedSouth = SPEED;
         break;
       case "ArrowLeft":
-        translate(-10, 0);
+        speedWest = SPEED;
         break;
       case "ArrowRight":
-        translate(10, 0);
+        speedEast = SPEED;
+        break;
+    }
+  });
+
+  document.addEventListener("keyup", (event) => {
+    const { key } = event;
+    switch (key) {
+      case "ArrowUp":
+        speedNorth = 0;
+        break;
+      case "ArrowDown":
+        speedSouth = 0;
+        break;
+      case "ArrowLeft":
+        speedWest = 0;
+        break;
+      case "ArrowRight":
+        speedEast = 0;
         break;
     }
   });
