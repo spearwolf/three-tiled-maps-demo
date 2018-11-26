@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import Stats from 'stats.js';
 
 import { Map2DScene } from "./tiledmap/Map2DSceneTHREE";
 import { Map2DView } from "./tiledmap/Map2DView";
@@ -78,6 +79,10 @@ camera.position.set(0, -75, 350);
 camera.lookAt(0, 0, 0);
 camera.up.set(0, 0, 1);
 
+const stats = new Stats();
+stats.showPanel(1);
+document.body.appendChild(stats.dom);
+
 let rendererShouldRender = true;
 
 const SPEED = 130; // pixels per second
@@ -91,8 +96,7 @@ let speedWest = 0;
 
 let lastTime = 0;
 
-function animate(time) {
-  requestAnimationFrame(animate);
+function render(time) {
   let isResized = resize();
 
   let t = 0;
@@ -126,6 +130,13 @@ function animate(time) {
     renderer.render(scene, camera);
     rendererShouldRender = false;
   }
+}
+
+function animate(time) {
+  stats.begin();
+  render(time);
+  stats.end();
+  requestAnimationFrame(animate);
 }
 
 requestAnimationFrame(animate);
