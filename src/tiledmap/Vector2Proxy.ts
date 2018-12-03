@@ -1,6 +1,6 @@
 import { Vector2 } from 'three';
 
-export class VectorProxy extends Vector2 {
+export class Vector2Proxy extends Vector2 {
 
   private readonly trgtObj: object;
   private readonly xProp: string;
