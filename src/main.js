@@ -2,10 +2,9 @@
 import * as THREE from 'three';
 import Stats from 'stats.js';
 
+import { TiledMap } from './tiledmap/TiledMap';
 import { Map2DScene } from './tiledmap/Map2DSceneTHREE';
 import { Map2DView } from './tiledmap/Map2DView';
-
-import loadTiledMap from './loadTiledMap';
 
 const urlParams = new URLSearchParams(window.location.search);
 
@@ -141,7 +140,7 @@ requestAnimationFrame(animate);
 
 // load tiled map ////////////////////////////////////////////////////
 
-loadTiledMap('./maps/180917-a-first-map.json').then((tiledMap) => {
+TiledMap.load('./maps/180917-a-first-map.json').then((tiledMap) => {
   const map2dScene = new Map2DScene();
   map2dScene.appendTo(scene);
 

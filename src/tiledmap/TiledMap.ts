@@ -5,6 +5,11 @@ import { TiledMapLayer } from './TiledMapLayer';
 export class TiledMap {
   private readonly layerMap: Map<string, TiledMapLayer> = new Map();
 
+  static async load(url: string): Promise<TiledMap> {
+    const jsonData = await fetch(url).then((response) => response.json());
+    return new TiledMap(jsonData);
+  }
+
   /**
    * Assume tiled map orientation is orthogonal and infinite is true.
    */
