@@ -11,7 +11,8 @@ const loadTexture = ( url: string, loader: THREE.TextureLoader): Promise<THREE.T
 
 export class TextureLibrary implements ITextureLibrary {
 
-  private allTextures: Set<THREE.Texture> = new Set();
+  baseTexture: THREE.Texture;
+
   private texNameMap: Map<string, THREE.Texture> = new Map();
   private texIdMap: Map<number, string> = new Map();
   private defaultTexName: string;
@@ -31,7 +32,7 @@ export class TextureLibrary implements ITextureLibrary {
   }
 
   importFromAtlas(data: ITextureAtlasData, base: THREE.Texture) {
-    this.allTextures.add(base);
+    this.baseTexture = base;
     Object.keys(data.frames).forEach((name: string) => {
       const tex = base.clone();
       const frame = data.frames[name];
@@ -44,8 +45,10 @@ export class TextureLibrary implements ITextureLibrary {
   }
 
   dispose() {
-    Array.from(this.allTextures).forEach((tex) => tex.dispose());
-    this.allTextures.clear();
+    if (this.baseTexture) {
+      this.baseTexture.dispose();
+      this.baseTexture = null;
+    }
   }
 
   getTextureById(id: number): THREE.Texture {

@@ -140,13 +140,34 @@ requestAnimationFrame(animate);
 
 // load tiled map ////////////////////////////////////////////////////
 
-TiledMap.load('./maps/180917-a-first-map.json').then((tiledMap) => {
-  const map2d = new Map2D();
-  map2d.appendTo(scene);
+Promise.all([
+  TiledMap.load('./maps/180917-a-first-map.json'),
+  TextureLibrary.loadFromAtlas('sketch-tiles.json', './atlas/'),
+]).then(([tiledMap, texLib]) => {
+  // tslint:disable-next-line:no-console
+  console.log(texLib);
+  texLib.setIdNameMap([
+    [1, 'empty.png'],
+    [2, 'floor.png'],
+    [3, 'wall-e.png'],
+    [4, 'wall-n.png'],
+    [5, 'wall-ns.png'],
+    [6, 'wall-s.png'],
+    [7, 'wall-w.png'],
+    [8, 'wall-es.png'],
+    [9, 'wall-esw.png'],
+    [10, 'wall-ew.png'],
+    [11, 'wall-ne.png'],
+    [12, 'wall-nes.png'],
+    [13, 'wall-nesw.png'],
+    [14, 'wall-new.png'],
+    [15, 'wall-nsw.png'],
+    [16, 'wall-nw.png'],
+    [17, 'wall-sw.png'],
+  ]);
 
-  TextureLibrary.loadFromAtlas('nobinger.json', './atlas/').then((texLib) => {
-    console.log(texLib);
-  });
+  const map2d = new Map2D(texLib);
+  map2d.appendTo(scene);
 
   view = new Map2DView(map2d, 0, 0, 320, 200, 100, 100);
   view.appendLayer(...tiledMap.getAllLayers());

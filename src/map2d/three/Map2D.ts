@@ -5,6 +5,7 @@ import { Map2DGridTile } from '../Map2DGridTile';
 import { Map2DView } from '../Map2DView';
 
 import { GridTile } from './GridTile';
+import { TextureLibrary } from './TextureLibrary';
 import { ViewFrame } from './ViewFrame';
 
 export class Map2D implements IMap2DRenderer {
@@ -14,7 +15,7 @@ export class Map2D implements IMap2DRenderer {
   viewFrame: ViewFrame;
   viewFrameZOffset = 0.5;
 
-  constructor() {
+  constructor(readonly textureLibrary: TextureLibrary) {
     this.container = new THREE.Object3D();
     this.viewFrame = new ViewFrame(this);
   }
@@ -64,7 +65,7 @@ export class Map2D implements IMap2DRenderer {
   }
 
   private createGridTile(tile: Map2DGridTile): GridTile {
-    const gt = new GridTile(tile);
+    const gt = new GridTile(tile, this.textureLibrary);
     this.gridTiles.set(tile.id, gt);
     return gt;
   }
