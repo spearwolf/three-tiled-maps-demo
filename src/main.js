@@ -2,9 +2,9 @@
 import * as THREE from 'three';
 import Stats from 'stats.js';
 
-import { TiledMap } from './tiledmap/TiledMap';
-import { Map2D } from './tiledmap/three';
-import { Map2DView } from './tiledmap/Map2DView';
+import { TiledMap } from './map2d/TiledMap';
+import { Map2D } from './map2d/three';
+import { Map2DView } from './map2d/Map2DView';
 
 const urlParams = new URLSearchParams(window.location.search);
 
