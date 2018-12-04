@@ -1,6 +1,6 @@
-import { AABB2 } from './AABB2';
+import { AABB2 } from '../AABB2';
+import { IMap2DLayer } from '../IMap2DLayer';
 import { ChunkQuadTreeNode } from './ChunkQuadTreeNode';
-import { IMap2DLayer } from './IMap2DLayer';
 import { ITiledMapLayerChunkData } from './ITiledMapLayerChunkData';
 import { ITiledMapLayerData } from './ITiledMapLayerData';
 import { TiledMap } from './TiledMap';

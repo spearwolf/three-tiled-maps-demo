@@ -1,5 +1,5 @@
-import { AABB2 } from './AABB2';
-import { base64toUint32Arr } from './base64toUint32Arr';
+import { AABB2 } from '../AABB2';
+import { base64toUint32Arr } from '../base64toUint32Arr';
 import { ITiledMapLayerChunkData } from './ITiledMapLayerChunkData';
 
 export class TiledMapLayerChunk {

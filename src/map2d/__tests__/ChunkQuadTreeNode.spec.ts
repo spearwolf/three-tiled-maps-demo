@@ -1,6 +1,6 @@
 import { AABB2 } from '../AABB2';
-import { ChunkQuadTreeNode } from '../ChunkQuadTreeNode';
-import { TiledMapLayerChunk } from '../TiledMapLayerChunk';
+import { ChunkQuadTreeNode } from '../tiledmap/ChunkQuadTreeNode';
+import { TiledMapLayerChunk } from '../tiledmap/TiledMapLayerChunk';
 
 const chunkNodeNames = (chunkNodes: TiledMapLayerChunk[]) => chunkNodes.map((chunkNode: TiledMapLayerChunk) => chunkNode.rawData).sort();
 

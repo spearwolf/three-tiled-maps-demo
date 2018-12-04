@@ -1,5 +1,5 @@
-import { TiledMap } from '../TiledMap';
-import { TiledMapLayer } from '../TiledMapLayer';
+import { TiledMap } from '../tiledmap/TiledMap';
+import { TiledMapLayer } from '../tiledmap/TiledMapLayer';
 
 import {
   A_FIRST_MAP,
