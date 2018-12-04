@@ -3,37 +3,35 @@ import * as THREE from 'three';
 import { Map2D } from './Map2D';
 
 export class ViewFrame {
-  readonly map2d: Map2D;
-  readonly scene: THREE.Scene;
 
   color = 0xff0032;
 
   zOffset = 1;
 
-  private obj3d: THREE.Object3D = null;
+  private container: THREE.Object3D = null;
+  private linesCreated = false;
 
-  constructor(map2d: Map2D) {
-    this.map2d = map2d;
-    this.scene = new THREE.Scene();
+  constructor(readonly map2d: Map2D) {
+    this.container = new THREE.Object3D();
   }
 
-  appendTo(scene: THREE.Scene) {
+  appendTo(obj: THREE.Object3D) {
     this.createMesh();
-    scene.add(this.scene);
+    obj.add(this.container);
   }
 
-  removeFrom(scene: THREE.Scene) {
-    scene.remove(this.scene);
+  removeFrom(obj: THREE.Object3D) {
+    obj.remove(this.container);
   }
 
   update(x: number, y: number, width: number, height: number) {
-    this.scene.position.set(x, y, this.zOffset);
-    this.scene.scale.set(width, height, 1);
-    this.scene.matrixWorldNeedsUpdate = true;
+    this.container.position.set(x, y, this.zOffset);
+    this.container.scale.set(width, height, 1);
+    this.container.matrixWorldNeedsUpdate = true;
   }
 
   private createMesh() {
-    if (this.obj3d === null) {
+    if (!this.linesCreated) {
       const l = 0.5;
       const c = 0.02;
       const geometry = new THREE.Geometry();
@@ -55,8 +53,9 @@ export class ViewFrame {
       );
 
       const material = new THREE.LineBasicMaterial({ color: this.color });
-      this.obj3d = new THREE.LineSegments(geometry, material) ;
-      this.scene.add(this.obj3d);
+      const lines = new THREE.LineSegments(geometry, material) ;
+      this.container.add(lines);
+      this.linesCreated = true;
     }
   }
 }

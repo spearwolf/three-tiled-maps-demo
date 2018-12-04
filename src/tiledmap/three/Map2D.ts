@@ -8,40 +8,40 @@ import { GridTile } from './GridTile';
 import { ViewFrame } from './ViewFrame';
 
 export class Map2D implements IMap2DRenderer {
-  readonly scene: THREE.Scene;
+  readonly container: THREE.Object3D;
   readonly gridTiles: Map<string, GridTile> = new Map();
 
   viewFrame: ViewFrame;
   viewFrameZOffset = 0.5;
 
   constructor() {
-    this.scene = new THREE.Scene();
+    this.container = new THREE.Object3D();
     this.viewFrame = new ViewFrame(this);
   }
 
-  appendTo(scene: THREE.Scene) {
-    if (!scene.children.includes(this.scene)) {
-      scene.add(this.scene);
-      this.viewFrame.appendTo(scene);
+  appendTo(obj: THREE.Object3D) {
+    if (!obj.children.includes(this.container)) {
+      obj.add(this.container);
+      this.viewFrame.appendTo(obj);
       this.viewFrame.zOffset = this.viewFrameZOffset;
     }
   }
 
-  removeFrom(scene: THREE.Scene) {
-    scene.remove(this.scene);
-    this.viewFrame.removeFrom(scene);
+  removeFrom(obj: THREE.Object3D) {
+    obj.remove(this.container);
+    this.viewFrame.removeFrom(obj);
   }
 
   addGridTile(tile: Map2DGridTile) {
     console.log('[Map2DSceneTHREE] add grid-tile:', tile.id);
-    this.createGridTile(tile).appendTo(this.scene);
+    this.createGridTile(tile).appendTo(this.container);
   }
 
   removeGridTile(tileId: string) {
     console.log('[Map2DSceneTHREE] remove grid-tile:', tileId);
     const gt = this.destroyGridTile(tileId);
     if (gt !== null) {
-      gt.removeFrom(this.scene);
+      gt.removeFrom(this.container);
       gt.dispose();
     }
  }

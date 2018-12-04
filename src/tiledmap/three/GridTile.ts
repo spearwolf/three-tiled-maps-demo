@@ -23,12 +23,12 @@ export class GridTile {
     this.mesh = new THREE.Mesh(this.gridTileGeometry, material);
   }
 
-  appendTo(scene: THREE.Scene) {
-    scene.add(this.mesh);
+  appendTo(obj: THREE.Object3D) {
+    obj.add(this.mesh);
   }
 
-  removeFrom(scene: THREE.Scene) {
-    scene.remove(this.mesh);
+  removeFrom(obj: THREE.Object3D) {
+    obj.remove(this.mesh);
   }
 
   dispose() {
