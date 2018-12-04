@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 
-import { Map2DScene } from './Map2DScene';
+import { Map2D } from './Map2D';
 
 export class ViewFrame {
-  readonly map2dScene: Map2DScene;
+  readonly map2d: Map2D;
   readonly scene: THREE.Scene;
 
   color = 0xff0032;
@@ -12,8 +12,8 @@ export class ViewFrame {
 
   private obj3d: THREE.Object3D = null;
 
-  constructor(map2dScene: Map2DScene) {
-    this.map2dScene = map2dScene;
+  constructor(map2d: Map2D) {
+    this.map2d = map2d;
     this.scene = new THREE.Scene();
   }
 
