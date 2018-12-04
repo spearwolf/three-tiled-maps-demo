@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import Stats from 'stats.js';
 
 import { TiledMap } from './map2d/tiledmap';
-import { Map2D } from './map2d/three';
+import { Map2D, TextureLibrary } from './map2d/three';
 import { Map2DView } from './map2d';
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -143,6 +143,10 @@ requestAnimationFrame(animate);
 TiledMap.load('./maps/180917-a-first-map.json').then((tiledMap) => {
   const map2d = new Map2D();
   map2d.appendTo(scene);
+
+  TextureLibrary.loadFromAtlas('nobinger.json', './atlas/').then((texLib) => {
+    console.log(texLib);
+  });
 
   view = new Map2DView(map2d, 0, 0, 320, 200, 100, 100);
   view.appendLayer(...tiledMap.getAllLayers());
