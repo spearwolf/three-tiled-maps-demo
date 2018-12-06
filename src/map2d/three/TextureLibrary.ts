@@ -17,6 +17,7 @@ export class TextureLibrary {
   constructor(readonly atlas: TextureAtlas) {
     this.baseTexture = new THREE.Texture(atlas.baseTexture.imgEl);
     this.baseTexture.flipY = false;
+    this.baseTexture.magFilter = THREE.NearestFilter;
     this.baseTexture.needsUpdate = true;
   }
 

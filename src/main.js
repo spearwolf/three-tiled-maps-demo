@@ -6,9 +6,9 @@ import { TiledMap } from './map2d/tiledmap';
 import { Map2D, TextureLibrary } from './map2d/three';
 import { Map2DView } from './map2d';
 
-const urlParams = new URLSearchParams(window.location.search);
-
-const min = (a, b) => a > b ? b : a;
+const VIEW_WIDTH = 320;
+const VIEW_ASPECT = 9/16;
+const calcViewHeight = (width = VIEW_WIDTH) => Math.round(width * VIEW_ASPECT);
 
 console.log('hej ho 🦄');
 
@@ -17,14 +17,17 @@ THREE.Object3D.DefaultUp.set(0, 0, 1);
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x203040);
 
-const camera3d = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+const camera3d = new THREE.PerspectiveCamera(75, 1, 0.1, 9999);
 camera3d.position.set(0, -75, 350);
 camera3d.lookAt(0, 0, 0);
 camera3d.up.set(0, 0, 1);
 
-const halfSize = 360 / 2;
+const min = (a, b) => a > b ? b : a;
+
+const halfSize = min(VIEW_WIDTH, calcViewHeight()) / 2;
 const cam2dZ = 100;
 const camera2d = new THREE.OrthographicCamera(-halfSize, halfSize, halfSize, -halfSize, 1, 1000 );
+console.log('cam2d', -halfSize, halfSize, halfSize, -halfSize);
 
 let curCamera = camera3d;
 
@@ -47,7 +50,15 @@ const infoDisplayElement = document.createElement('div');
 infoDisplayElement.setAttribute('class', 'infoDisplay infoText');
 threeContainerElement.appendChild(infoDisplayElement);
 
+window.THREE = THREE;
+// eslint-disable-next-line no-undef
+require('three/examples/js/controls/MapControls');
+
+const controls = new window.THREE.MapControls(camera3d);
+
 const PIXELATE = 'pixelate';
+
+const urlParams = new URLSearchParams(window.location.search);
 
 let lastSizeInfo = null;
 
@@ -63,7 +74,7 @@ function resize() {
 
   const newSizeInfo = `container: ${clientWidth}x${clientHeight}<br>canvas: ${size}x${size}<br>devicePixelRatio: ${DPR}<br>?${PIXELATE}=${pixelate}`;
 
-  infoDisplayElement.innerHTML = view ? `${newSizeInfo}<br>x=${Math.round(view.centerX)} y=${Math.round(view.centerY)}` : newSizeInfo;
+  infoDisplayElement.innerHTML = view ? `${newSizeInfo}<br>x=${Math.round(view.centerX)} y=${Math.round(view.centerY)} [${Math.round(view.width)}x${Math.round(view.height)}]` : newSizeInfo;
 
   if (lastSizeInfo !== newSizeInfo) {
     lastSizeInfo = newSizeInfo;
@@ -109,8 +120,11 @@ function render(time) {
   }
 
   rendererShouldRender = rendererShouldRender || 0 < (speedNorth + speedEast + speedSouth + speedWest);
+  rendererShouldRender = rendererShouldRender || curCamera === camera3d;
 
   if (isResized || rendererShouldRender) {
+    controls.update();
+
     if (view) {
       view.centerY += speedNorth * t;
       view.centerY -= speedSouth * t;
@@ -172,7 +186,7 @@ Promise.all([
   const map2d = new Map2D(texLib);
   map2d.appendTo(scene);
 
-  view = new Map2DView(map2d, 0, 0, 320, 200, 100, 100);
+  view = new Map2DView(map2d, 0, 0, VIEW_WIDTH, calcViewHeight(), 100, 100);
   view.appendLayer(...tiledMap.getAllLayers());
   // view.update();
 
@@ -185,45 +199,71 @@ Promise.all([
   // view.update();
 
   document.addEventListener('keydown', (event) => {
-    const { key } = event;
-    switch (key) {
-    case 'ArrowUp':
+    const { keyCode } = event;
+    switch (keyCode) {
+    case 87: // W
       speedNorth = SPEED;
       break;
-    case 'ArrowDown':
+    case 83: // S
       speedSouth = SPEED;
       break;
-    case 'ArrowLeft':
+    case 65: // A
       speedWest = SPEED;
       break;
-    case 'ArrowRight':
+    case 68: // D
       speedEast = SPEED;
       break;
     }
   });
 
+  const changeViewSize = (multiplyByScalar) => {
+    if (view) {
+      view.width *= multiplyByScalar;
+      view.height = calcViewHeight(view.width);
+      const halfSize = min(view.width, view.height) / 2;
+      camera2d.left = -halfSize;
+      camera2d.right = halfSize;
+      camera2d.top = halfSize;
+      camera2d.bottom = -halfSize;
+      camera2d.updateProjectionMatrix();
+      rendererShouldRender = true;
+    }
+  };
+
   document.addEventListener('keyup', (event) => {
-    const { key } = event;
-    switch (key) {
-    case 'ArrowUp':
+    const { keyCode } = event;
+    switch (keyCode) {
+    case 87: // W
       speedNorth = 0;
       break;
-    case 'ArrowDown':
+    case 83: // A
       speedSouth = 0;
       break;
-    case 'ArrowLeft':
+    case 65: // S
       speedWest = 0;
       break;
-    case 'ArrowRight':
+    case 68: // D
       speedEast = 0;
       break;
-    case '1':
+    case 49: // 1
       curCamera = camera2d;
+      map2d.viewFrame.container.visible = false;
+      controls.enabled = false;
       rendererShouldRender = true;
       break;
-    case '2':
+    case 50: // 2
       curCamera = camera3d;
+      map2d.viewFrame.container.visible = true;
+      controls.enabled = true;
       rendererShouldRender = true;
+      break;
+    case 107: // numPad: add
+    case 187: // +
+      changeViewSize(curCamera === camera3d ? 1.1 : 0.9);
+      break;
+    case 109: // numPad: sub
+    case 189: // -
+      changeViewSize(curCamera === camera2d ? 1.1 : 0.9);
       break;
     }
   });
