@@ -1,20 +1,20 @@
 import * as THREE from 'three';
 
-import { Map2DGridTile } from '../Map2DGridTile';
-import { GridTileBufferGeometry } from './GridTileBufferGeometry';
+import { Map2DLayerTile } from '../Map2DLayerTile';
+import { LayerTileBufferGeometry } from './LayerTileBufferGeometry';
 import { TextureLibrary } from './TextureLibrary';
 
-export class GridTile {
+export class LayerTile {
   readonly mesh: THREE.Mesh;
 
   constructor(
-    readonly map2dGridTile: Map2DGridTile,
+    readonly map2dLayerTile: Map2DLayerTile,
     readonly textureLibrary: TextureLibrary = null,
   ) {
 
-    map2dGridTile.fetchTileIds();
+    map2dLayerTile.fetchTileIds();
 
-    const geometry = new GridTileBufferGeometry(this);
+    const geometry = new LayerTileBufferGeometry(this);
 
     const material = new THREE.MeshBasicMaterial({
       color: 0xffffff,

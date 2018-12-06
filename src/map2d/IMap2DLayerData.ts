@@ -1,7 +1,4 @@
 
-/**
- * Represents a specific layer of a 2d map.
- */
 export interface IMap2DLayerData {
   name: string;
 

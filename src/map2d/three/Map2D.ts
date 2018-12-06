@@ -1,20 +1,20 @@
 import * as THREE from 'three';
 
 import { IMap2DRenderer } from '../IMap2DRenderer';
-import { Map2DGridTile } from '../Map2DGridTile';
+import { Map2DLayerTile } from '../Map2DLayerTile';
 import { Map2DView } from '../Map2DView';
 
-import { GridTile } from './GridTile';
+import { LayerTile } from './LayerTile';
 import { TextureLibrary } from './TextureLibrary';
 import { ViewFrame } from './ViewFrame';
 
 export class Map2D implements IMap2DRenderer {
 
-  readonly container: THREE.Object3D;
-  readonly gridTiles: Map<string, GridTile> = new Map();
-
   viewFrame: ViewFrame;
   viewFrameZOffset = 0.5;
+
+  private readonly container: THREE.Object3D;
+  private readonly layerTiles: Map<string, LayerTile> = new Map();
 
   constructor(readonly textureLibrary: TextureLibrary) {
     this.container = new THREE.Object3D();
@@ -34,19 +34,19 @@ export class Map2D implements IMap2DRenderer {
     this.viewFrame.removeFrom(obj);
   }
 
-  addGridTile(tile: Map2DGridTile) {
-    this.createGridTile(tile).appendTo(this.container);
+  addLayerTile(tile: Map2DLayerTile) {
+    this.createTile(tile).appendTo(this.container);
   }
 
-  removeGridTile(tileId: string) {
-    const gt = this.destroyGridTile(tileId);
+  removeLayerTile(tileId: string) {
+    const gt = this.destroyTile(tileId);
     if (gt !== null) {
       gt.removeFrom(this.container);
       gt.dispose();
     }
  }
 
-  updateGridTile(_tile: Map2DGridTile) {
+  updateLayerTile(_tile: Map2DLayerTile) {
     // console.log('[Map2DSceneTHREE] update grid-tile:', tile.id);
   }
 
@@ -54,18 +54,18 @@ export class Map2D implements IMap2DRenderer {
     this.viewFrame.update(view.centerX, view.centerY, view.width, view.height);
   }
 
-  private destroyGridTile(id: string): GridTile {
-    if (this.gridTiles.has(id)) {
-      const gt = this.gridTiles.get(id);
-      this.gridTiles.delete(id);
+  private destroyTile(id: string): LayerTile {
+    if (this.layerTiles.has(id)) {
+      const gt = this.layerTiles.get(id);
+      this.layerTiles.delete(id);
       return gt;
     }
     return null;
   }
 
-  private createGridTile(tile: Map2DGridTile): GridTile {
-    const gt = new GridTile(tile, this.textureLibrary);
-    this.gridTiles.set(tile.id, gt);
+  private createTile(tile: Map2DLayerTile): LayerTile {
+    const gt = new LayerTile(tile, this.textureLibrary);
+    this.layerTiles.set(tile.id, gt);
     return gt;
   }
 }

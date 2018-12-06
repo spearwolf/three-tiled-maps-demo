@@ -15,8 +15,8 @@ export class Map2DView {
   /**
    * @param centerX horizontal center position
    * @param centerY vertical center position
-   * @param gridTileWidth approximate width of a *grid tile* (see Map2DGridTile) in *pixels*. The real size is a multiple of the size of a single tile.
-   * @param gridTileHeight approximate height of a *grid tile* (see Map2DGridTile) in *pixels* The real size is a multiple of the size of a single tile.
+   * @param layerTileWidth approximate width of a *grid tile* (see [[Map2DLayerTile]]) in *pixels*. The real size is a multiple of the size of a single tile.
+   * @param layerTileHeight approximate height of a *grid tile* (see [[Map2DLayerTile]]) in *pixels* The real size is a multiple of the size of a single tile.
    */
   constructor(
     readonly renderer: IMap2DRenderer,
@@ -24,8 +24,8 @@ export class Map2DView {
     public centerY: number,
     public width: number,
     public height: number,
-    readonly gridTileWidth: number,
-    readonly gridTileHeight: number,
+    readonly layerTileWidth: number,
+    readonly layerTileHeight: number,
   ) { }
 
   get left() {

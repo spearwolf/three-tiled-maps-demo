@@ -1,9 +1,9 @@
 import { IMap2DLayerData } from './IMap2DLayerData';
-import { Map2DGridTile } from './Map2DGridTile';
+import { Map2DLayerTile } from './Map2DLayerTile';
 import { Map2DView } from './Map2DView';
 
-const takeFrom = (tiles: Map2DGridTile[], left: number, top: number): Map2DGridTile => {
-  const idx = tiles.findIndex((gridTile) => gridTile.isGridTilePosition(left, top));
+const takeFrom = (tiles: Map2DLayerTile[], left: number, top: number): Map2DLayerTile => {
+  const idx = tiles.findIndex((tile) => tile.isLayerTilePosition(left, top));
   if (idx !== -1) {
     return tiles.splice(idx, 1)[0];
   }
@@ -12,24 +12,24 @@ const takeFrom = (tiles: Map2DGridTile[], left: number, top: number): Map2DGridT
 
 /**
  * Represents a single layer of a [[Map2D]].
- * Internally the layer is organized as a grid of tiles (see [[Map2DGridTile]]).
+ * Internally the layer is organized as a grid of tiles (see [[Map2DLayerTile]]).
  * The layer is responsible for the lifecycle of the tiles dependent on their visibility
  * which is defined by [[Map2DView]].
  */
 export class Map2DLayer {
 
-  readonly gridTileColumns: number;
-  readonly gridTileRows: number;
-  readonly gridTileWidth: number;
-  readonly gridTileHeight: number;
+  readonly tileColumns: number;
+  readonly tileRows: number;
+  readonly tileWidth: number;
+  readonly tileHeight: number;
 
-  gridTiles: Map2DGridTile[] = [];
+  tiles: Map2DLayerTile[] = [];
 
   constructor(readonly view: Map2DView, readonly layerData: IMap2DLayerData) {
-    this.gridTileColumns = Math.ceil(view.gridTileWidth / layerData.tileWidth);
-    this.gridTileRows = Math.ceil(view.gridTileHeight / layerData.tileHeight);
-    this.gridTileWidth = this.gridTileColumns * layerData.tileWidth;
-    this.gridTileHeight = this.gridTileRows * layerData.tileHeight;
+    this.tileColumns = Math.ceil(view.layerTileWidth / layerData.tileWidth);
+    this.tileRows = Math.ceil(view.layerTileHeight / layerData.tileHeight);
+    this.tileWidth = this.tileColumns * layerData.tileWidth;
+    this.tileHeight = this.tileRows * layerData.tileHeight;
   }
 
   /**
@@ -43,10 +43,10 @@ export class Map2DLayer {
     const viewHalfWidth = this.view.width * 0.5;
     const viewHalfHeight = this.view.height * 0.5;
 
-    const left = Math.floor((this.view.centerX - viewHalfWidth) / this.gridTileWidth);
-    const top = Math.floor((this.view.centerY - viewHalfHeight) / this.gridTileHeight);
-    const right = Math.ceil((this.view.centerX + viewHalfWidth) / this.gridTileWidth);
-    const bottom = Math.ceil((this.view.centerY + viewHalfHeight) / this.gridTileHeight);
+    const left = Math.floor((this.view.centerX - viewHalfWidth) / this.tileWidth);
+    const top = Math.floor((this.view.centerY - viewHalfHeight) / this.tileHeight);
+    const right = Math.ceil((this.view.centerX + viewHalfWidth) / this.tileWidth);
+    const bottom = Math.ceil((this.view.centerY + viewHalfHeight) / this.tileHeight);
 
     const width = right - left;
     const height = bottom - top;
@@ -57,21 +57,21 @@ export class Map2DLayer {
     // tslint:disable-next-line:max-line-length
     // console.log('[Map2DGridTile] (pixels) topLeft', left * this.gridTileWidth, top * this.gridTileHeight, 'bottomRight', right * this.gridTileWidth, bottom * this.gridTileHeight, 'sizes', width * this.gridTileWidth, height * this.gridTileHeight);
 
-    const prevGridTiles = this.gridTiles.slice(0);
-    const knownGridTiles: Map2DGridTile[] = [];
-    const newGridTileCoords: number[][] = [];
-    let removeGridTiles: string[] = [];
+    const reuseTiles = this.tiles.slice(0);
+    const knownTiles: Map2DLayerTile[] = [];
+    const newTileCoords: number[][] = [];
+    let removeTiles: string[] = [];
 
     for (let yOffset = 0; yOffset < height; ++yOffset) {
       for (let xOffset = 0; xOffset < width; ++xOffset) {
         const x = left + xOffset;
         const y = top + yOffset;
-        const tile = takeFrom(prevGridTiles, x, y);
+        const tile = takeFrom(reuseTiles, x, y);
         if (tile) {
           // console.log('[Map2DGridTile] found previous grid-tile:', tile.id, tile);
-          knownGridTiles.push(tile);
+          knownTiles.push(tile);
         } else {
-          newGridTileCoords.push([x, y]);
+          newTileCoords.push([x, y]);
         }
       }
     }
@@ -79,39 +79,39 @@ export class Map2DLayer {
     // II. create geometries for all *new* map tiles
     // -------------------------------------------------
 
-    const newGridTiles: Map2DGridTile[] = newGridTileCoords.map(([x, y]: number[]): Map2DGridTile => {
-      const prevTile = prevGridTiles.shift();
+    const newTiles: Map2DLayerTile[] = newTileCoords.map(([x, y]: number[]): Map2DLayerTile => {
+      const prevTile = reuseTiles.shift();
       if (prevTile) {
-        removeGridTiles.push(prevTile.id);
+        removeTiles.push(prevTile.id);
       }
-      return this.makeGridTile(x, y, prevTile);
+      return this.createTile(x, y, prevTile);
     });
 
     // III. render visible tiles
     // -------------------------------
 
-    this.gridTiles = knownGridTiles.concat(newGridTiles);
-    this.gridTiles.forEach((tile) => {
+    this.tiles = knownTiles.concat(newTiles);
+    this.tiles.forEach((tile) => {
       tile.fetchTileIds();
-      this.view.renderer.updateGridTile(tile);
+      this.view.renderer.updateLayerTile(tile);
     });
 
     // IV. remove unused tiles
     // -----------------------------
 
-    removeGridTiles = removeGridTiles.concat(prevGridTiles.map((tile) => tile.id));
-    removeGridTiles.forEach((tile) => this.view.renderer.removeGridTile(tile));
+    removeTiles = removeTiles.concat(reuseTiles.map((tile) => tile.id));
+    removeTiles.forEach((tile) => this.view.renderer.removeLayerTile(tile));
   }
 
-  private makeGridTile(x: number, y: number, prevGridTile?: Map2DGridTile) {
-    const tile = prevGridTile || new Map2DGridTile(this.layerData, this.gridTileColumns, this.gridTileRows);
-    tile.setGridTilePosition(x, y);
-    tile.setPosition(x * this.gridTileColumns, y * this.gridTileRows);
-    tile.setViewOffset(x * this.gridTileWidth, y * this.gridTileHeight);
+  private createTile(x: number, y: number, reuseTile?: Map2DLayerTile) {
+    const tile = reuseTile || new Map2DLayerTile(this.layerData, this.tileColumns, this.tileRows);
+    tile.setLayerTilePosition(x, y);
+    tile.setPosition(x * this.tileColumns, y * this.tileRows);
+    tile.setViewOffset(x * this.tileWidth, y * this.tileHeight);
     // if (prevGridTile) {
       // console.log('[Map2DGridTile] re-init grid-tile:', tile.id, tile);
     // }
-    this.view.renderer.addGridTile(tile);
+    this.view.renderer.addLayerTile(tile);
     return tile;
   }
 }

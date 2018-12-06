@@ -1,24 +1,23 @@
 import { IMap2DLayerData } from './IMap2DLayerData';
 
 /**
- * Represents a specific 2d section (a *grid tile*) of a Map2DLayerGrid.
- * Holds a set of *tile ids*.
+ * Represents a 2d section (a *layer tile*) of a [[Map2DLayer]].
+ *
+ * Internally these *layer tiles* are organized as a grid of *tiles*
+ * which are defined by an id (see [[IMap2DLayerData]]).
+ *
+ * The instances of this class are reused among the [[Map2DLayer]].
  *
  * The unit of measurement are *tiles* unless otherwise stated.
  */
-export class Map2DGridTile {
-
-  readonly layer: IMap2DLayerData;
-
-  readonly width: number;
-  readonly height: number;
+export class Map2DLayerTile {
 
   readonly tileIds: Uint32Array;
 
   tileIdsNeedsUpdate: boolean = true;
 
-  gridTileLeft: number;
-  gridTileTop: number;
+  layerTileLeft: number;
+  layerTileTop: number;
 
   /**
    * Uppler left view position offset in *pixels*
@@ -33,40 +32,35 @@ export class Map2DGridTile {
   private _top: number = 0;
   private _left: number = 0;
 
-  constructor(layer: IMap2DLayerData, width: number, height: number) {
-    this.layer = layer;
-
-    this.width = width;
-    this.height = height;
-
+  constructor(readonly layerData: IMap2DLayerData, readonly width: number, readonly height: number) {
     this.tileIds = new Uint32Array(width * height);
   }
 
   get id() {
-    return `${this.left},${this.top}|${this.width}x${this.height}|${this.layer.name}|M2DGT`;
+    return `${this.left},${this.top}|${this.width}x${this.height}|${this.layerData.name}|M2DGT`;
   }
 
   /**
    * View dimension in *pixels*
    */
-  get viewWidth() { return this.layer.tileWidth * this.width; }
+  get viewWidth() { return this.layerData.tileWidth * this.width; }
 
   /**
    * View dimension in *pixels*
    */
-  get viewHeight() { return this.layer.tileHeight * this.height; }
+  get viewHeight() { return this.layerData.tileHeight * this.height; }
 
   getTileIdAt(x: number, y: number) {
     return this.tileIds[x + (y * this.width)];
   }
 
-  setGridTilePosition(left: number, top: number) {
-    this.gridTileLeft = left;
-    this.gridTileTop = top;
+  setLayerTilePosition(left: number, top: number) {
+    this.layerTileLeft = left;
+    this.layerTileTop = top;
   }
 
-  isGridTilePosition(left: number, top: number) {
-    return this.gridTileLeft === left && this.gridTileTop === top;
+  isLayerTilePosition(left: number, top: number) {
+    return this.layerTileLeft === left && this.layerTileTop === top;
   }
 
   setViewOffset(x: number, y: number) {
@@ -103,7 +97,7 @@ export class Map2DGridTile {
 
   fetchTileIds() {
     if (this.tileIdsNeedsUpdate) {
-      this.layer.getTileIdsWithin(this._left, this._top, this.width, this.height, this.tileIds);
+      this.layerData.getTileIdsWithin(this._left, this._top, this.width, this.height, this.tileIds);
       this.tileIdsNeedsUpdate = false;
     }
     return this;
