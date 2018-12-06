@@ -9,6 +9,7 @@ import { TextureLibrary } from './TextureLibrary';
 import { ViewFrame } from './ViewFrame';
 
 export class Map2D implements IMap2DRenderer {
+
   readonly container: THREE.Object3D;
   readonly gridTiles: Map<string, GridTile> = new Map();
 
