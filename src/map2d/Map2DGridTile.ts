@@ -1,4 +1,4 @@
-import { IMap2DLayer } from './IMap2DLayer';
+import { IMap2DLayerData } from './IMap2DLayerData';
 
 /**
  * Represents a specific 2d section (a *grid tile*) of a Map2DLayerGrid.
@@ -8,7 +8,7 @@ import { IMap2DLayer } from './IMap2DLayer';
  */
 export class Map2DGridTile {
 
-  readonly layer: IMap2DLayer;
+  readonly layer: IMap2DLayerData;
 
   readonly width: number;
   readonly height: number;
@@ -33,7 +33,7 @@ export class Map2DGridTile {
   private _top: number = 0;
   private _left: number = 0;
 
-  constructor(layer: IMap2DLayer, width: number, height: number) {
+  constructor(layer: IMap2DLayerData, width: number, height: number) {
     this.layer = layer;
 
     this.width = width;

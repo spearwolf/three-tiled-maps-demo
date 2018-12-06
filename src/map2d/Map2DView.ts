@@ -1,6 +1,6 @@
-import { IMap2DLayer } from './IMap2DLayer';
+import { IMap2DLayerData } from './IMap2DLayerData';
 import { IMap2DRenderer } from './IMap2DRenderer';
-import { Map2DLayerGrid } from './Map2DLayerGrid';
+import { Map2DLayer } from './Map2DLayer';
 
 /**
  * Represents a 2d section from a 2d map along the x- and y- axis.
@@ -10,7 +10,7 @@ import { Map2DLayerGrid } from './Map2DLayerGrid';
  */
 export class Map2DView {
 
-  readonly layers: Map2DLayerGrid[] = [];
+  readonly layers: Map2DLayer[] = [];
 
   /**
    * @param centerX horizontal center position
@@ -38,8 +38,8 @@ export class Map2DView {
     return this.centerY - halfHeight;
   }
 
-  appendLayer(...layers: IMap2DLayer[]) {
-    layers.forEach((layer) => this.layers.push(new Map2DLayerGrid(this, layer)));
+  appendLayer(...layers: IMap2DLayerData[]) {
+    layers.forEach((layer) => this.layers.push(new Map2DLayer(this, layer)));
   }
 
   setOrigin(centerX: number, centerY: number) {

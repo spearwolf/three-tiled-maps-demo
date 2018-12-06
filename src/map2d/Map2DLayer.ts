@@ -1,4 +1,4 @@
-import { IMap2DLayer } from './IMap2DLayer';
+import { IMap2DLayerData } from './IMap2DLayerData';
 import { Map2DGridTile } from './Map2DGridTile';
 import { Map2DView } from './Map2DView';
 
@@ -11,12 +11,12 @@ const takeFrom = (tiles: Map2DGridTile[], left: number, top: number): Map2DGridT
 };
 
 /**
- * Represents a grid of *grid tiles* (see Map2DGridTile) for a specific layer.
+ * Represents a single layer of a [[Map2D]].
+ * Internally the layer is organized as a grid of tiles (see [[Map2DGridTile]]).
+ * The layer is responsible for the lifecycle of the tiles dependent on their visibility
+ * which is defined by [[Map2DView]].
  */
-export class Map2DLayerGrid {
-
-  readonly view: Map2DView;
-  readonly layer: IMap2DLayer;
+export class Map2DLayer {
 
   readonly gridTileColumns: number;
   readonly gridTileRows: number;
@@ -25,16 +25,17 @@ export class Map2DLayerGrid {
 
   gridTiles: Map2DGridTile[] = [];
 
-  constructor(view: Map2DView, layer: IMap2DLayer) {
-    this.view = view;
-    this.layer = layer;
-
-    this.gridTileColumns = Math.ceil(view.gridTileWidth / layer.tileWidth);
-    this.gridTileRows = Math.ceil(view.gridTileHeight / layer.tileHeight);
-    this.gridTileWidth = this.gridTileColumns * layer.tileWidth;
-    this.gridTileHeight = this.gridTileRows * layer.tileHeight;
+  constructor(readonly view: Map2DView, readonly layerData: IMap2DLayerData) {
+    this.gridTileColumns = Math.ceil(view.gridTileWidth / layerData.tileWidth);
+    this.gridTileRows = Math.ceil(view.gridTileHeight / layerData.tileHeight);
+    this.gridTileWidth = this.gridTileColumns * layerData.tileWidth;
+    this.gridTileHeight = this.gridTileRows * layerData.tileHeight;
   }
 
+  /**
+   * Create, update or delete the tiles dependent of their visibility.
+   * You should call this only once per frame.
+   */
   update() {
     // I. create visible map tiles (and remove/dispose unvisible)
     // ---------------------------------------------------------------
@@ -103,7 +104,7 @@ export class Map2DLayerGrid {
   }
 
   private makeGridTile(x: number, y: number, prevGridTile?: Map2DGridTile) {
-    const tile = prevGridTile || new Map2DGridTile(this.layer, this.gridTileColumns, this.gridTileRows);
+    const tile = prevGridTile || new Map2DGridTile(this.layerData, this.gridTileColumns, this.gridTileRows);
     tile.setGridTilePosition(x, y);
     tile.setPosition(x * this.gridTileColumns, y * this.gridTileRows);
     tile.setViewOffset(x * this.gridTileWidth, y * this.gridTileHeight);

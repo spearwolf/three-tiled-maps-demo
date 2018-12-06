@@ -1,5 +1,5 @@
 import { AABB2 } from '../AABB2';
-import { IMap2DLayer } from '../IMap2DLayer';
+import { IMap2DLayerData } from '../IMap2DLayerData';
 import { ChunkQuadTreeNode } from './ChunkQuadTreeNode';
 import { ITiledMapLayerChunkData } from './ITiledMapLayerChunkData';
 import { ITiledMapLayerData } from './ITiledMapLayerData';
@@ -13,7 +13,7 @@ const findChunk = (chunks: TiledMapLayerChunk[], x: number, y: number): TiledMap
 /**
  * Represents a specific layer of a TiledMap.
  */
-export class TiledMapLayer implements IMap2DLayer {
+export class TiledMapLayer implements IMap2DLayerData {
   private readonly tiledMap: TiledMap;
   private readonly data: ITiledMapLayerData;
   private readonly rootNode: ChunkQuadTreeNode;
