@@ -1,47 +1,27 @@
 import * as THREE from 'three';
 
-import { ITextureAtlasData } from '../ITextureAtlasData';
-import { ITextureLibrary } from '../ITextureLibrary';
+import { Texture } from '../Texture';
+import { TextureAtlas } from '../TextureAtlas';
 
-const loadTexture = ( url: string, loader: THREE.TextureLoader): Promise<THREE.Texture> => {
-  return new Promise((onLoad) => {
-    loader.load(url, onLoad);
-  });
-};
+export class TextureLibrary {
 
-export class TextureLibrary implements ITextureLibrary {
+  static async load(path: string, basePath: string = './'): Promise<TextureLibrary> {
+    return new TextureLibrary(await TextureAtlas.load(path, basePath));
+  }
 
   baseTexture: THREE.Texture;
 
-  private texNameMap: Map<string, THREE.Texture> = new Map();
   private texIdMap: Map<number, string> = new Map();
   private defaultTexName: string;
 
+  constructor(readonly atlas: TextureAtlas) {
+    this.baseTexture = new THREE.Texture(atlas.baseTexture.imgEl);
+    this.baseTexture.flipY = false;
+    this.baseTexture.needsUpdate = true;
+  }
+
   get textureNames() {
-    return Array.from(this.texNameMap.keys());
-  }
-
-  static async loadFromAtlas(path: string, basePath: string = './'): Promise<TextureLibrary> {
-    const atlas = await fetch(`${basePath}/${path}`).then((response) => response.json()) as ITextureAtlasData;
-    const textureLoader = new THREE.TextureLoader();
-    textureLoader.setPath(basePath);
-    const baseTex = await loadTexture(atlas.meta.image, textureLoader);
-    const texLib = new TextureLibrary();
-    texLib.importFromAtlas(atlas, baseTex);
-    return texLib;
-  }
-
-  importFromAtlas(data: ITextureAtlasData, base: THREE.Texture) {
-    this.baseTexture = base;
-    Object.keys(data.frames).forEach((name: string) => {
-      const tex = base.clone();
-      const frame = data.frames[name];
-      tex.repeat.set(frame.w / base.image.width, frame.h / base.image.height);
-      tex.offset.set(frame.x / base.image.width, (frame.h / base.image.height) - (frame.y / base.image.height));
-      tex.needsUpdate = true;
-      tex.name = name;
-      this.texNameMap.set(name, tex);
-    });
+    return this.atlas.frameNames();
   }
 
   dispose() {
@@ -51,19 +31,19 @@ export class TextureLibrary implements ITextureLibrary {
     }
   }
 
-  getTextureById(id: number): THREE.Texture {
+  getTextureById(id: number): Texture {
     const name = this.texIdMap.get(id) || this.defaultTexName;
     if (name) {
-      return this.texNameMap.get(name) || null;
+      return this.atlas.frame(name) || null;
     }
     return null;
   }
 
-  getTextureByName(frame: string): THREE.Texture {
-    return this.texNameMap.get(frame) || this.texNameMap.get(this.defaultTexName) || null;
+  getTextureByName(frame: string): Texture {
+    return this.atlas.frame(frame) || this.atlas.frame(this.defaultTexName) || null;
   }
 
-  getRandomTexture(): THREE.Texture {
+  getRandomTexture(): Texture {
     const { textureNames } = this;
     const randomName = textureNames[Math.floor(Math.random() * textureNames.length)];
     return this.getTextureByName(randomName);

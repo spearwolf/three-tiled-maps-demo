@@ -142,10 +142,13 @@ requestAnimationFrame(animate);
 
 Promise.all([
   TiledMap.load('./maps/180917-a-first-map.json'),
-  TextureLibrary.loadFromAtlas('sketch-tiles.json', './atlas/'),
+  TextureLibrary.load('sketch-tiles.json', './atlas/'),
 ]).then(([tiledMap, texLib]) => {
-  // tslint:disable-next-line:no-console
-  console.log(texLib);
+
+  const { imgEl } = texLib.atlas.baseTexture;
+  const el = document.querySelector('.textureAtlas');
+  el.appendChild(imgEl);
+
   texLib.setIdNameMap([
     [1, 'empty.png'],
     [2, 'floor.png'],
@@ -165,6 +168,10 @@ Promise.all([
     [16, 'wall-nw.png'],
     [17, 'wall-sw.png'],
   ]);
+
+  texLib.setDefaultTexture('empty.png');
+
+  console.log('TextureLibrary', texLib);
 
   const map2d = new Map2D(texLib);
   map2d.appendTo(scene);

@@ -3,7 +3,9 @@ import { ITextureAtlasMetaData } from './ITextureAtlasMetaData';
 
 export interface ITextureAtlasData {
   frames: {
-    [name: string]: ITextureAtlasFrameData;
+    [name: string]: {
+      frame: ITextureAtlasFrameData;
+    },
   };
   meta: ITextureAtlasMetaData;
 }

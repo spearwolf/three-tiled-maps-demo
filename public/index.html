@@ -42,13 +42,12 @@
       width: 100%;
       text-align: center;
     }
-    .textureBakery {
+    .textureAtlas {
       position: fixed;
       z-index: 10;
-      bottom: 0;
+      bottom: 20px;
       right: 0;
-      width: 256px;
-      height: 256px;
+      background-color: rgba(128,128,128, 0.5);
     }
   </style>
 </head>
@@ -57,6 +56,7 @@
   <div class="statusBar infoText">
     press keys [1] &rarr; orthographic 2d view [2] &rarr; perspective 3d view
   </div>
+  <div class="textureAtlas pixelate"></div>
   <script src="bundle.js"></script>
 </body>
 </html>

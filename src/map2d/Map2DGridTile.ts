@@ -55,6 +55,10 @@ export class Map2DGridTile {
    */
   get viewHeight() { return this.layer.tileHeight * this.height; }
 
+  getTileIdAt(x: number, y: number) {
+    return this.tileIds[x + (y * this.width)];
+  }
+
   setGridTilePosition(left: number, top: number) {
     this.gridTileLeft = left;
     this.gridTileTop = top;
