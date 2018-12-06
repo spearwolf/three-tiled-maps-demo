@@ -11,7 +11,7 @@ const takeFrom = (tiles: Map2DLayerTile[], left: number, top: number): Map2DLaye
 };
 
 /**
- * Represents a single layer of a [[Map2D]].
+ * Represents a single layer of a [[Map2DView]].
  * Internally the layer is organized as a grid of tiles (see [[Map2DLayerTile]]).
  * The layer is responsible for the lifecycle of the tiles dependent on their visibility
  * which is defined by [[Map2DView]].
