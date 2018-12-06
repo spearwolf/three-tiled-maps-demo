@@ -38,9 +38,7 @@ renderer.gammaOutput = true;
 renderer.gammaFactor = 2.2;
 
 const DPR = window.devicePixelRatio || 1;
-const PIXELATE_MIN = 1 / DPR;
-
-renderer.setPixelRatio(DPR);
+renderer.setPixelRatio(1);
 
 const threeContainerElement = document.getElementById('three-container');
 threeContainerElement.appendChild(renderer.domElement);
@@ -55,17 +53,15 @@ let lastSizeInfo = null;
 
 function resize() {
   let pixelate = Number(urlParams.get(PIXELATE));
-  if (pixelate === 0 || isNaN(pixelate)) {
+  if (isNaN(pixelate)) {
     pixelate = 1;
-  }
-  if (pixelate < PIXELATE_MIN) {
-    pixelate = PIXELATE_MIN;
   }
 
   const { clientWidth, clientHeight } = renderer.domElement.parentNode;
   const minSize = min(clientWidth, clientHeight);
-  const size = Math.floor(minSize / pixelate);
-  const newSizeInfo = `container: ${clientWidth}x${clientHeight}<br>canvas: ${size}x${size}<br>?${PIXELATE}=${pixelate}`;
+  const size = Math.floor(pixelate > 0 ? (minSize / pixelate) : (minSize * DPR));
+
+  const newSizeInfo = `container: ${clientWidth}x${clientHeight}<br>canvas: ${size}x${size}<br>devicePixelRatio: ${DPR}<br>?${PIXELATE}=${pixelate}`;
 
   infoDisplayElement.innerHTML = view ? `${newSizeInfo}<br>x=${Math.round(view.centerX)} y=${Math.round(view.centerY)}` : newSizeInfo;
 
@@ -76,7 +72,7 @@ function resize() {
     camera3d.aspect = 1;
     curCamera.updateProjectionMatrix();
 
-    renderer.domElement.classList[PIXELATE > 1 ? 'add' : 'remove'](PIXELATE);
+    renderer.domElement.classList[pixelate !== 0 ? 'add' : 'remove'](PIXELATE);
     renderer.domElement.style.width = `${minSize}px`;
     renderer.domElement.style.height = `${minSize}px`;
     return true;
