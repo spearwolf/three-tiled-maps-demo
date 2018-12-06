@@ -14,6 +14,7 @@ const takeFrom = (tiles: Map2DGridTile[], left: number, top: number): Map2DGridT
  * Represents a grid of *grid tiles* (see Map2DGridTile) for a specific layer.
  */
 export class Map2DLayerGrid {
+
   readonly view: Map2DView;
   readonly layer: IMap2DLayer;
 

@@ -2,16 +2,15 @@ import * as THREE from 'three';
 
 import { Map2DGridTile } from '../Map2DGridTile';
 import { GridTileBufferGeometry } from './GridTileBufferGeometry';
-// import { TextureBakery } from './TextureBakery';
 import { TextureLibrary } from './TextureLibrary';
 
 export class GridTile {
   readonly mesh: THREE.Mesh;
-  // readonly textureBakery: TextureBakery;
 
-  constructor(readonly map2dGridTile: Map2DGridTile, readonly textureLibrary: TextureLibrary = null) {
-    // this.textureBakery = new TextureBakery(256, 256);
-    // this.textureBakery.make(tile.id);
+  constructor(
+    readonly map2dGridTile: Map2DGridTile,
+    readonly textureLibrary: TextureLibrary = null,
+  ) {
 
     map2dGridTile.fetchTileIds();
 
@@ -19,7 +18,6 @@ export class GridTile {
 
     const material = new THREE.MeshBasicMaterial({
       color: 0xffffff,
-      // map: this.textureBakery.texture,
       map: textureLibrary.baseTexture,
       transparent: true,
     });
@@ -37,6 +35,5 @@ export class GridTile {
 
   dispose() {
     this.mesh.geometry.dispose();
-    // this.textureBakery.dispose();
   }
 }

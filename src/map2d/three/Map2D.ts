@@ -34,12 +34,10 @@ export class Map2D implements IMap2DRenderer {
   }
 
   addGridTile(tile: Map2DGridTile) {
-    // console.log('[Map2DSceneTHREE] add grid-tile:', tile.id);
     this.createGridTile(tile).appendTo(this.container);
   }
 
   removeGridTile(tileId: string) {
-    // console.log('[Map2DSceneTHREE] remove grid-tile:', tileId);
     const gt = this.destroyGridTile(tileId);
     if (gt !== null) {
       gt.removeFrom(this.container);

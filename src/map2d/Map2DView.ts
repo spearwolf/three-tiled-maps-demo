@@ -3,12 +3,13 @@ import { IMap2DRenderer } from './IMap2DRenderer';
 import { Map2DLayerGrid } from './Map2DLayerGrid';
 
 /**
- * Represents a 2d section in a 2d map along the x- and y- axis.
- * A 2d map is defined by one or more layers.
+ * Represents a 2d section from a 2d map along the x- and y- axis.
+ * A 2d map consists of one or more layers.
  *
  * The unit of measurement are *pixels* unless otherwise stated.
  */
 export class Map2DView {
+
   readonly renderer: IMap2DRenderer;
 
   width: number;

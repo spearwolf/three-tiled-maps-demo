@@ -7,6 +7,7 @@ import { IMap2DLayer } from './IMap2DLayer';
  * The unit of measurement are *tiles* unless otherwise stated.
  */
 export class Map2DGridTile {
+
   readonly layer: IMap2DLayer;
 
   readonly width: number;

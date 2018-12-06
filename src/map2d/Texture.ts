@@ -52,7 +52,7 @@ export class Texture {
     if (root.image instanceof PowerOf2Image) {
       return root.image.imgEl;
     }
-    return root.image as ImageSource;
+    return root.image;
   }
 
   get width(): number {

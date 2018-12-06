@@ -31,6 +31,7 @@ export class GridTileBufferGeometry extends THREE.BufferGeometry {
       let x = viewOffsetX;
 
       for (let col = 0; col < tileCols; ++col) {
+
         const y0 = viewHeight - y;
         const x1 = x + tileWidth;
         const y1 = viewHeight - (y + tileHeight);
@@ -51,14 +52,25 @@ export class GridTileBufferGeometry extends THREE.BufferGeometry {
 
         const tileId = map2dGridTile.getTileIdAt(col, tileRows - row - 1);
         const texture = textureLibrary.getTextureById(tileId);
-        const { minS, minT, maxS, maxT } = texture;
 
-        uvs.push(minS, maxT);
-        uvs.push(minS, minT);
-        uvs.push(maxS, maxT);
-        uvs.push(minS, minT);
-        uvs.push(maxS, minT);
-        uvs.push(maxS, maxT);
+        if (texture) {
+          const { minS, minT, maxS, maxT } = texture;
+
+          uvs.push(minS, maxT);
+          uvs.push(minS, minT);
+          uvs.push(maxS, maxT);
+          uvs.push(minS, minT);
+          uvs.push(maxS, minT);
+          uvs.push(maxS, maxT);
+
+        } else {
+          uvs.push(0, 1);
+          uvs.push(0, 0);
+          uvs.push(1, 1);
+          uvs.push(0, 0);
+          uvs.push(1, 0);
+          uvs.push(1, 1);
+        }
 
         x += tileWidth;
       }
