@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 
 import { Map2DViewTile } from '../Map2DViewTile';
+import { TextureLibrary } from '../TextureLibrary';
 
 import { Map2DLayerTileBufferGeometry } from './Map2DLayerTileBufferGeometry';
-import { TextureLibrary } from './TextureLibrary';
 
 export class Map2DLayerTile {
   readonly mesh: THREE.Mesh;

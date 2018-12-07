@@ -2,25 +2,37 @@ import * as THREE from 'three';
 
 import { IMap2DLayerRenderer } from '../IMap2DLayerRenderer';
 import { Map2DViewTile } from '../Map2DViewTile';
+import { TextureLibrary } from '../TextureLibrary';
 
 import { Map2DLayerTile } from './Map2DLayerTile';
-import { TextureLibrary } from './TextureLibrary';
 
 export class Map2DLayer implements IMap2DLayerRenderer {
 
   readonly obj3d: THREE.Object3D = new THREE.Object3D();
 
-  private readonly tiles: Map<string, Map2DLayerTile> = new Map();
   private readonly material: THREE.Material;
+  private readonly texture: THREE.Texture;
+
+  private readonly tiles: Map<string, Map2DLayerTile> = new Map();
 
   constructor(readonly textureLibrary: TextureLibrary) {
 
+    this.texture = new THREE.Texture(textureLibrary.atlas.baseTexture.imgEl);
+    this.texture.flipY = false;
+    this.texture.magFilter = THREE.NearestFilter;
+    this.texture.needsUpdate = true;
+
     this.material = new THREE.MeshBasicMaterial({
       color: 0xffffff,
-      map: textureLibrary.baseTexture,
+      map: this.texture,
       transparent: true,
     });
 
+  }
+
+  dispose() {
+    this.texture.dispose();
+    this.material.dispose();
   }
 
   addViewTile(tile: Map2DViewTile) {

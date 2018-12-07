@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 
+import { TextureLibrary } from '../TextureLibrary';
+
 import { Map2DLayerTile } from './Map2DLayerTile';
-import { TextureLibrary } from './TextureLibrary';
 
 export class Map2DLayerTileBufferGeometry extends THREE.BufferGeometry {
   readonly type: string = 'Map2DLayerTileBufferGeometry';

@@ -3,8 +3,8 @@ import * as THREE from 'three';
 import Stats from 'stats.js';
 
 import { TiledMap } from './map2d/tiledmap';
-import { Map2DView, Map2DViewLayer } from './map2d';
-import { Map2D, Map2DLayer, TextureLibrary } from './map2d/three';
+import { Map2DView, Map2DViewLayer, TextureLibrary } from './map2d';
+import { Map2D, Map2DLayer } from './map2d/three';
 
 const VIEW_WIDTH = 320;
 const VIEW_ASPECT = 9/16;
