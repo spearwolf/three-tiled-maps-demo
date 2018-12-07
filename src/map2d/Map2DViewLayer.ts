@@ -91,7 +91,7 @@ export class Map2DViewLayer {
     this.tiles = knownTiles.concat(newTiles);
     this.tiles.forEach((tile) => {
       tile.fetchTileIds();
-      this.layerRenderer.updateViewTile(tile);
+      this.layerRenderer.renderViewTile(tile);
     });
 
     // IV. remove unused tiles

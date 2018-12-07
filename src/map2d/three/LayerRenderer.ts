@@ -27,7 +27,7 @@ export class LayerRenderer implements IMap2DLayerRenderer {
     }
  }
 
-  updateViewTile(_tile: Map2DViewTile) {
+  renderViewTile(_tile: Map2DViewTile) {
     // console.log('[Map2DSceneTHREE] update grid-tile:', tile.id);
   }
 
