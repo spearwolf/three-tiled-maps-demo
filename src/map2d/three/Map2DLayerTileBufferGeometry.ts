@@ -1,14 +1,13 @@
 import * as THREE from 'three';
 
 import { Map2DLayerTile } from './Map2DLayerTile';
+import { TextureLibrary } from './TextureLibrary';
 
 export class Map2DLayerTileBufferGeometry extends THREE.BufferGeometry {
   readonly type: string = 'Map2DLayerTileBufferGeometry';
 
-  constructor(layerTile: Map2DLayerTile) {
+  constructor({ viewTile }: Map2DLayerTile, textureLibrary: TextureLibrary) {
     super();
-
-    const { viewTile, textureLibrary } = layerTile;
 
     const {
       viewWidth,

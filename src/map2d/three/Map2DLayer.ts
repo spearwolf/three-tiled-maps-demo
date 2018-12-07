@@ -11,8 +11,16 @@ export class Map2DLayer implements IMap2DLayerRenderer {
   readonly obj3d: THREE.Object3D = new THREE.Object3D();
 
   private readonly tiles: Map<string, Map2DLayerTile> = new Map();
+  private readonly material: THREE.Material;
 
   constructor(readonly textureLibrary: TextureLibrary) {
+
+    this.material = new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      map: textureLibrary.baseTexture,
+      transparent: true,
+    });
+
   }
 
   addViewTile(tile: Map2DViewTile) {
@@ -40,9 +48,9 @@ export class Map2DLayer implements IMap2DLayerRenderer {
     return null;
   }
 
-  private createTile(tile: Map2DViewTile): Map2DLayerTile {
-    const gt = new Map2DLayerTile(tile, this.textureLibrary);
-    this.tiles.set(tile.id, gt);
+  private createTile(viewTile: Map2DViewTile): Map2DLayerTile {
+    const gt = new Map2DLayerTile(viewTile, this.material, this.textureLibrary);
+    this.tiles.set(viewTile.id, gt);
     return gt;
   }
 }

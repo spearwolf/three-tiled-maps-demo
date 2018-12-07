@@ -10,18 +10,13 @@ export class Map2DLayerTile {
 
   constructor(
     readonly viewTile: Map2DViewTile,
-    readonly textureLibrary: TextureLibrary = null,
+    readonly material: THREE.Material,
+    readonly textureLibrary: TextureLibrary,
   ) {
 
     viewTile.fetchTileIds();
 
-    const geometry = new Map2DLayerTileBufferGeometry(this);
-
-    const material = new THREE.MeshBasicMaterial({
-      color: 0xffffff,
-      map: textureLibrary.baseTexture,
-      transparent: true,
-    });
+    const geometry = new Map2DLayerTileBufferGeometry(this, textureLibrary);
 
     this.mesh = new THREE.Mesh(geometry, material);
   }
