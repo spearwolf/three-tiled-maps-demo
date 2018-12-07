@@ -12,8 +12,6 @@ const calcViewHeight = (width = VIEW_WIDTH) => Math.round(width * VIEW_ASPECT);
 
 console.log('hej ho 🦄');
 
-THREE.Object3D.DefaultUp.set(0, 0, 1);
-
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x203040);
 
@@ -27,7 +25,6 @@ const min = (a, b) => a > b ? b : a;
 const halfSize = min(VIEW_WIDTH, calcViewHeight()) / 2;
 const cam2dZ = 100;
 const camera2d = new THREE.OrthographicCamera(-halfSize, halfSize, halfSize, -halfSize, 1, 1000 );
-console.log('cam2d', -halfSize, halfSize, halfSize, -halfSize);
 
 let curCamera = camera3d;
 
@@ -72,9 +69,16 @@ function resize() {
   const minSize = min(clientWidth, clientHeight);
   const size = Math.floor(pixelate > 0 ? (minSize / pixelate) : (minSize * DPR));
 
-  const newSizeInfo = `container: ${clientWidth}x${clientHeight}<br>canvas: ${size}x${size}<br>devicePixelRatio: ${DPR}<br>?${PIXELATE}=${pixelate}`;
+  const newSizeInfo = `
+    container: ${clientWidth}x${clientHeight}<br>
+    canvas: ${size}x${size}<br>
+    devicePixelRatio: ${DPR}<br>
+    ?${PIXELATE}=${pixelate}
+  `;
 
-  infoDisplayElement.innerHTML = view ? `${newSizeInfo}<br>x=${Math.round(view.centerX)} y=${Math.round(view.centerY)} [${Math.round(view.width)}x${Math.round(view.height)}]` : newSizeInfo;
+  infoDisplayElement.innerHTML = view
+    ? `${newSizeInfo.trim()}<br>x=${Math.round(view.centerX)} y=${Math.round(view.centerY)} [${Math.round(view.width)}x${Math.round(view.height)}]`
+    : newSizeInfo;
 
   if (lastSizeInfo !== newSizeInfo) {
     lastSizeInfo = newSizeInfo;
