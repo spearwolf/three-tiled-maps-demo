@@ -1,16 +1,16 @@
 import { IMap2DLayerData } from './IMap2DLayerData';
 
 /**
- * Represents a 2d section (a *layer tile*) of a [[Map2DLayer]].
+ * Represents a 2d section (a *tile*) of a [[Map2DViewLayer]].
  *
- * Internally these *layer tiles* are organized as a grid of *tiles*
+ * Internally these *view layer tiles* are organized as a grid of *sub tiles*
  * which are defined by an id (see [[IMap2DLayerData]]).
  *
- * The instances of this class are reused among the [[Map2DLayer]].
+ * The instances of this class are reused among the [[Map2DViewLayer]].
  *
  * The unit of measurement are *tiles* unless otherwise stated.
  */
-export class Map2DLayerTile {
+export class Map2DViewTile {
 
   readonly tileIds: Uint32Array;
 

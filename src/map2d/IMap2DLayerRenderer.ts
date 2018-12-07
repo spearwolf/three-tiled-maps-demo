@@ -1,9 +1,9 @@
-import { Map2DLayerTile } from './Map2DLayerTile';
+import { Map2DViewTile } from './Map2DViewTile';
 
 export interface IMap2DLayerRenderer {
 
-  addLayerTile(tile: Map2DLayerTile): void;
-  updateLayerTile(tile: Map2DLayerTile): void;
-  removeLayerTile(tileId: string): void;
+  addViewTile(tile: Map2DViewTile): void;
+  updateViewTile(tile: Map2DViewTile): void;
+  removeViewTile(tileId: string): void;
 
 }

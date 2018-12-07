@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-import { Map2DLayerTile } from '../Map2DLayerTile';
+import { Map2DViewTile } from '../Map2DViewTile';
 import { LayerTileBufferGeometry } from './LayerTileBufferGeometry';
 import { TextureLibrary } from './TextureLibrary';
 
@@ -8,7 +8,7 @@ export class LayerTile {
   readonly mesh: THREE.Mesh;
 
   constructor(
-    readonly map2dLayerTile: Map2DLayerTile,
+    readonly map2dLayerTile: Map2DViewTile,
     readonly textureLibrary: TextureLibrary = null,
   ) {
 

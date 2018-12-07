@@ -1,5 +1,5 @@
 import { IMap2DRenderer } from './IMap2DRenderer';
-import { Map2DLayer } from './Map2DLayer';
+import { Map2DViewLayer } from './Map2DViewLayer';
 
 /**
  * Represents a 2d section from a 2d map along the x- and y- axis.
@@ -9,7 +9,7 @@ import { Map2DLayer } from './Map2DLayer';
  */
 export class Map2DView {
 
-  readonly layers: Map2DLayer[] = [];
+  readonly layers: Map2DViewLayer[] = [];
 
   /**
    * @param centerX horizontal center position
@@ -37,7 +37,7 @@ export class Map2DView {
     return this.centerY - halfHeight;
   }
 
-  addLayer(layer: Map2DLayer) {
+  addLayer(layer: Map2DViewLayer) {
     this.layers.push(layer);
   }
 
