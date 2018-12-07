@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { IMap2DRenderer } from '../IMap2DRenderer';
 import { Map2DView } from '../Map2DView';
 
-import { LayerRenderer } from './LayerRenderer';
+import { Map2DLayer } from './Map2DLayer';
 import { ViewFrame } from './ViewFrame';
 
 const appendToScene = (scene: THREE.Object3D, obj: THREE.Object3D) => {
@@ -41,12 +41,12 @@ export class Map2D implements IMap2DRenderer {
     this.viewFrame.removeFrom(scene);
   }
 
-  appendLayer(renderer: LayerRenderer) {
-    appendToScene(this.scene, renderer.obj3d);
+  appendLayer(layer: Map2DLayer) {
+    appendToScene(this.scene, layer.obj3d);
   }
 
-  removeLayer(renderer: LayerRenderer) {
-    removeFromScene(this.scene, renderer.obj3d);
+  removeLayer(layer: Map2DLayer) {
+    removeFromScene(this.scene, layer.obj3d);
   }
 
   beginRender(view: Map2DView) {

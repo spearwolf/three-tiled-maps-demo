@@ -1,20 +1,21 @@
 import * as THREE from 'three';
 
 import { Map2DViewTile } from '../Map2DViewTile';
-import { LayerTileBufferGeometry } from './LayerTileBufferGeometry';
+
+import { Map2DLayerTileBufferGeometry } from './Map2DLayerTileBufferGeometry';
 import { TextureLibrary } from './TextureLibrary';
 
-export class LayerTile {
+export class Map2DLayerTile {
   readonly mesh: THREE.Mesh;
 
   constructor(
-    readonly map2dLayerTile: Map2DViewTile,
+    readonly viewTile: Map2DViewTile,
     readonly textureLibrary: TextureLibrary = null,
   ) {
 
-    map2dLayerTile.fetchTileIds();
+    viewTile.fetchTileIds();
 
-    const geometry = new LayerTileBufferGeometry(this);
+    const geometry = new Map2DLayerTileBufferGeometry(this);
 
     const material = new THREE.MeshBasicMaterial({
       color: 0xffffff,

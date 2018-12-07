@@ -1,19 +1,23 @@
 import * as THREE from 'three';
 
-import { LayerTile } from './LayerTile';
+import { Map2DLayerTile } from './Map2DLayerTile';
 
-export class LayerTileBufferGeometry extends THREE.BufferGeometry {
-  readonly type: string = 'LayerTileBufferGeometry';
+export class Map2DLayerTileBufferGeometry extends THREE.BufferGeometry {
+  readonly type: string = 'Map2DLayerTileBufferGeometry';
 
-  constructor(layerTile: LayerTile) {
+  constructor(layerTile: Map2DLayerTile) {
     super();
 
-    const { map2dLayerTile, textureLibrary } = layerTile;
+    const { viewTile, textureLibrary } = layerTile;
 
-    const { viewWidth, viewHeight, viewOffsetX, viewOffsetY } = map2dLayerTile;
-
-    const tileCols = map2dLayerTile.width;
-    const tileRows = map2dLayerTile.height;
+    const {
+      viewWidth,
+      viewHeight,
+      viewOffsetX,
+      viewOffsetY,
+      width: tileCols,
+      height: tileRows,
+    } = viewTile;
 
     const tileWidth = viewWidth / tileCols;
     const tileHeight = viewHeight / tileRows;
@@ -50,7 +54,7 @@ export class LayerTileBufferGeometry extends THREE.BufferGeometry {
         normals.push(up.x, up.y, up.z);
         normals.push(up.x, up.y, up.z);
 
-        const tileId = map2dLayerTile.getTileIdAt(col, tileRows - row - 1);
+        const tileId = viewTile.getTileIdAt(col, tileRows - row - 1);
         const texture = textureLibrary.getTextureById(tileId);
 
         if (texture) {
