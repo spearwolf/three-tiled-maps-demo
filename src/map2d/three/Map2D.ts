@@ -4,56 +4,33 @@ import { IMap2DRenderer } from '../IMap2DRenderer';
 import { Map2DView } from '../Map2DView';
 
 import { Map2DLayer } from './Map2DLayer';
-import { ViewFrame } from './ViewFrame';
 
-const appendToScene = (scene: THREE.Object3D, obj: THREE.Object3D) => {
-  if (!scene.children.includes(obj)) {
-    scene.add(obj);
-    return true;
-  }
-  return false;
-};
+export class Map2D extends THREE.Object3D implements IMap2DRenderer {
 
-const removeFromScene = (scene: THREE.Object3D, ...objects: THREE.Object3D[]) => {
-  objects.forEach((obj) => scene.remove(obj));
-};
+  static BeginRenderEvent = 'map2dbeginrender';
+  static EndRenderEvent = 'map2dendrender';
 
-export class Map2D implements IMap2DRenderer {
+  private readonly map2dLayers = new Set<Map2DLayer>();
 
-  viewFrame: ViewFrame;
-  viewFrameZOffset = 0.5;
-
-  private readonly scene = new THREE.Object3D();
-
-  constructor() {
-    this.viewFrame = new ViewFrame(this);
-  }
-
-  appendTo(scene: THREE.Object3D) {
-    if (appendToScene(scene, this.scene)) {
-      this.viewFrame.appendTo(scene);
-      this.viewFrame.zOffset = this.viewFrameZOffset;
+  appendLayer(layer: Map2DLayer) {
+    if (!this.map2dLayers.has(layer)) {
+      this.map2dLayers.add(layer);
+      this.add(layer.obj3d);
     }
   }
 
-  removeFrom(scene: THREE.Object3D) {
-    removeFromScene(scene, this.scene);
-    this.viewFrame.removeFrom(scene);
-  }
-
-  appendLayer(layer: Map2DLayer) {
-    appendToScene(this.scene, layer.obj3d);
-  }
-
   removeLayer(layer: Map2DLayer) {
-    removeFromScene(this.scene, layer.obj3d);
+    if (this.map2dLayers.has(layer)) {
+      this.map2dLayers.delete(layer);
+      this.remove(layer.obj3d);
+    }
   }
 
   beginRender(view: Map2DView) {
-    this.viewFrame.update(view.centerX, view.centerY, view.width, view.height);
+    this.children.forEach((obj3d) => obj3d.dispatchEvent({ type: Map2D.BeginRenderEvent, map2d: this, view }));
   }
 
-  endRender(_view: Map2DView) {
-    // nothing to do here
+  endRender(view: Map2DView) {
+    this.children.forEach((obj3d) => obj3d.dispatchEvent({ type: Map2D.EndRenderEvent, map2d: this, view }));
   }
 }

@@ -4,7 +4,7 @@ import Stats from 'stats.js';
 
 import { TiledMap } from './map2d/tiledmap';
 import { Map2DView, Map2DViewLayer, TextureLibrary } from './map2d';
-import { Map2D, Map2DLayer } from './map2d/three';
+import { Map2D, Map2DLayer, Map2DViewFrame } from './map2d/three';
 
 const VIEW_WIDTH = 320;
 const VIEW_ASPECT = 9/16;
@@ -99,6 +99,7 @@ let rendererShouldRender = true;
 const SPEED = 130; // pixels per second
 
 let view = null;
+let viewFrame = null;
 
 let speedNorth = 0;
 let speedEast = 0;
@@ -184,7 +185,7 @@ Promise.all([
   console.log('TextureLibrary', texLib);
 
   const map2d = new Map2D();
-  map2d.appendTo(scene);
+  scene.add(map2d);
 
   const layerMain = new Map2DLayer(texLib);
   map2d.appendLayer(layerMain);
@@ -192,6 +193,9 @@ Promise.all([
   view = new Map2DView(map2d, 0, 0, VIEW_WIDTH, calcViewHeight(), 100, 100);
   view.addLayer(new Map2DViewLayer(view, layerMain, tiledMap.getLayer('main')));
   // view.update();
+
+  viewFrame = new Map2DViewFrame(map2d);
+  map2d.add(viewFrame);
 
   rendererShouldRender = true;
 
@@ -250,13 +254,13 @@ Promise.all([
       break;
     case 49: // 1
       curCamera = camera2d;
-      map2d.viewFrame.container.visible = false;
+      viewFrame.visible = false;
       controls.enabled = false;
       rendererShouldRender = true;
       break;
     case 50: // 2
       curCamera = camera3d;
-      map2d.viewFrame.container.visible = true;
+      viewFrame.visible = true;
       controls.enabled = true;
       rendererShouldRender = true;
       break;

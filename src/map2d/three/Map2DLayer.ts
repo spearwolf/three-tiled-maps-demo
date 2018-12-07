@@ -31,6 +31,9 @@ export class Map2DLayer implements IMap2DLayerRenderer {
   }
 
   dispose() {
+    Array.from(this.tiles.values()).forEach((tile) => tile.dispose());
+    this.tiles.clear();
+
     this.texture.dispose();
     this.material.dispose();
   }
