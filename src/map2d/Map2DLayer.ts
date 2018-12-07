@@ -1,4 +1,5 @@
 import { IMap2DLayerData } from './IMap2DLayerData';
+import { IMap2DLayerRenderer } from './IMap2DLayerRenderer';
 import { Map2DLayerTile } from './Map2DLayerTile';
 import { Map2DView } from './Map2DView';
 
@@ -25,7 +26,11 @@ export class Map2DLayer {
 
   tiles: Map2DLayerTile[] = [];
 
-  constructor(readonly view: Map2DView, readonly layerData: IMap2DLayerData) {
+  constructor(
+    readonly view: Map2DView,
+    readonly layerRenderer: IMap2DLayerRenderer,
+    readonly layerData: IMap2DLayerData,
+  ) {
     this.tileColumns = Math.ceil(view.layerTileWidth / layerData.tileWidth);
     this.tileRows = Math.ceil(view.layerTileHeight / layerData.tileHeight);
     this.tileWidth = this.tileColumns * layerData.tileWidth;
@@ -93,14 +98,14 @@ export class Map2DLayer {
     this.tiles = knownTiles.concat(newTiles);
     this.tiles.forEach((tile) => {
       tile.fetchTileIds();
-      this.view.renderer.updateLayerTile(tile);
+      this.layerRenderer.updateLayerTile(tile);
     });
 
     // IV. remove unused tiles
     // -----------------------------
 
     removeTiles = removeTiles.concat(reuseTiles.map((tile) => tile.id));
-    removeTiles.forEach((tile) => this.view.renderer.removeLayerTile(tile));
+    removeTiles.forEach((tile) => this.layerRenderer.removeLayerTile(tile));
   }
 
   private createTile(x: number, y: number, reuseTile?: Map2DLayerTile) {
@@ -111,7 +116,7 @@ export class Map2DLayer {
     // if (prevGridTile) {
       // console.log('[Map2DGridTile] re-init grid-tile:', tile.id, tile);
     // }
-    this.view.renderer.addLayerTile(tile);
+    this.layerRenderer.addLayerTile(tile);
     return tile;
   }
 }

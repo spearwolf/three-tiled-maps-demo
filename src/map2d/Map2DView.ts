@@ -1,4 +1,3 @@
-import { IMap2DLayerData } from './IMap2DLayerData';
 import { IMap2DRenderer } from './IMap2DRenderer';
 import { Map2DLayer } from './Map2DLayer';
 
@@ -19,7 +18,7 @@ export class Map2DView {
    * @param layerTileHeight approximate height of a *grid tile* (see [[Map2DLayerTile]]) in *pixels* The real size is a multiple of the size of a single tile.
    */
   constructor(
-    readonly renderer: IMap2DRenderer,
+    private readonly renderer: IMap2DRenderer,
     public centerX: number,
     public centerY: number,
     public width: number,
@@ -38,8 +37,8 @@ export class Map2DView {
     return this.centerY - halfHeight;
   }
 
-  appendLayer(...layers: IMap2DLayerData[]) {
-    layers.forEach((layer) => this.layers.push(new Map2DLayer(this, layer)));
+  addLayer(layer: Map2DLayer) {
+    this.layers.push(layer);
   }
 
   setOrigin(centerX: number, centerY: number) {
@@ -53,7 +52,8 @@ export class Map2DView {
   }
 
   update() {
+    this.renderer.beginRender(this);
     this.layers.forEach((layer) => layer.update());
-    this.renderer.postRender(this);
+    this.renderer.endRender(this);
   }
 }

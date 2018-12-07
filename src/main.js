@@ -3,8 +3,8 @@ import * as THREE from 'three';
 import Stats from 'stats.js';
 
 import { TiledMap } from './map2d/tiledmap';
-import { Map2D, TextureLibrary } from './map2d/three';
-import { Map2DView } from './map2d';
+import { Map2D, TextureLibrary, LayerRenderer } from './map2d/three';
+import { Map2DView, Map2DLayer } from './map2d';
 
 const VIEW_WIDTH = 320;
 const VIEW_ASPECT = 9/16;
@@ -183,11 +183,14 @@ Promise.all([
 
   console.log('TextureLibrary', texLib);
 
-  const map2d = new Map2D(texLib);
+  const map2d = new Map2D();
   map2d.appendTo(scene);
 
+  const mainRenderer = new LayerRenderer(texLib);
+  map2d.appendLayer(mainRenderer);
+
   view = new Map2DView(map2d, 0, 0, VIEW_WIDTH, calcViewHeight(), 100, 100);
-  view.appendLayer(...tiledMap.getAllLayers());
+  view.addLayer(new Map2DLayer(view, mainRenderer, tiledMap.getLayer('main')));
   // view.update();
 
   rendererShouldRender = true;

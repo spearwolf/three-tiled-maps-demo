@@ -1,71 +1,59 @@
 import * as THREE from 'three';
 
 import { IMap2DRenderer } from '../IMap2DRenderer';
-import { Map2DLayerTile } from '../Map2DLayerTile';
 import { Map2DView } from '../Map2DView';
 
-import { LayerTile } from './LayerTile';
-import { TextureLibrary } from './TextureLibrary';
+import { LayerRenderer } from './LayerRenderer';
 import { ViewFrame } from './ViewFrame';
+
+const appendToScene = (scene: THREE.Object3D, obj: THREE.Object3D) => {
+  if (!scene.children.includes(obj)) {
+    scene.add(obj);
+    return true;
+  }
+  return false;
+};
+
+const removeFromScene = (scene: THREE.Object3D, ...objects: THREE.Object3D[]) => {
+  objects.forEach((obj) => scene.remove(obj));
+};
 
 export class Map2D implements IMap2DRenderer {
 
   viewFrame: ViewFrame;
   viewFrameZOffset = 0.5;
 
-  private readonly container: THREE.Object3D;
-  private readonly layerTiles: Map<string, LayerTile> = new Map();
+  private readonly scene = new THREE.Object3D();
 
-  constructor(readonly textureLibrary: TextureLibrary) {
-    this.container = new THREE.Object3D();
+  constructor() {
     this.viewFrame = new ViewFrame(this);
   }
 
-  appendTo(obj: THREE.Object3D) {
-    if (!obj.children.includes(this.container)) {
-      obj.add(this.container);
-      this.viewFrame.appendTo(obj);
+  appendTo(scene: THREE.Object3D) {
+    if (appendToScene(scene, this.scene)) {
+      this.viewFrame.appendTo(scene);
       this.viewFrame.zOffset = this.viewFrameZOffset;
     }
   }
 
-  removeFrom(obj: THREE.Object3D) {
-    obj.remove(this.container);
-    this.viewFrame.removeFrom(obj);
+  removeFrom(scene: THREE.Object3D) {
+    removeFromScene(scene, this.scene);
+    this.viewFrame.removeFrom(scene);
   }
 
-  addLayerTile(tile: Map2DLayerTile) {
-    this.createTile(tile).appendTo(this.container);
+  appendLayer(renderer: LayerRenderer) {
+    appendToScene(this.scene, renderer.obj3d);
   }
 
-  removeLayerTile(tileId: string) {
-    const gt = this.destroyTile(tileId);
-    if (gt !== null) {
-      gt.removeFrom(this.container);
-      gt.dispose();
-    }
- }
-
-  updateLayerTile(_tile: Map2DLayerTile) {
-    // console.log('[Map2DSceneTHREE] update grid-tile:', tile.id);
+  removeLayer(renderer: LayerRenderer) {
+    removeFromScene(this.scene, renderer.obj3d);
   }
 
-  postRender(view: Map2DView) {
+  beginRender(view: Map2DView) {
     this.viewFrame.update(view.centerX, view.centerY, view.width, view.height);
   }
 
-  private destroyTile(id: string): LayerTile {
-    if (this.layerTiles.has(id)) {
-      const gt = this.layerTiles.get(id);
-      this.layerTiles.delete(id);
-      return gt;
-    }
-    return null;
-  }
-
-  private createTile(tile: Map2DLayerTile): LayerTile {
-    const gt = new LayerTile(tile, this.textureLibrary);
-    this.layerTiles.set(tile.id, gt);
-    return gt;
+  endRender(_view: Map2DView) {
+    // nothing to do here
   }
 }
