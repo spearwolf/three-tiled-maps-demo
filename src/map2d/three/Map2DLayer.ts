@@ -4,7 +4,7 @@ import { IMap2DLayerRenderer } from '../IMap2DLayerRenderer';
 import { Map2DViewTile } from '../Map2DViewTile';
 import { TextureLibrary } from '../TextureLibrary';
 
-import { Map2DLayerTile } from './Map2DLayerTile';
+import { Map2DTileBufferGeometry } from './Map2DTileBufferGeometry';
 
 export class Map2DLayer implements IMap2DLayerRenderer {
 
@@ -13,7 +13,7 @@ export class Map2DLayer implements IMap2DLayerRenderer {
   private readonly material: THREE.Material;
   private readonly texture: THREE.Texture;
 
-  private readonly tiles: Map<string, Map2DLayerTile> = new Map();
+  private readonly tiles: Map<string, THREE.Mesh> = new Map();
 
   constructor(readonly textureLibrary: TextureLibrary) {
 
@@ -31,7 +31,9 @@ export class Map2DLayer implements IMap2DLayerRenderer {
   }
 
   dispose() {
-    Array.from(this.tiles.values()).forEach((tile) => tile.dispose());
+    Array.from(this.tiles.values()).forEach((tile) => {
+      tile.geometry.dispose();
+    });
     this.tiles.clear();
 
     this.texture.dispose();
@@ -39,14 +41,16 @@ export class Map2DLayer implements IMap2DLayerRenderer {
   }
 
   addViewTile(tile: Map2DViewTile) {
-    this.createTile(tile).appendTo(this.obj3d);
+    const mesh = this.createTileMesh(tile);
+    mesh.name = tile.id;
+    this.obj3d.add(mesh);
   }
 
   removeViewTile(tileId: string) {
-    const gt = this.destroyTile(tileId);
-    if (gt !== null) {
-      gt.removeFrom(this.obj3d);
-      gt.dispose();
+    const mesh = this.destroyTile(tileId);
+    if (mesh !== null) {
+      this.obj3d.remove(mesh);
+      mesh.geometry.dispose();
     }
  }
 
@@ -54,18 +58,19 @@ export class Map2DLayer implements IMap2DLayerRenderer {
     // console.log('[Map2DSceneTHREE] update grid-tile:', tile.id);
   }
 
-  private destroyTile(id: string): Map2DLayerTile {
+  private destroyTile(id: string): THREE.Mesh {
     if (this.tiles.has(id)) {
-      const gt = this.tiles.get(id);
+      const mesh = this.tiles.get(id);
       this.tiles.delete(id);
-      return gt;
+      return mesh;
     }
     return null;
   }
 
-  private createTile(viewTile: Map2DViewTile): Map2DLayerTile {
-    const gt = new Map2DLayerTile(viewTile, this.material, this.textureLibrary);
-    this.tiles.set(viewTile.id, gt);
-    return gt;
+  private createTileMesh(viewTile: Map2DViewTile): THREE.Mesh {
+    const geometry = new Map2DTileBufferGeometry(viewTile, this.textureLibrary);
+    const mesh = new THREE.Mesh(geometry, this.material);
+    this.tiles.set(viewTile.id, mesh);
+    return mesh;
   }
 }

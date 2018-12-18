@@ -1,6 +1,7 @@
 /* eslint no-console: 0 */
 import * as THREE from 'three';
 import Stats from 'stats.js';
+import GLTFLoader from 'three-gltf-loader';
 
 import { TiledMap } from './map2d/tiledmap';
 import { Map2DView, Map2DViewLayer, TextureLibrary } from './map2d';
@@ -278,4 +279,11 @@ Promise.all([
       break;
     }
   });
+});
+
+// ===== load gtlf =/=/============////==================================-------
+
+const gltfLoader = new GLTFLoader();
+gltfLoader.load('gltf/foo.glb', (gltf) => {
+  console.log('loaded gltf:', gltf);
 });

@@ -1,13 +1,12 @@
 import * as THREE from 'three';
 
+import { Map2DViewTile } from '../Map2DViewTile';
 import { TextureLibrary } from '../TextureLibrary';
 
-import { Map2DLayerTile } from './Map2DLayerTile';
+export class Map2DTileBufferGeometry extends THREE.BufferGeometry {
+  readonly type: string = 'Map2DTileBufferGeometry';
 
-export class Map2DLayerTileBufferGeometry extends THREE.BufferGeometry {
-  readonly type: string = 'Map2DLayerTileBufferGeometry';
-
-  constructor({ viewTile }: Map2DLayerTile, textureLibrary: TextureLibrary) {
+  constructor(viewTile: Map2DViewTile, textureLibrary: TextureLibrary) {
     super();
 
     const {
@@ -27,6 +26,8 @@ export class Map2DLayerTileBufferGeometry extends THREE.BufferGeometry {
     const uvs = [];
 
     const up = new THREE.Vector3(0, 0, 1);
+
+    viewTile.fetchTileIds();
 
     let y = -viewOffsetY;
 
