@@ -6,7 +6,7 @@ import { TextureLibrary } from '../TextureLibrary';
 
 import { Map2DTileBufferGeometry } from './Map2DTileBufferGeometry';
 
-export class Map2DLayer implements IMap2DLayerRenderer {
+export class Map2DFlat2DTilesLayer implements IMap2DLayerRenderer {
 
   readonly obj3d: THREE.Object3D = new THREE.Object3D();
 
