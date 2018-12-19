@@ -1,14 +1,14 @@
 import * as THREE from 'three';
 
-import { IMap2DLayerRenderer } from '../IMap2DLayerRenderer';
 import { Map2DViewTile } from '../Map2DViewTile';
 import { TextureLibrary } from '../TextureLibrary';
 
+import { IMap2DLayer } from './IMap2DLayer';
 import { Map2DTileBufferGeometry } from './Map2DTileBufferGeometry';
 
-export class Map2DFlat2DTilesLayer implements IMap2DLayerRenderer {
+export class Map2DFlat2DTilesLayer implements IMap2DLayer {
 
-  readonly obj3d: THREE.Object3D = new THREE.Object3D();
+  private readonly obj3d: THREE.Object3D = new THREE.Object3D();
 
   private readonly material: THREE.Material;
   private readonly texture: THREE.Texture;
@@ -28,6 +28,10 @@ export class Map2DFlat2DTilesLayer implements IMap2DLayerRenderer {
       transparent: true,
     });
 
+  }
+
+  getObject3D() {
+    return this.obj3d;
   }
 
   dispose() {
@@ -52,7 +56,7 @@ export class Map2DFlat2DTilesLayer implements IMap2DLayerRenderer {
       this.obj3d.remove(mesh);
       mesh.geometry.dispose();
     }
- }
+  }
 
   renderViewTile(_tile: Map2DViewTile) {
     // console.log('[Map2DSceneTHREE] update grid-tile:', tile.id);

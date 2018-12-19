@@ -3,26 +3,26 @@ import * as THREE from 'three';
 import { IMap2DRenderer } from '../IMap2DRenderer';
 import { Map2DView } from '../Map2DView';
 
-import { Map2DFlat2DTilesLayer } from './Map2DFlat2DTilesLayer';
+import { IMap2DLayer } from './IMap2DLayer';
 
 export class Map2D extends THREE.Object3D implements IMap2DRenderer {
 
   static BeginRenderEvent = 'map2dbeginrender';
   static EndRenderEvent = 'map2dendrender';
 
-  private readonly map2dLayers = new Set<Map2DFlat2DTilesLayer>();
+  private readonly map2dLayers = new Set<IMap2DLayer>();
 
-  appendLayer(layer: Map2DFlat2DTilesLayer) {
+  appendLayer(layer: IMap2DLayer) {
     if (!this.map2dLayers.has(layer)) {
       this.map2dLayers.add(layer);
-      this.add(layer.obj3d);
+      this.add(layer.getObject3D());
     }
   }
 
-  removeLayer(layer: Map2DFlat2DTilesLayer) {
+  removeLayer(layer: IMap2DLayer) {
     if (this.map2dLayers.has(layer)) {
       this.map2dLayers.delete(layer);
-      this.remove(layer.obj3d);
+      this.remove(layer.getObject3D());
     }
   }
 
