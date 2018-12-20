@@ -283,7 +283,6 @@ Promise.all([
 
 // ===== load gtlf =/=/============////==================================-------
 
-const gltfLoader = new GLTFLoader();
-gltfLoader.load('gltf/foo.glb', (gltf) => {
+new GLTFLoader().load('gltf/lab-walls-tiles.glb', (gltf) => {
   console.log('loaded gltf:', gltf);
 });
