@@ -1,17 +1,10 @@
-
-const isPowerOf2 = (n: number) => n !== 0 && (n & (n - 1)) === 0;
-
-const findNextPowerOf2 = (x: number) => {
-  let p = 1;
-  while (x > p) { p <<= 1; }
-  return p;
-};
+import * as spearwolf from 'spearwolf-js';
 
 export type ImageSource = HTMLImageElement | HTMLCanvasElement | HTMLVideoElement;
 
 const convertToPowerOf2 = (image: ImageSource) => {
-  const w = findNextPowerOf2(image.width);
-  const h = findNextPowerOf2(image.height);
+  const w = spearwolf.utils.findNextPowerOf2(image.width);
+  const h = spearwolf.utils.findNextPowerOf2(image.height);
 
   const canvas = document.createElement('canvas');
   canvas.width = w;
@@ -90,7 +83,7 @@ export class PowerOf2Image {
   }
 
   private setImgEl(imgEl: ImageSource) {
-    this.imgEl = isPowerOf2(imgEl.width) && isPowerOf2(imgEl.height) ? imgEl : convertToPowerOf2(imgEl);
+    this.imgEl = spearwolf.utils.isPowerOf2(imgEl.width) && spearwolf.utils.isPowerOf2(imgEl.height) ? imgEl : convertToPowerOf2(imgEl);
     this.origWidth = imgEl.width;
     this.origHeight = imgEl.height;
   }

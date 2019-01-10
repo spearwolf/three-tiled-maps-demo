@@ -36,6 +36,9 @@ module.exports = {
   },
   resolve: {
     extensions: [ ".ts", ".js" ],
+    alias: {
+      "spearwolf-js": path.resolve(__dirname, "../spearwolf-js"),
+    },
   },
   output: {
     filename: "bundle.js",

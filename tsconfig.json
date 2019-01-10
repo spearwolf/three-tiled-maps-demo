@@ -11,7 +11,12 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "importHelpers": false,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "spearwolf-js": ["../spearwolf-js"]
+    }
   },
   "include": [
     "src/**/*.ts"
