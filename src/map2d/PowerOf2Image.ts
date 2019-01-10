@@ -3,8 +3,8 @@ import * as spearwolf from 'spearwolf-js';
 export type ImageSource = HTMLImageElement | HTMLCanvasElement | HTMLVideoElement;
 
 const convertToPowerOf2 = (image: ImageSource) => {
-  const w = spearwolf.utils.findNextPowerOf2(image.width);
-  const h = spearwolf.utils.findNextPowerOf2(image.height);
+  const w = spearwolf.findNextPowerOf2(image.width);
+  const h = spearwolf.findNextPowerOf2(image.height);
 
   const canvas = document.createElement('canvas');
   canvas.width = w;
@@ -83,7 +83,7 @@ export class PowerOf2Image {
   }
 
   private setImgEl(imgEl: ImageSource) {
-    this.imgEl = spearwolf.utils.isPowerOf2(imgEl.width) && spearwolf.utils.isPowerOf2(imgEl.height) ? imgEl : convertToPowerOf2(imgEl);
+    this.imgEl = spearwolf.isPowerOf2(imgEl.width) && spearwolf.isPowerOf2(imgEl.height) ? imgEl : convertToPowerOf2(imgEl);
     this.origWidth = imgEl.width;
     this.origHeight = imgEl.height;
   }
