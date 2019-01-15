@@ -1,4 +1,5 @@
-import { AABB2 } from '../AABB2';
+import { AABB2 } from 'spearwolf-js';
+
 import { IMap2DLayerData } from '../IMap2DLayerData';
 import { ChunkQuadTreeNode } from './ChunkQuadTreeNode';
 import { ITiledMapLayerChunkData } from './ITiledMapLayerChunkData';

@@ -1,4 +1,5 @@
-import { AABB2 } from '../AABB2';
+import { AABB2 } from 'spearwolf-js';
+
 import { base64toUint32Arr } from '../base64toUint32Arr';
 import { ITiledMapLayerChunkData } from './ITiledMapLayerChunkData';
 
