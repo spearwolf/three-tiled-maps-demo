@@ -6,6 +6,15 @@ import { TextureLibrary } from '../TextureLibrary';
 import { IMap2DLayer } from './IMap2DLayer';
 import { Map2DTileBufferGeometry } from './Map2DTileBufferGeometry';
 
+/**
+ * Represents one map2d layer.
+ *
+ * Each tile is rendered with the same material which is built by the layer
+ * upon the *base image* from the given [[TextureLibrary]].
+ *
+ * For each tile a [[Map2DTileBufferGeometryGeometry]] is created.
+ */
+
 export class Map2DFlat2DTilesLayer implements IMap2DLayer {
 
   private readonly obj3d: THREE.Object3D = new THREE.Object3D();
