@@ -4,8 +4,6 @@
   "description": "three.js playground",
   "private": true,
   "scripts": {
-    "build": "webpack",
-    "serve": "serve public",
     "start": "webpack-dev-server --open",
     "lint": "tslint --format verbose --project ./tsconfig.json",
     "test": "jest"
