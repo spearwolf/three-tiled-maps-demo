@@ -2,7 +2,7 @@
 const path = require("path");
 
 module.exports = {
-  entry: "./src/main.js",
+  entry: ["@babel/polyfill", "./src/main.js"],
   mode: "development",
   devtool: "inline-source-map",
   devServer: {
@@ -27,8 +27,7 @@ module.exports = {
         use: {
           loader: "babel-loader",
           options: {
-            presets: ["@babel/preset-env"],
-            plugins: ["@babel/plugin-transform-runtime"],
+            presets: [["@babel/preset-env", { useBuiltIns: "entry" }]],
           },
         },
       },
