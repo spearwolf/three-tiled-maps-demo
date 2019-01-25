@@ -1,8 +1,12 @@
+/* eslint-disable */
 // tslint:disable:object-literal-sort-keys
 const path = require("path");
 
 module.exports = {
-  entry: ["@babel/polyfill", "./src/main.js"],
+  entry: [
+    "@babel/polyfill",
+    "./src/main.js",
+  ],
   mode: "development",
   devtool: "inline-source-map",
   devServer: {
@@ -27,7 +31,11 @@ module.exports = {
         use: {
           loader: "babel-loader",
           options: {
-            presets: [["@babel/preset-env", { useBuiltIns: "entry" }]],
+            presets: [
+              ["@babel/preset-env", {
+                useBuiltIns: "entry",
+              }],
+            ],
           },
         },
       },
@@ -35,9 +43,6 @@ module.exports = {
   },
   resolve: {
     extensions: [ ".ts", ".js" ],
-    alias: {
-      "spearwolf-js": path.resolve(__dirname, "../spearwolf-js"),
-    },
   },
   output: {
     filename: "bundle.js",

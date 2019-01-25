@@ -15,6 +15,7 @@
   "author": "Wolfger Schramm <wolfger@spearwolf.de>",
   "devDependencies": {
     "@babel/core": "^7.2.2",
+    "@babel/plugin-proposal-class-properties": "^7.3.0",
     "@babel/polyfill": "^7.2.5",
     "@babel/preset-env": "^7.3.1",
     "@types/jest": "^23.3.13",
@@ -38,6 +39,7 @@
   },
   "dependencies": {
     "lodash": "^4.17.11",
+    "spearwolf-js": "^0.0.2",
     "stats.js": "^0.17.0",
     "three": "^0.100.0",
     "three-gltf-loader": "^1.100.0"
