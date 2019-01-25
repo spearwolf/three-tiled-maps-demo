@@ -17,6 +17,8 @@ import { Map2DTileBufferGeometry } from './Map2DTileBufferGeometry';
 
 export class Map2DFlat2DTilesLayer implements IMap2DLayer {
 
+  readonly textureLibrary: TextureLibrary;
+
   private readonly obj3d: THREE.Object3D = new THREE.Object3D();
 
   private readonly material: THREE.Material;
@@ -24,7 +26,9 @@ export class Map2DFlat2DTilesLayer implements IMap2DLayer {
 
   private readonly tiles: Map<string, THREE.Mesh> = new Map();
 
-  constructor(readonly textureLibrary: TextureLibrary) {
+  constructor(textureLibrary: TextureLibrary) {
+
+    this.textureLibrary = textureLibrary;
 
     this.texture = new THREE.Texture(textureLibrary.atlas.baseTexture.imgEl);
     this.texture.flipY = false;

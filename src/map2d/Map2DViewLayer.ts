@@ -19,6 +19,10 @@ const takeFrom = (tiles: Map2DViewTile[], left: number, top: number): Map2DViewT
  */
 export class Map2DViewLayer {
 
+  readonly view: Map2DView;
+  readonly layerRenderer: IMap2DLayerRenderer;
+  readonly layerData: IMap2DLayerData;
+
   readonly tileColumns: number;
   readonly tileRows: number;
   readonly tileWidth: number;
@@ -27,10 +31,14 @@ export class Map2DViewLayer {
   tiles: Map2DViewTile[] = [];
 
   constructor(
-    readonly view: Map2DView,
-    readonly layerRenderer: IMap2DLayerRenderer,
-    readonly layerData: IMap2DLayerData,
+    view: Map2DView,
+    layerRenderer: IMap2DLayerRenderer,
+    layerData: IMap2DLayerData,
   ) {
+    this.view = view;
+    this.layerRenderer = layerRenderer;
+    this.layerData = layerData;
+
     this.tileColumns = Math.ceil(view.layerTileWidth / layerData.tileWidth);
     this.tileRows = Math.ceil(view.layerTileHeight / layerData.tileHeight);
     this.tileWidth = this.tileColumns * layerData.tileWidth;

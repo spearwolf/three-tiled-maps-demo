@@ -21,28 +21,23 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.ts$/,
-        use: "ts-loader",
-        exclude: /node_modules/,
-      },
-      {
-        test: /\.m?js$/,
-        exclude: /node_modules/,
+        test: /\.m?[jt]s$/,
+        include: [
+          path.resolve('src'),
+          /spearwolf-js/,
+        ],
+        // exclude: /node_modules/,
         use: {
           loader: "babel-loader",
           options: {
-            presets: [
-              ["@babel/preset-env", {
-                useBuiltIns: "entry",
-              }],
-            ],
+            configFile: path.resolve('babel.config.js'),
           },
         },
       },
     ],
   },
   resolve: {
-    extensions: [ ".ts", ".js" ],
+    extensions: [ ".ts", ".js", ".json" ],
   },
   output: {
     filename: "bundle.js",

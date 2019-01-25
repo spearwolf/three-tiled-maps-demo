@@ -13,15 +13,11 @@
     "importHelpers": false,
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "baseUrl": ".",
-    "paths": {
-      "spearwolf-js": ["../spearwolf-js"]
-    }
+    "baseUrl": "."
   },
   "include": [
     "src/**/*.ts",
-    "types/**/*.ts",
-
+    "types/**/*.ts"
   ],
   "exclude": [
     "src/loadTiledMap.ts"

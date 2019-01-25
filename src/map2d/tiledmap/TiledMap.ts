@@ -3,17 +3,20 @@ import { ITiledMapLayerData } from './ITiledMapLayerData';
 import { TiledMapLayer } from './TiledMapLayer';
 
 export class TiledMap {
-  private readonly layerMap: Map<string, TiledMapLayer> = new Map();
 
   static async load(url: string): Promise<TiledMap> {
     const jsonData = await fetch(url).then((response) => response.json());
     return new TiledMap(jsonData);
   }
 
+  private readonly data: ITiledMapData;
+
+  private readonly layerMap: Map<string, TiledMapLayer> = new Map();
+
   /**
    * Assume tiled map orientation is orthogonal and infinite is true.
    */
-  constructor(private readonly data: ITiledMapData) {
+  constructor(data: ITiledMapData) {
     this.data = data;
     data.layers.forEach((layerData: ITiledMapLayerData) => {
       this.layerMap.set(layerData.name, new TiledMapLayer(this, layerData));

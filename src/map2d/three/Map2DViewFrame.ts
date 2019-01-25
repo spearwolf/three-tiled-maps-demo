@@ -5,8 +5,19 @@ import { Map2D } from './Map2D';
 
 export class Map2DViewFrame extends THREE.Object3D {
 
-  constructor(readonly map2d: Map2D, public color = 0xff0032, public zOffset = 0.5) {
+  readonly map2d: Map2D;
+
+  color: number;
+
+  zOffset: number;
+
+  constructor(map2d: Map2D, color = 0xff0032, zOffset = 0.5) {
     super();
+
+    this.map2d = map2d;
+
+    this.color = color;
+    this.zOffset = zOffset;
 
     const l = 0.5;
     const c = 0.02;

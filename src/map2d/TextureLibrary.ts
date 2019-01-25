@@ -7,10 +7,13 @@ export class TextureLibrary {
     return new TextureLibrary(await TextureAtlas.load(path, basePath));
   }
 
+  readonly atlas: TextureAtlas;
+
   private texIdMap: Map<number, string> = new Map();
   private defaultTexName: string;
 
-  constructor(readonly atlas: TextureAtlas) {
+  constructor(atlas: TextureAtlas) {
+    this.atlas = atlas;
   }
 
   get textureNames() {

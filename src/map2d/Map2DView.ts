@@ -9,7 +9,17 @@ import { Map2DViewLayer } from './Map2DViewLayer';
  */
 export class Map2DView {
 
+  centerX: number;
+  centerY: number;
+  width: number;
+  height: number;
+
+  readonly layerTileWidth: number;
+  readonly layerTileHeight: number;
+
   readonly layers: Map2DViewLayer[] = [];
+
+  private readonly renderer: IMap2DRenderer;
 
   /**
    * @param centerX horizontal center position
@@ -18,14 +28,22 @@ export class Map2DView {
    * @param layerTileHeight approximate height of a *grid tile* (see [[Map2DLayerTile]]) in *pixels* The real size is a multiple of the size of a single tile.
    */
   constructor(
-    private readonly renderer: IMap2DRenderer,
-    public centerX: number,
-    public centerY: number,
-    public width: number,
-    public height: number,
-    readonly layerTileWidth: number,
-    readonly layerTileHeight: number,
-  ) { }
+    renderer: IMap2DRenderer,
+    centerX: number,
+    centerY: number,
+    width: number,
+    height: number,
+    layerTileWidth: number,
+    layerTileHeight: number,
+  ) {
+    this.renderer = renderer;
+    this.centerX = centerX;
+    this.centerY = centerY;
+    this.width = width;
+    this.height = height;
+    this.layerTileWidth = layerTileWidth;
+    this.layerTileHeight = layerTileHeight;
+  }
 
   get left() {
     const halfWidth = this.width / 2;

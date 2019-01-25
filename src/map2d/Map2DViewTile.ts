@@ -12,6 +12,11 @@ import { IMap2DLayerData } from './IMap2DLayerData';
  */
 export class Map2DViewTile {
 
+  readonly layerData: IMap2DLayerData;
+
+  readonly width: number;
+  readonly height: number;
+
   readonly tileIds: Uint32Array;
 
   tileIdsNeedsUpdate: boolean = true;
@@ -32,7 +37,12 @@ export class Map2DViewTile {
   private _top: number = 0;
   private _left: number = 0;
 
-  constructor(readonly layerData: IMap2DLayerData, readonly width: number, readonly height: number) {
+  constructor(layerData: IMap2DLayerData, width: number, height: number) {
+    this.layerData = layerData;
+
+    this.width = width;
+    this.height = height;
+
     this.tileIds = new Uint32Array(width * height);
   }
 

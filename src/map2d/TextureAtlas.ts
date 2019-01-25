@@ -8,6 +8,8 @@ function sample<T>(arr: T[]): T {
 
 export class TextureAtlas {
 
+  readonly baseTexture: Texture;
+
   static async load(path: string, basePath: string = './'): Promise<TextureAtlas> {
     const atlas = await fetch(`${basePath}${path}`).then((response) => response.json()) as ITextureAtlasData;
     const baseTexture = new Texture(await new PowerOf2Image(`${basePath}${atlas.meta.image}`).onLoaded);
@@ -16,7 +18,9 @@ export class TextureAtlas {
 
   private frames = new Map<string, Texture>();
 
-  constructor(readonly baseTexture: Texture, data: ITextureAtlasData) {
+  constructor(baseTexture: Texture, data: ITextureAtlasData) {
+    this.baseTexture = baseTexture;
+    console.log('baseTexture', this.baseTexture);
     Object.keys(data.frames).forEach((name: string) => {
       const { frame } = data.frames[name];
       this.addFrame(name, frame.w, frame.h, frame.x, frame.y);

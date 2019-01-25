@@ -4,11 +4,14 @@ import { base64toUint32Arr } from '../base64toUint32Arr';
 import { ITiledMapLayerChunkData } from './ITiledMapLayerChunkData';
 
 export class TiledMapLayerChunk {
-  private cachedUint32Array: Uint32Array = null;
 
   readonly aabb: AABB2;
 
-  constructor(private readonly data: ITiledMapLayerChunkData) {
+  private readonly data: ITiledMapLayerChunkData;
+
+  private cachedUint32Array: Uint32Array = null;
+
+  constructor(data: ITiledMapLayerChunkData) {
     this.data = data;
     this.aabb = new AABB2(data.x, data.y, data.width, data.height);
   }
