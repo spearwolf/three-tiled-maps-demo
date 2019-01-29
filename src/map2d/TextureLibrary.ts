@@ -1,5 +1,4 @@
-import { Texture } from './Texture';
-import { TextureAtlas } from './TextureAtlas';
+import { Texture, TextureAtlas } from 'spearwolf-js';
 
 export class TextureLibrary {
 
