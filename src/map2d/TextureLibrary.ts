@@ -31,7 +31,7 @@ export class TextureLibrary {
     return this.atlas.frame(frame) || this.atlas.frame(this.defaultTexName) || null;
   }
 
-  setIdNameMap(idNameMap: [[number, string]]) {
+  setIdNameMap(idNameMap: Array<[number, string]>) {
     idNameMap.forEach(([id, name]) => this.texIdMap.set(id, name));
   }
 
