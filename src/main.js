@@ -3,9 +3,15 @@ import * as THREE from 'three';
 import Stats from 'stats.js';
 import GLTFLoader from 'three-gltf-loader';
 
-import { TiledMap } from './map2d/tiledmap';
-import { Map2DView, Map2DViewLayer, TextureLibrary } from './map2d';
-import { Map2D, Map2DFlat2DTilesLayer, Map2DViewFrame } from './map2d/three';
+import {
+  TiledMap,
+  Map2DView,
+  Map2DViewLayer,
+  TextureLibrary,
+  Map2D,
+  Map2DFlat2DTilesLayer,
+  Map2DViewFrame,
+} from 'spearwolf-js';
 
 const VIEW_WIDTH = 320;
 const VIEW_ASPECT = 9/16;
