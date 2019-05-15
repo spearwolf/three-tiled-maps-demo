@@ -23,7 +23,7 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x203040);
 
 const camera3d = new THREE.PerspectiveCamera(75, 1, 1, 1000);
-camera3d.position.set(0, 75, 350);
+camera3d.position.set(0, -75, 350);
 camera3d.lookAt(0, 0, 0);
 camera3d.up.set(0, 0, 1);
 
@@ -32,9 +32,6 @@ const min = (a, b) => a > b ? b : a;
 const halfSize = min(VIEW_WIDTH, calcViewHeight()) / 2;
 const cam2dZ = 100;
 const camera2d = new THREE.OrthographicCamera(-halfSize, halfSize, halfSize, -halfSize, 1, 1000 );
-const m = new THREE.Matrix4();
-m.makeScale(-1, -1, 1);
-camera2d.applyMatrix(m);
 
 let curCamera = camera3d;
 
@@ -143,11 +140,11 @@ function render(time) {
     if (view) {
       view.centerY -= speedNorth * t;
       view.centerY += speedSouth * t;
-      view.centerX -= speedEast * t;
-      view.centerX += speedWest * t;
+      view.centerX += speedEast * t;
+      view.centerX -= speedWest * t;
       view.update();
 
-      camera2d.position.set(view.centerX, view.centerY, cam2dZ);
+      camera2d.position.set(view.centerX, -view.centerY, cam2dZ);
     }
     renderer.render(scene, curCamera);
     rendererShouldRender = false;
