@@ -39,7 +39,6 @@
     "lodash": "^4.17.11",
     "spearwolf-js": "^0.0.7",
     "stats.js": "^0.17.0",
-    "three": "^0.100.0",
-    "three-gltf-loader": "^1.100.0"
+    "three": "^0.104.0"
   }
 }

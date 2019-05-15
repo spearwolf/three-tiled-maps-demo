@@ -1,23 +1,25 @@
 /* eslint no-console: 0 */
-import * as THREE from 'three';
-import Stats from 'stats.js';
-import GLTFLoader from 'three-gltf-loader';
+/* tslint:disable:no-console */
+import * as THREE from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { MapControls } from "three/examples/jsm/controls/MapControls";
+import Stats from "stats.js";
 
 import {
-  TiledMap,
-  Map2DView,
-  Map2DViewLayer,
-  TextureLibrary,
   Map2D,
   Map2DFlat2DTilesLayer,
+  Map2DView,
   Map2DViewFrame,
-} from 'spearwolf-js';
+  Map2DViewLayer,
+  TextureLibrary,
+  TiledMap,
+} from "spearwolf-js";
 
 const VIEW_WIDTH = 320;
-const VIEW_ASPECT = 9/16;
+const VIEW_ASPECT = 9 / 16;
 const calcViewHeight = (width = VIEW_WIDTH) => Math.round(width * VIEW_ASPECT);
 
-console.log('hej ho 🦄');
+console.log("hej ho 🦄");
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x203040);
@@ -38,7 +40,7 @@ let curCamera = camera3d;
 
 const renderer = new THREE.WebGLRenderer({
   antialias: false,
-  powerPreference: 'high-performance',
+  powerPreference: "high-performance",
 });
 
 // see https://threejs.org/docs/#examples/loaders/GLTFLoader
@@ -48,20 +50,16 @@ const renderer = new THREE.WebGLRenderer({
 const DPR = window.devicePixelRatio || 1;
 renderer.setPixelRatio(1);
 
-const threeContainerElement = document.getElementById('three-container');
+const threeContainerElement = document.getElementById("three-container");
 threeContainerElement.appendChild(renderer.domElement);
 
-const infoDisplayElement = document.createElement('div');
-infoDisplayElement.setAttribute('class', 'infoDisplay infoText');
+const infoDisplayElement = document.createElement("div");
+infoDisplayElement.setAttribute("class", "infoDisplay infoText");
 threeContainerElement.appendChild(infoDisplayElement);
 
-window.THREE = THREE;
-// eslint-disable-next-line no-undef
-require('three/examples/js/controls/MapControls');
+const controls = new MapControls(camera3d);
 
-const controls = new window.THREE.MapControls(camera3d);
-
-const PIXELATE = 'pixelate';
+const PIXELATE = "pixelate";
 
 const urlParams = new URLSearchParams(window.location.search);
 
@@ -95,7 +93,7 @@ function resize() {
     camera3d.aspect = 1;
     curCamera.updateProjectionMatrix();
 
-    renderer.domElement.classList[pixelate !== 0 ? 'add' : 'remove'](PIXELATE);
+    renderer.domElement.classList[pixelate !== 0 ? "add" : "remove"](PIXELATE);
     renderer.domElement.style.width = `${minSize}px`;
     renderer.domElement.style.height = `${minSize}px`;
     return true;
@@ -166,12 +164,12 @@ requestAnimationFrame(animate);
 Promise.all([
   // TiledMap.load('./maps/180917-a-first-map.json'),
   // TextureLibrary.load('sketch-tiles.json', './atlas/'),
-  TiledMap.load('./maps/lab-wall-tiles-new-map.json'),
-  TextureLibrary.load('lab-wall-tiles-new.json', './atlas/'),
+  TiledMap.load("./maps/lab-wall-tiles-new-map.json"),
+  TextureLibrary.load("lab-wall-tiles-new.json", "./atlas/"),
 ]).then(([tiledMap, texLib]) => {
 
   const { imgEl } = texLib.atlas.baseTexture;
-  const el = document.querySelector('.textureAtlas');
+  const el = document.querySelector(".textureAtlas");
   el.appendChild(imgEl);
 
   // texLib.setIdNameMap([
@@ -194,30 +192,30 @@ Promise.all([
   //   [17, 'wall-sw.png'],
   // ]);
   texLib.setIdNameMap([
-    [1, 'lab-wall-tiles-00.png'],
-    [2, 'lab-wall-tiles-01.png'],
-    [3, 'lab-wall-tiles-02.png'],
-    [4, 'lab-wall-tiles-03.png'],
-    [5, 'lab-wall-tiles-04.png'],
-    [6, 'lab-wall-tiles-05.png'],
-    [7, 'lab-wall-tiles-06.png'],
-    [8, 'lab-wall-tiles-07.png'],
-    [9, 'lab-wall-tiles-08.png'],
-    [10, 'lab-wall-tiles-09.png'],
-    [11, 'lab-wall-tiles-10.png'],
-    [12, 'lab-wall-tiles-11.png'],
-    [13, 'lab-wall-tiles-12.png'],
-    [14, 'lab-wall-tiles-13.png'],
-    [15, 'lab-wall-tiles-14.png'],
-    [16, 'lab-wall-tiles-15.png'],
-    [17, 'lab-wall-tiles-16.png'],
-    [18, 'lab-wall-tiles-18.png'],
+    [1, "lab-wall-tiles-00.png"],
+    [2, "lab-wall-tiles-01.png"],
+    [3, "lab-wall-tiles-02.png"],
+    [4, "lab-wall-tiles-03.png"],
+    [5, "lab-wall-tiles-04.png"],
+    [6, "lab-wall-tiles-05.png"],
+    [7, "lab-wall-tiles-06.png"],
+    [8, "lab-wall-tiles-07.png"],
+    [9, "lab-wall-tiles-08.png"],
+    [10, "lab-wall-tiles-09.png"],
+    [11, "lab-wall-tiles-10.png"],
+    [12, "lab-wall-tiles-11.png"],
+    [13, "lab-wall-tiles-12.png"],
+    [14, "lab-wall-tiles-13.png"],
+    [15, "lab-wall-tiles-14.png"],
+    [16, "lab-wall-tiles-15.png"],
+    [17, "lab-wall-tiles-16.png"],
+    [18, "lab-wall-tiles-18.png"],
   ]);
 
   // texLib.setDefaultTexture('empty.png');
-  texLib.setDefaultTexture('sketch-dungeon-back-tile.png');
+  texLib.setDefaultTexture("sketch-dungeon-back-tile.png");
 
-  console.log('TextureLibrary', texLib);
+  console.log("TextureLibrary", texLib);
 
   const map2d = new Map2D();
   scene.add(map2d);
@@ -229,7 +227,7 @@ Promise.all([
 
   // view.addLayer(new Map2DViewLayer(view, layerMain, tiledMap.getLayer('main')));
   // view.addLayer(new Map2DViewLayer(view, layerMain, tiledMap.getLayer('Kachelebene 2')));
-  view.addLayer(new Map2DViewLayer(view, layerMain, tiledMap.getLayer('Kachelebene 1')));
+  view.addLayer(new Map2DViewLayer(view, layerMain, tiledMap.getLayer("Kachelebene 1")));
   // view.update();
 
   viewFrame = new Map2DViewFrame(map2d, 0xff0000, 2);
@@ -237,13 +235,7 @@ Promise.all([
 
   rendererShouldRender = true;
 
-  // const center = new Vector2Link(view, 'centerX', 'centerY');
-  // center.addScalar(50);
-  // view.update();
-  // view.centerY -= 50;
-  // view.update();
-
-  document.addEventListener('keydown', (event) => {
+  document.addEventListener("keydown", (event) => {
     const { keyCode } = event;
     switch (keyCode) {
     case 87: // W
@@ -265,17 +257,17 @@ Promise.all([
     if (view) {
       view.width *= multiplyByScalar;
       view.height = calcViewHeight(view.width);
-      const halfSize = min(view.width, view.height) / 2;
-      camera2d.left = -halfSize;
-      camera2d.right = halfSize;
-      camera2d.top = halfSize;
-      camera2d.bottom = -halfSize;
+      const half = min(view.width, view.height) / 2;
+      camera2d.left = -half;
+      camera2d.right = half;
+      camera2d.top = half;
+      camera2d.bottom = -half;
       camera2d.updateProjectionMatrix();
       rendererShouldRender = true;
     }
   };
 
-  document.addEventListener('keyup', (event) => {
+  document.addEventListener("keyup", (event) => {
     const { keyCode } = event;
     switch (keyCode) {
     case 87: // W
@@ -291,6 +283,7 @@ Promise.all([
       speedEast = 0;
       break;
     case 49: // 1
+      // @ts-ignore
       curCamera = camera2d;
       viewFrame.visible = false;
       controls.enabled = false;
@@ -308,6 +301,7 @@ Promise.all([
       break;
     case 109: // numPad: sub
     case 189: // -
+      // @ts-ignore
       changeViewSize(curCamera === camera2d ? 1.1 : 0.9);
       break;
     }
@@ -316,6 +310,6 @@ Promise.all([
 
 // ===== load gtlf =/=/============////==================================-------
 
-new GLTFLoader().load('gltf/lab-walls-tiles.glb', (gltf) => {
-  console.log('loaded gltf:', gltf);
+new GLTFLoader().load("gltf/lab-walls-tiles.glb", (gltf) => {
+  console.log("loaded gltf:", gltf);
 });
