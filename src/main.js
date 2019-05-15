@@ -23,15 +23,16 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x203040);
 
 const camera3d = new THREE.PerspectiveCamera(75, 1, 1, 1000);
-camera3d.position.set(0, -75, 350);
+camera3d.position.set(0, 200, 350);
 camera3d.lookAt(0, 0, 0);
-camera3d.up.set(0, 0, 1);
+camera3d.up.set(0, 1, 0);
 
 const min = (a, b) => a > b ? b : a;
 
 const halfSize = min(VIEW_WIDTH, calcViewHeight()) / 2;
 const cam2dZ = 100;
 const camera2d = new THREE.OrthographicCamera(-halfSize, halfSize, halfSize, -halfSize, 1, 1000 );
+camera2d.applyQuaternion(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI * -0.5));
 
 let curCamera = camera3d;
 
@@ -144,7 +145,7 @@ function render(time) {
       view.centerX -= speedWest * t;
       view.update();
 
-      camera2d.position.set(view.centerX, -view.centerY, cam2dZ);
+      camera2d.position.set(view.centerX, cam2dZ, view.centerY);
     }
     renderer.render(scene, curCamera);
     rendererShouldRender = false;
