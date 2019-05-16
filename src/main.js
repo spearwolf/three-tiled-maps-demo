@@ -8,6 +8,7 @@ import Stats from "stats.js";
 import {
   Map2D,
   Map2DFlat2DTilesLayer,
+  Map2DTileQuadsLayer,
   Map2DView,
   Map2DViewFrame,
   Map2DViewLayer,
@@ -219,15 +220,21 @@ Promise.all([
 
   const map2d = new Map2D();
   scene.add(map2d);
+  window.map2d = map2d;
 
-  const layerMain = new Map2DFlat2DTilesLayer(texLib);
-  map2d.appendLayer(layerMain);
+  const flat2dTiles = new Map2DFlat2DTilesLayer(texLib);
+  map2d.appendLayer(flat2dTiles);
+
+  const tileQuads = new Map2DTileQuadsLayer(texLib);
+  tileQuads.getObject3D().position.add(new THREE.Vector3(0, 1, 0));
+  map2d.appendLayer(tileQuads);
 
   view = new Map2DView(map2d, 0, 0, VIEW_WIDTH, calcViewHeight(), 100, 100);
 
   // view.addLayer(new Map2DViewLayer(view, layerMain, tiledMap.getLayer('main')));
-  // view.addLayer(new Map2DViewLayer(view, layerMain, tiledMap.getLayer('Kachelebene 2')));
-  view.addLayer(new Map2DViewLayer(view, layerMain, tiledMap.getLayer("Kachelebene 1")));
+  // view.addLayer(new Map2DViewLayer(view, flat2dTiles, tiledMap.getLayer("Kachelebene 1")));
+  // view.addLayer(new Map2DViewLayer(view, tileQuads, tiledMap.getLayer("Kachelebene 2")));
+  view.addLayer(new Map2DViewLayer(view, tileQuads, tiledMap.getLayer("Kachelebene 1")));
   // view.update();
 
   viewFrame = new Map2DViewFrame(map2d, 0xff0000, 2);
