@@ -72,6 +72,7 @@ function resize() {
     pixelate = 1;
   }
 
+  // @ts-ignore
   const { clientWidth, clientHeight } = renderer.domElement.parentNode;
   const minSize = min(clientWidth, clientHeight);
   const size = Math.floor(pixelate > 0 ? (minSize / pixelate) : (minSize * DPR));
@@ -220,24 +221,29 @@ Promise.all([
 
   const map2d = new Map2D();
   scene.add(map2d);
+
+  // @ts-ignore
   window.map2d = map2d;
 
   const flat2dTiles = new Map2DFlat2DTilesLayer(texLib);
   map2d.appendLayer(flat2dTiles);
 
-  const tileQuads = new Map2DTileQuadsLayer(texLib);
-  tileQuads.getObject3D().position.add(new THREE.Vector3(0, 1, 0));
-  map2d.appendLayer(tileQuads);
+  const backTileQuads = new Map2DTileQuadsLayer(texLib);
+  map2d.appendLayer(backTileQuads);
+
+  const frontTileQuads = new Map2DTileQuadsLayer(texLib);
+  frontTileQuads.getObject3D().position.add(new THREE.Vector3(0, 10, 0));
+  map2d.appendLayer(frontTileQuads);
 
   view = new Map2DView(map2d, 0, 0, VIEW_WIDTH, calcViewHeight(), 100, 100);
 
   // view.addLayer(new Map2DViewLayer(view, layerMain, tiledMap.getLayer('main')));
   // view.addLayer(new Map2DViewLayer(view, flat2dTiles, tiledMap.getLayer("Kachelebene 1")));
-  // view.addLayer(new Map2DViewLayer(view, tileQuads, tiledMap.getLayer("Kachelebene 2")));
-  view.addLayer(new Map2DViewLayer(view, tileQuads, tiledMap.getLayer("Kachelebene 1")));
+  view.addLayer(new Map2DViewLayer(view, backTileQuads, tiledMap.getLayer("Kachelebene 1")));
+  view.addLayer(new Map2DViewLayer(view, frontTileQuads, tiledMap.getLayer("Kachelebene 2")));
   // view.update();
 
-  viewFrame = new Map2DViewFrame(map2d, 0xff0000, 2);
+  viewFrame = new Map2DViewFrame(map2d, 0xff0000, 20);
   map2d.add(viewFrame);
 
   rendererShouldRender = true;
